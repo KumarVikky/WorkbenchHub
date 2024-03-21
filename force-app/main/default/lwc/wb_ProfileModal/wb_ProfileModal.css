@@ -1,0 +1,37 @@
+table {
+    border-radius: 5em;
+    outline: .5em solid silver;
+    outline-offset: -.5em;
+    overflow: hidden;
+}
+
+table, tr, th, td {
+    border-collapse: collapse;
+    border: .5em solid silver;
+}
+
+th, td {
+    padding: .5em 1em;
+}
+
+th:first-child, td:first-child {
+    padding-left: 3em;
+}
+
+th:last-child, td:last-child {
+    padding-right: 3em;
+}
+
+.name-initials {
+    font-family: "Helvetica Neue", helvetica, serif;
+    font-size: 60px;
+    color: #bbb;
+    background: #eee;
+    text-align: center;
+    line-height: 200px;
+    width: 200px;
+    height: 200px;
+    margin:0; 
+    border-radius: 100%;
+    margin: 20px;
+}

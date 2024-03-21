@@ -1,0 +1,17 @@
+.p1{
+    /*margin-left: 13px;*/
+    margin-top: 4px;
+    text-align: center;
+}
+.ringProgress{
+    transform: scale(0.9);
+}
+.boxMargin{
+    margin-top: 14px;
+}
+.scroller {
+    height: 160px;
+    overflow: auto;
+    padding: var(--lwc-varSpacingXSmall, 8px);
+    border: solid var(--lwc-borderWidthThin, 1px) #eee;
+}

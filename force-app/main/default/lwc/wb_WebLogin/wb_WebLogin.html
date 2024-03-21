@@ -1,0 +1,43 @@
+<template>
+    <div class="slds-box">
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="2" medium-device-size="4" large-device-size="4" padding="around-small">
+                <div class="slds-form_horizontal">
+                    <lightning-combobox
+                        name="environment"
+                        label="Environment :"
+                        value={envValue}
+                        placeholder="Select Environment"
+                        options={envOptions}
+                        onchange={handleEnvChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-form_horizontal">
+                    <lightning-combobox
+                        name="apiVersion"
+                        label="API Version :"
+                        value={apiVersionValue}
+                        placeholder="Select Version"
+                        options={apiVersionOptions}
+                        onchange={handleApiChange}>
+                    </lightning-combobox>
+                </div>
+                <div class="slds-form_horizontal">
+                    <lightning-button variant="brand" label="Login" title="Login" onclick={handleLogin} class="slds-var-m-left_x-small"></lightning-button>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        <div align="right">
+            <span>
+                <h4>Developed by &nbsp;
+                <lightning-formatted-url value="https://salesarena-dev-ed.my.site.com/MyResume/" tooltip="About Me" label="Vikky Saha" target="_blank" ></lightning-formatted-url></h4>
+            </span>
+        </div>
+    </div>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+</template>

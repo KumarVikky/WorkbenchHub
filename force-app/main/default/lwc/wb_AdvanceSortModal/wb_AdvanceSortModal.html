@@ -1,0 +1,77 @@
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-modal-header label="Multi-level Sort"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-var-p-around_small">
+            <div class="slds-box">
+                <template if:true={hasErrorMsg}>
+                    <div class="slds-align_absolute-center textColor">{errorMsg}</div>
+                </template>
+                <template iterator:it={selectedMultiSortByList}>
+                    <div key={it.value.id}>
+                        <lightning-layout multiple-rows >
+                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="1" padding="horizontal-small">
+                                <span class="slds-align_absolute-center indexPos">
+                                <p>{it.value.id}</p>
+                                </span> 
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                                <span class="span-pos">
+                                    <label class="slds-form-element__label" for="multiSortBy">Sort By</label>
+                                </span>
+                                <lightning-combobox data-id={it.value.id} name="multiSortBy"
+                                    variant="label-hidden"
+                                    label="Sort By"
+                                    options={multiSortByFieldOptions}
+                                    onchange={handleMultiSortByFields}
+                                    value={it.value.selectedField}
+                                    spinner-active
+                                    dropdown-alignment="left"
+                                    disabled={disableMultiSortOpt}>
+                                </lightning-combobox>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                                <span class="span-pos">
+                                    <label class="slds-form-element__label" for="multiSortByFunction">Operator</label>
+                                </span>
+                                <lightning-combobox data-id={it.value.id} name="multiSortByFunction"
+                                    variant="label-hidden"
+                                    label="Function"
+                                    value={it.value.selectedOperator}
+                                    options={multiSortByOptions}
+                                    onchange={handleMultiSortByOption}
+                                    dropdown-alignment="left"
+                                    disabled={disableMultiSortOpt}>
+                                </lightning-combobox>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="1" padding="horizontal-small">
+                                <template if:true={it.first}>
+                                    <span class="rowIcon">
+                                        <lightning-button-icon icon-name="utility:add" name="addFilter" alternative-text="Add Row" title="Add Row" label="" onclick={handleAddRow}></lightning-button-icon>
+                                    </span>
+                                </template>
+                                <template if:false={it.first}>
+                                    <span class="rowIcon">
+                                        <lightning-button-icon icon-name="utility:dash" name="addFilter" data-id={it.value.id} alternative-text="Remove Row" title="Remove Row" label="" onclick={handleRemoveRow}></lightning-button-icon>
+                                    </span>
+                                </template>
+                            </lightning-layout-item>
+                        </lightning-layout> 
+                    </div>
+                </template>
+            </div>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div class="slds-var-m-top_small slds-align_absolute-center">
+            <lightning-button variant="brand" label="Close" class="slds-var-m-left_x-small" onclick={handleClose}>
+            </lightning-button>
+            <lightning-button variant="brand" label="Apply" class="slds-var-m-left_x-small" onclick={handleApply}>
+            </lightning-button>
+        </div>
+    </lightning-modal-footer>
+</template>

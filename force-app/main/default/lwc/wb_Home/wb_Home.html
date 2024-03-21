@@ -1,0 +1,38 @@
+<template>
+    <template if:true={hasUserToken}>
+        <div class="slds-grid slds-wrap">
+            <div class="slds-col slds-size_12-of-12">
+                <span class="slds-var-m-bottom_xx-small spanRight"> 
+                    <span>Logged in as: <abbr title={userName}><span class="spanColor">{userFullName}</span></abbr></span> &nbsp;&nbsp;
+                    <lightning-button-menu alternative-text="Show menu" menu-alignment="right" onselect={handleUserMenu} icon-name="utility:settings">
+                        <lightning-menu-item value="ProfileMenu" label="Profile" prefix-icon-name="utility:profile_alt"></lightning-menu-item>
+                        <lightning-menu-item value="LogOut" label="Logout" prefix-icon-name="utility:logout"></lightning-menu-item>
+                    </lightning-button-menu>
+                </span>
+            </div>
+        </div>
+    </template>
+    <lightning-tabset variant="scoped" active-tab-value="one">
+        <lightning-tab label="SOQL Queries" value="one">
+            <template if:true={hasUserToken}>
+                <c-wb_-query user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-query>
+            </template>
+        </lightning-tab>
+        <lightning-tab label="Metadata Retrieve" value="two">
+            <template if:true={hasUserToken}>
+                <c-wb_-metadata-retrieve user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-metadata-retrieve>
+            </template>
+        </lightning-tab>
+        <lightning-tab label="Metadata Deploy" value="three">
+            <template if:true={hasUserToken}>
+                <c-wb_-metadata-deploy user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-metadata-deploy>
+            </template>
+        </lightning-tab>
+    </lightning-tabset>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+</template>

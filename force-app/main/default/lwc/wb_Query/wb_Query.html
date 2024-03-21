@@ -1,0 +1,246 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
+        <P class="p1">Choose the object, fields, and criteria to build a SOQL query below. [API: {apiValue}]</P>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="around-small">
+                <div class="slds-box slds-p-around_medium">
+                    <div class="slds-form slds-form_horizontal m1Top">
+                        <lightning-combobox name="object"
+                                label="Select Object"
+                                options={sObjectOptions}
+                                onchange={handleObjectChange}
+                                spinner-active
+                                dropdown-alignment="left"
+                                required>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-form">
+                        <span class="field-span-pos">
+                            <abbr title="required" class="slds-required">*</abbr>
+                            <label class="slds-form-element__label" for="fields">Select Fields</label>
+                        </span>
+                        <lightning-dual-listbox name="fields"
+                            variant="label-hidden"
+                            label="Select Fields"
+                            source-label="Available"
+                            selected-label="Selected"
+                            options={fieldOptions}
+                            onchange={handleFieldChange}
+                            spinner-active
+                            dropdown-alignment="left"
+                            value={selectedFieldName}
+                            required>
+                        </lightning-dual-listbox>
+                    </div>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="7" padding="around-small">
+                <div class="slds-box slds-p-around_medium">
+                    <div align="right" class="multiLevelPos">
+                        <lightning-button label="Multi-level Sort" title="Multi-level Sort" icon-name={multiSortIcon} class="slds-m-left_x-small" onclick={handleAdvanceSort}></lightning-button>
+                    </div>
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                            <span class="span-pos">
+                                <label class="slds-form-element__label" for="sortBy">Sort By</label>
+                            </span>
+                            <lightning-combobox name="sortBy"
+                                variant="label-hidden"
+                                label="Sort By"
+                                options={sortByFieldOptions}
+                                onchange={handleSortByFields}
+                                value={selectedSortBy.selectedField}
+                                spinner-active
+                                dropdown-alignment="left"
+                                disabled={disableFilterOpt}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="3" padding="horizontal-small">
+                            <span class="span-pos">
+                                <label class="slds-form-element__label" for="sortByOrder">Order</label>
+                            </span>
+                            <lightning-combobox name="sortByOrder"
+                                variant="label-hidden"
+                                label="Order"
+                                options={sortOptions}
+                                value={selectedSortBy.selectedOperator}
+                                onchange={handleSortOrder}
+                                disabled={disableFilterOpt}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="4" padding="horizontal-small">
+                            <span class="span-pos">
+                                <label class="slds-form-element__label" for="nullSequence">Null Sequence</label>
+                            </span>
+                            <lightning-combobox name="nullSequence"
+                                variant="label-hidden"
+                                label="Null Sequence"
+                                options={nullSequenceOptions}
+                                onchange={handleNullSequence}
+                                value={selectedNullSequence}
+                                dropdown-alignment="left"
+                                disabled={disableFilterOpt}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <div class="slds-box slds-p-around_medium">
+                    <div align="right" class="multiLevelPos">
+                        <lightning-button label="Multi-level Filter" title="Multi-level Filter" icon-name={multiFilterIcon} class="slds-m-left_x-small" onclick={handleAdvanceFilter}></lightning-button>
+                    </div>
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                            <span class="span-pos">
+                                <label class="slds-form-element__label" for="filterBy">Filter By</label>
+                            </span>
+                            <lightning-combobox name="filterBy"
+                                variant="label-hidden"
+                                label="Filter By"
+                                options={filterByFieldOptions}
+                                onchange={handleFilterByFields}
+                                value={selectedFilterBy.selectedField}
+                                spinner-active
+                                dropdown-alignment="left"
+                                disabled={disableFilterOpt}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="3" padding="horizontal-small">
+                            <span class="span-pos">
+                                <label class="slds-form-element__label" for="filterByFunction">Operator</label>
+                            </span>
+                            <lightning-combobox name="filterByFunction"
+                                variant="label-hidden"
+                                label="Function"
+                                value={selectedFilterBy.selectedOperator}
+                                options={filterByOptions}
+                                onchange={handleFilterByOption}
+                                dropdown-alignment="left"
+                                disabled={disableFilterOpt}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="4" padding="horizontal-small">
+                            <span class="span-pos">
+                                <label class="slds-form-element__label" for="filterByValue">Value</label>
+                            </span>
+                            <lightning-input type="text" name="filterByValue" variant="label-hidden" label="Value" value={selectedFilterBy.selectedValue} disabled={disableFilterOpt} onchange={handleFilterByValue}></lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <div class="slds-box slds-p-around_medium">
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="5" padding="horizontal-small">
+                            <span class="span-pos">
+                                <label class="slds-form-element__label" for="maxRecord">Max Records:</label>
+                            </span>
+                            <lightning-input type="number" name="maxRecord" variant="label-hidden" onchange={handleMaxRecord} disabled={disableFilterOpt} value={maxRecordLimit}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="5" padding="horizontal-small">
+                            <lightning-button variant="brand" label="Reset Filters" title="Reset Filters" onclick={handleResetAllFilters} class="resetBtn" disabled={disableFilterOpt}></lightning-button>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <div class="slds-box slds-p-around_medium">
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="6" padding="horizontal-small">
+                            <span class="span-pos">
+                                <label class="slds-form-element__label" for="supportedScope">Scope Clause</label>
+                            </span>
+                            <lightning-combobox name="supportedScope"
+                                variant="label-hidden"
+                                label="Scope Clause"
+                                options={supportedScopeOptions}
+                                onchange={handleScopeChange}
+                                value={selectedSupportedScope}
+                                dropdown-alignment="left"
+                                disabled={disableFilterOpt}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="6" padding="horizontal-small">
+                            <span class="span-pos">
+                                <label class="slds-form-element__label" for="listViewRecords">List View</label>
+                            </span>
+                            <lightning-combobox name="listViewRecords"
+                                variant="label-hidden"
+                                label="List View"
+                                options={listViewOptions}
+                                onchange={handleListViewChange}
+                                value={selectedListView}
+                                dropdown-alignment="left"
+                                disabled={hasListViewDisable}>
+                            </lightning-combobox>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                <div class="slds-box">
+                    <span>
+                        <h2 class="header">Query Editor:</h2>
+                        <lightning-textarea name="queryEditor" variant="label-hidden" placeholder="soql query..." value={queryString} onchange={handleManualQuery}></lightning-textarea>
+                    </span>
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="4">
+                            <span class="spanSec">
+                                <lightning-button variant="brand" label="Fetch Record" title="Fetch Record" onclick={handleQuery}></lightning-button>
+                            </span>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2">
+                            <template if:true={showQueryHistory}>
+                                <span class="spanSec">
+                                    <a onclick={handleQueryHistory}>Show History</a>
+                                </span>
+                            </template>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="6">
+                            <template if:true={showSoqlHistoryOpt}>
+                                <span class="spanSec">
+                                    <lightning-combobox name="soqlHistory"
+                                        variant="label-hidden"
+                                        label="SOQL History"
+                                        options={soqlHistoryOptions}
+                                        onchange={handleSoqlHistoryChange}
+                                        value={selectedSoqlHistory}
+                                        dropdown-alignment="left">
+                                    </lightning-combobox>
+                                </span>
+                            </template>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        <template if:true={hasRecords}>
+            <template if:true={recordList}>
+                <div class="slds-p-around_medium">
+                    <lightning-card>
+                        <div slot="title">
+                            <div class="slds-p-vertical_x-small slds-grid slds-grid_vertical-align-center">
+                                <span class="slds-col">
+                                    <h3>Total Records: {totalRecords}</h3>
+                                </span>
+                                <span class="slds-col ringProgress">
+                                    <lightning-progress-ring value={progressValue} variant={progressVariant}></lightning-progress-ring>
+                                </span>
+                            </div>
+                        </div>
+                        <lightning-button icon-name="utility:download" label="Download CSV" title="Download CSV File"
+                        onclick={downloadCSVFile} variant="brand" slot="actions" disabled={disableDownloadBtn} class="slds-m-left_x-small"></lightning-button>
+                        
+                        <div class="slds-scrollable_y"  style="height:15rem;">
+                            <lightning-datatable data={recordList} columns={recordColumns} key-field={recordKey} hide-checkbox-column></lightning-datatable>
+                        </div>
+                    </lightning-card>
+                </div>
+            </template>
+        </template>
+    </div>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+</template>

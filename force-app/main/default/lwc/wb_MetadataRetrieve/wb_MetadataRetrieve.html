@@ -1,0 +1,78 @@
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
+        <P class="p1">Choose the metadata types & items to retrieve package. [API: {apiValue}]</P>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                <div class="slds-box slds-p-around_medium">
+                    <div class="slds-form slds-form_horizontal m1Top">
+                        <lightning-combobox name="metadataType"
+                                label="Select Metadata Type"
+                                options={metadataTypeOptions}
+                                onchange={handleMetadataTypeChange}
+                                value={selectedMetadataType}
+                                spinner-active
+                                dropdown-alignment="left"
+                                required>
+                        </lightning-combobox>
+                    </div>
+                    <div class="slds-theme_default">
+                        <lightning-card title="Metadata Items">  
+                            <lightning-button icon-name="utility:add" label="Add Items" title="Add Items"
+                            onclick={handleAddPackage} variant="brand" slot="actions" disabled={disableAddPackageBtn} class="slds-m-left_x-small"></lightning-button>
+                            <div class="slds-scrollable_y"  style="height:20rem;">
+                                <lightning-datatable data={metadataItemsData} columns={metadataItemsColumn} key-field="ItemName" onrowselection={handleSelectedMetaItems} max-row-selection="1"></lightning-datatable> 
+                            </div>
+                        </lightning-card>
+                    </div>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                <div class="slds-box slds-p-around_medium">
+                    <div class="slds-theme_default">
+                        <lightning-card title="Package Items">  
+                            <lightning-button icon-name="utility:delete" label="Remove Items" title="Remove Items"
+                            onclick={handleRemovePackage} variant="brand" slot="actions" disabled={disableRemovePackageBtn} class="slds-m-left_x-small"></lightning-button>
+                            <div class="slds-scrollable_y"  style="height:19rem;">
+                                <lightning-datatable data={packageItemsData} columns={packageItemsColumn} key-field="ItemName" onrowselection={handleSelectedPackageItems}></lightning-datatable> 
+                            </div>
+                        </lightning-card>
+                    </div>
+                </div>
+                <div class="slds-box slds-p-around_medium">
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                            <span class="slds-grid slds-grid_vertical-align-center">
+                                <span class="slds-col">
+                                    <lightning-button icon-name="utility:file" label="Retrieve Package" title="Retrieve Package"
+                                    onclick={handleRetrievePackage} variant="brand" disabled={disableRetrievePackageBtn}></lightning-button>
+                                </span>
+                                <template if:true={showRingProgress}>
+                                    <span class="slds-col ringProgress">
+                                        <lightning-progress-ring value={progressValue} variant={progressVariant}></lightning-progress-ring>
+                                    </span>
+                                </template>
+                            </span>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                            <span class="slds-grid slds-grid_vertical-align-center">
+                                <span>
+                                    <lightning-button icon-name="utility:download" label="Download Package" title="Download Package"
+                                    onclick={handleDownloadPackage} variant="brand" disabled={disableDownloadPackageBtn}></lightning-button>
+                                </span>
+                            </span>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+</template>

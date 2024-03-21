@@ -1,0 +1,91 @@
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="slds-box slds-p-around_none slds-var-m-top_x-small slds-var-m-bottom_medium slds-m-horizontal_none">
+        <P class="p1">Upload metadata files to deploy package. [API: {apiValue}]</P>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                <div class="slds-box slds-p-around_medium">
+                    <lightning-input type="file" name="MetadataZipFile" label="Upload Metadata Zip Files" accept=".zip"  onchange={handleFilesChange}></lightning-input>
+                </div>
+                <div class="slds-box slds-p-around_medium boxMargin">
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="3" large-device-size="3">
+                            <lightning-input type="checkbox" label="Rollback on Error" name="RollbackOnError" checked={deployOptionsObj.rollbackOnError} onchange={handleInputChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="3" large-device-size="3">
+                            <lightning-input type="checkbox" label="Single Package" name="SinglePackage" checked={deployOptionsObj.singlePackage} onchange={handleInputChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="3" large-device-size="3">
+                            <lightning-input type="checkbox" label="Check Only" name="CheckOnly" checked={deployOptionsObj.checkOnly} onchange={handleInputChange}></lightning-input>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="3" large-device-size="3">
+                            <lightning-input type="checkbox" label="Ignore Warnings" name="IgnoreWarnings" checked={deployOptionsObj.ignoreWarnings} onchange={handleInputChange}></lightning-input>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <div class="slds-box slds-p-around_medium">
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                            <span>
+                                <lightning-combobox name="TestLevel" label="Test Level" options={testLevelOptions} value={deployOptionsObj.testLevel} onchange={handleTestLevelChange} dropdown-alignment="left"></lightning-combobox>
+                            </span>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                            <template if:true={showTestRun}>
+                                <span>
+                                    <lightning-input type="text" label="Test Class Names (coma-sep)" name="RunTests" value={deployOptionsObj.runTests} onchange={handleInputChange}></lightning-input>
+                                </span>
+                            </template>
+                        </lightning-layout-item>
+                    </lightning-layout> 
+                </div>
+                <div class="slds-box slds-p-around_medium boxMargin">
+                    <div class="scroller">
+                        <pre>{responseAsJson}</pre>
+                    </div>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                <div class="slds-box slds-p-around_medium">
+                    <div class="slds-theme_default">
+                        <lightning-card title="Package Items">
+                            <div class="slds-scrollable_y"  style="height:19rem;">
+                                <lightning-datatable hide-checkbox-column data={packageItemsData} columns={packageItemsColumn} key-field="ItemName" onrowselection={handleSelectedPackageItems}></lightning-datatable> 
+                            </div>
+                        </lightning-card>
+                    </div>
+                </div>
+                <div class="slds-box slds-p-around_medium">
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                            <span class="slds-grid slds-grid_vertical-align-center">
+                                <span class="slds-col">
+                                    <lightning-button icon-name="utility:file" label="Deploy Package" title="Deploy Package"
+                                    onclick={handleDeployPackage} variant="brand" disabled={disableDeployPackageBtn}></lightning-button>
+                                </span>
+                                <template if:true={showRingProgress}>
+                                    <span class="slds-col ringProgress">
+                                        <lightning-progress-ring value={progressValue} variant={progressVariant}></lightning-progress-ring>
+                                    </span>
+                                </template>
+                            </span>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+</template>

@@ -1,0 +1,11 @@
+.p1{
+    /*margin-left: 13px;*/
+    margin-top: 4px;
+    text-align: center;
+}
+.ringProgress{
+    transform: scale(0.9);
+}
+.m1Top{
+    margin-top: 24px;
+}

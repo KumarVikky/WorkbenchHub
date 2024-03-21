@@ -1,0 +1,42 @@
+.strong-text {
+    font-weight: bold;
+}
+.custom-box{
+    height: 115px;
+}
+.span-pos{
+    float: left;
+    margin-left: 11px;
+}
+.field-span-pos{
+    float: left;
+    margin-left: 4px;
+}
+.p1{
+    /*margin-left: 13px;*/
+    margin-top: 4px;
+    text-align: center;
+}
+.mr1{
+    margin-right: 15px;
+}
+.ringProgress{
+    margin-left: 10px;
+    transform: scale(0.6);
+    margin-top: 2px;
+}
+.multiLevelPos{
+    margin-right: 12px;
+}
+.resetBtn{
+    margin-top: 24px;
+    display: inline-block;
+}
+.m1Top{
+    margin-top: 50px;
+}
+.spanSec{
+    display: block;
+    margin-top: 4px;
+    overflow: initial;
+}

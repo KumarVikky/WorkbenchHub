@@ -1,0 +1,226 @@
+import { LightningElement, api, track } from 'lwc';
+import jszip from '@salesforce/resourceUrl/jszip';
+import jszipmin from '@salesforce/resourceUrl/jszipmin';
+import filesaver from '@salesforce/resourceUrl/filesaver';
+import jquery from '@salesforce/resourceUrl/jquery';
+import { loadScript } from 'lightning/platformResourceLoader';
+import metadataDeployRequest from '@salesforce/apex/WB_WorkbenchController.metadataDeployRequest';
+import checkAsyncDeployRequest from '@salesforce/apex/WB_WorkbenchController.checkAsyncDeployRequest';
+import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import LightningConfirm from 'lightning/confirm';
+
+export default class Wb_MetadataDeploy extends LightningElement {
+    @api userId;
+    @api customDomain;
+    @api apiValue;
+    @track packageItemsData;
+    fileData;
+    packageItemsColumn;
+    disableDeployPackageBtn = true;
+    showRingProgress = false;
+    progressVariant = 'active-step';
+    progressValue = 0;
+    _progressInterval;
+    isLoading = false;
+    deployAsyncResult;
+    deployOptionsObj;
+    responseAsJson;
+    showTestRun = false;
+
+    get testLevelOptions() {
+        return [
+            { label: 'NoTestRun', value: 'NoTestRun' },
+            { label: 'RunSpecifiedTests', value: 'RunSpecifiedTests' },
+            { label: 'RunLocalTests', value: 'RunLocalTests' },
+            { label: 'RunAllTestsInOrg', value: 'RunAllTestsInOrg' },
+        ];
+    }
+
+    connectedCallback(){
+        Promise.all([
+            loadScript(this, jszip),
+            loadScript(this, jszipmin),
+            loadScript(this, filesaver),
+            loadScript(this, jquery)
+        ]).then(() => console.log('Success: All Script Loaded.'))
+        .catch(error => console.log('Error:',error));
+        this.packageItemsColumn = [{label:'Name',fieldName:'itemName', type:'text'},
+                                   {label:'Type',fieldName:'itemType', type:'text'}];
+        this.packageItemsData = [];
+        //this.responseAsJson = JSON.stringify(this.blogdetail, null, 2);
+        this.deployOptionsObj = {'checkOnly':false, 'ignoreWarnings':false, 'rollbackOnError':true, 'singlePackage':true, 'testLevel':'NoTestRun', 'runTests':''};
+    }
+
+    handleTestLevelChange(event) {
+        this.deployOptionsObj.testLevel = event.detail.value;
+        if(this.deployOptionsObj.testLevel === 'RunSpecifiedTests'){
+            this.showTestRun = true;
+        }else{
+            this.showTestRun = false;
+        }
+    }
+    handleInputChange(event) {
+        let tagName = event.currentTarget.name;
+        if(tagName === 'CheckOnly'){
+            this.deployOptionsObj.checkOnly = event.currentTarget.checked;
+        }
+        if(tagName === 'IgnoreWarnings'){
+            this.deployOptionsObj.ignoreWarnings = event.currentTarget.checked;
+        }
+        if(tagName === 'RollbackOnError'){
+            this.deployOptionsObj.rollbackOnError = event.currentTarget.checked;
+        }
+        if(tagName === 'SinglePackage'){
+            this.deployOptionsObj.singlePackage = event.currentTarget.checked;
+        }
+        if(tagName === 'RunTests'){
+            this.deployOptionsObj.runTests = event.currentTarget.value;
+        }
+        //console.log('deployoption=',this.deployOptionsObj);
+    }
+
+    handleFilesChange(event){
+        const file = event.target.files[0];
+        let reader = new FileReader();
+        reader.onload = () => {
+            var base64 = reader.result.split(',')[1];
+            this.fileData = {
+                'filename': file.name,
+                'base64': base64
+            };
+            this.isLoading = true;
+            this.packageItemsData = [];
+            this.readPackageXML(this.fileData,this);
+        }
+        reader.readAsDataURL(file);
+    }
+    readPackageXML(fileVal,that){
+        const file = fileVal.base64;
+        // eslint-disable-next-line no-undef
+        JSZip.loadAsync(file, { base64: true }).then(function(zip) {
+            zip.file("package.xml").async("string").then(function(data) {
+                // eslint-disable-next-line no-undef
+                let xmlDoc = jQuery.parseXML(data);
+                that.createPackageItems(xmlDoc);
+            })
+        }).catch(function(err) {
+            console.error("Failed to open as ZIP file:", err);
+        })
+    }
+    createPackageItems(xmlDoc){
+        let packageItems = [...this.packageItemsData];
+        let x = xmlDoc.getElementsByTagName("types");
+        for (let i = 0; i < x.length; i++) {
+            let y = x[i].getElementsByTagName("name")[0].childNodes[0].nodeValue;
+            for (let j = 0; j < x[i].getElementsByTagName("members").length; j++) {
+                let z = x[i].getElementsByTagName("members")[j].childNodes[0].nodeValue;
+                packageItems.push({itemName: z, itemType: y});
+            }
+        }
+        this.packageItemsData = packageItems;
+        this.isLoading = false;
+        this.disableDeployPackageBtn = false;
+    }
+    handleDeployPackage(){
+        this.handleConfirmClick();
+    }
+    fetchMetadataDeployRequest(){
+        this.isLoading = true;
+        //console.log('file=>',JSON.stringify(this.fileData.base64));
+		metadataDeployRequest({ userId: this.userId, metadataZip: JSON.stringify(this.fileData.base64), apiVersion: this.apiValue, deployOptionsJson: JSON.stringify(this.deployOptionsObj)})
+		.then(result => {
+            this.isLoading = false;
+            if(result){
+                let response = JSON.parse(result);
+                console.log('response=>',response);
+                if(result !== null){
+                    this.deployAsyncResult = response;
+                    this.disableDeployPackageBtn = true;
+                    this.toggleProgress(true,'active-step');
+                    // eslint-disable-next-line @lwc/lwc/no-async-operation
+                    this._serverInterval = setInterval(() => {
+                        this.fetchDeployResult();
+                    }, 10000);
+                }  
+            }else{
+                this.showToastMessage('error', 'Some Error Occured.');
+            }
+		})
+		.catch(error => {
+            this.isLoading = false;
+			console.log('error',error);
+            this.showToastMessage('error', error);
+		})
+	}
+    fetchDeployResult(){
+        checkAsyncDeployRequest({ userId: this.userId, deployAsyncResultJSON: JSON.stringify(this.deployAsyncResult), apiVersion: this.apiValue})
+		.then(result => {
+            //console.log('result=>',result);
+            if(result !== '' && result !== null){
+                let response = JSON.parse(result);
+                this.responseAsJson = JSON.stringify(response, null, 2);
+                if(result.includes('error')){
+                    console.log('error',result);
+                    clearInterval(this._serverInterval);
+                    this.toggleProgress(false,'expired');
+                    this.showToastMessage('error', 'Some Error Occured.');
+                    this.disableDeployPackageBtn = false;
+                }else{
+                    clearInterval(this._serverInterval);
+                    this.toggleProgress(false,'base-autocomplete');
+                    this.disableDeployPackageBtn = false;
+                    this.showToastMessage('success', 'Selected packages deployed successfully.');
+                }
+            }else{
+                this.disableDeployPackageBtn = false;
+                clearInterval(this._serverInterval);
+                this.toggleProgress(false,'expired');
+                this.showToastMessage('error', 'Some Error Occured.');
+                console.log('error',result);
+            }
+		})
+		.catch(error => {
+			console.log('error',error);
+            this.showToastMessage('error', error);
+            clearInterval(this._serverInterval);
+            this.toggleProgress(false,'expired');
+            this.disableDeployPackageBtn = false;
+		})
+    }
+    showToastMessage(variant, message){
+        let title = (variant === 'error' ? 'Error:' : 'Success:');
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: title,
+                message : message,
+                variant: variant,
+            }),
+        );
+    }
+    toggleProgress(isProgressing, variant) {
+        let progressVal = (variant === 'base-autocomplete' || variant === 'warning' ? 100 : 50);
+        if(isProgressing === true){
+            this.showRingProgress = true;
+            // eslint-disable-next-line @lwc/lwc/no-async-operation
+            this._progressInterval = setInterval(() => {
+                this.progressValue = this.progressValue === 100 ? 0 : this.progressValue + 1;
+            }, 1000);
+        }else{
+            clearInterval(this._progressInterval);
+            this.progressVariant = variant;
+            this.progressValue = progressVal;
+            this.showRingProgress = false;
+        }
+    }
+    async handleConfirmClick() {
+        const result = await LightningConfirm.open({
+            message: 'Are you sure you want to deploy all packaged items?',
+            variant: 'header',
+            label: 'Confirmation',
+            theme:'info',
+        });
+        if(result){
+            this.fetchMetadataDeployRequest();
+        }
+    }
+}

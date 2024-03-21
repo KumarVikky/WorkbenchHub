@@ -1,0 +1,13 @@
+.rowIcon{
+    display: block;
+    margin-top: 24px;
+}
+.indexPos{
+    margin-top: 24px;
+    width: 30px;
+    height: 30px;
+    border: var(--lwc-borderWidthThin,1px) solid var(--slds-g-color-border-base-1, var(--lwc-colorBorder,#D4D4D4));
+}
+.textColor{
+    color: #FF0000;
+}

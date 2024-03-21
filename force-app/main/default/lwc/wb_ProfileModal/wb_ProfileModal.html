@@ -1,0 +1,60 @@
+<template>
+    <lightning-modal-header label="Profile Details"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-var-p-around_small">
+            <div class="slds-box">
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="4" padding="around-small">
+                        <div align="center">
+                            <div class="name-initials">{nameInitials}</div>
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="8" padding="around-small">
+                        <div class="slds-scrollable slds-var-m-around_medium slds-list_horizontal slds-wrap">
+                            <table class="slds-table" role="grid">
+                               <thead>
+                                    <tr>
+                                        <th style="background:#f3eded;">Name</th>
+                                        <td>{name}</td>
+                                    </tr>
+                                    <tr>
+                                        <th style="background:#f3eded;">Nickname</th>
+                                        <td>{nickName}</td>
+                                    </tr>
+                                    <tr>
+                                        <th style="background:#f3eded;">Username</th>
+                                        <td>{userName}</td>
+                                    </tr>
+                                    <tr>
+                                        <th style="background:#f3eded;">Email</th>
+                                        <td>{emailId}</td>
+                                    </tr>
+                                    <tr>
+                                        <th style="background:#f3eded;">Phone</th>
+                                        <td>{phoneNumber}</td>
+                                    </tr>
+                                    <tr>
+                                        <th style="background:#f3eded;">User Id</th>
+                                        <td>{userId}</td>
+                                    </tr>
+                                    <tr>
+                                        <th style="background:#f3eded;">Organization Id</th>
+                                        <td>{organizationId}</td>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div class="slds-clearfix slds-var-m-top_small">
+            <span class="slds-float_right">
+                <lightning-button variant="brand" label="Close" class="slds-var-m-left_x-small" onclick={handleClose}>
+                </lightning-button>
+            </span>
+        </div>
+    </lightning-modal-footer>
+</template>
