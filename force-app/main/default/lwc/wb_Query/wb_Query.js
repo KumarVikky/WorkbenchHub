@@ -445,16 +445,17 @@ export default class Wb_Query extends LightningElement {
                                     res.RedirectURL = this.customDomain + '/' + res.Id;
                                 }
                                 for(const key in res){
-                                    if(key !== 'attributes' && typeof res[key] === 'object'){
-                                        this.getKeyValue(res[key], key, res, uniqueKey, this);
-                                    }else{
-                                        if(key !== 'RedirectURL'){
-                                            uniqueKey.add(key);
-                                        } 
+                                    if(key !== 'attributes'){
+                                        if(res[key] !== null && typeof res[key] === 'object'){
+                                            this.getKeyValue(res[key], key, res, uniqueKey, this);
+                                        }else{
+                                            if(key !== 'RedirectURL'){
+                                                uniqueKey.add(key);
+                                            } 
+                                        }
                                     }
                                 }
                             });
-                            
                             let columns = [];
                             for(let key of uniqueKey){
                                 if(key !== 'attributes'){
@@ -503,13 +504,15 @@ export default class Wb_Query extends LightningElement {
     }
     getKeyValue(jsonObj, ref, res, uniqueKey, that){
         for(const key in jsonObj){
-            if(key !== 'attributes' && typeof jsonObj[key] === 'object'){
-                that.getKeyValue(jsonObj[key], `${ref}.${key}`, res, uniqueKey, that);
-            }
-            else{
-                if(key !== 'attributes'){
-                    res[`${ref}.${key}`] = jsonObj[key];
-                    uniqueKey.add(`${ref}.${key}`);
+            if(key !== 'attributes'){
+                if(jsonObj[key] !== null && typeof jsonObj[key] === 'object'){
+                    that.getKeyValue(jsonObj[key], `${ref}.${key}`, res, uniqueKey, that);
+                }
+                else{
+                    if(key !== 'attributes'){
+                        res[`${ref}.${key}`] = jsonObj[key];
+                        uniqueKey.add(`${ref}.${key}`);
+                    }
                 }
             }
         }
