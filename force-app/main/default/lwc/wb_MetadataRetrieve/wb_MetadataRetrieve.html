@@ -23,7 +23,7 @@
                             <lightning-button icon-name="utility:add" label="Add Items" title="Add Items"
                             onclick={handleAddPackage} variant="brand" slot="actions" disabled={disableAddPackageBtn} class="slds-m-left_x-small"></lightning-button>
                             <div class="slds-scrollable_y"  style="height:20rem;">
-                                <lightning-datatable data={metadataItemsData} columns={metadataItemsColumn} key-field="ItemName" onrowselection={handleSelectedMetaItems} max-row-selection="1"></lightning-datatable> 
+                                <lightning-datatable data={metadataItemsData} columns={metadataItemsColumn} key-field="ItemName" onrowselection={handleSelectedMetaItems} max-row-selection="50"></lightning-datatable> 
                             </div>
                         </lightning-card>
                     </div>

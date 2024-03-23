@@ -437,16 +437,24 @@ export default class Wb_Query extends LightningElement {
                 if(result){
                     let response = JSON.parse(result);
                     //console.log('response',response);
-                    let objKey = [];
+                    let uniqueKey = new Set();
                     if(response.records){
                         if(response.records.length > 0){
                             response.records.forEach(res => {
-                                objKey = Object.keys(res);
                                 if('Id' in res){
                                     res.RedirectURL = this.customDomain + '/' + res.Id;
                                 }
+                                for(const key in res){
+                                    if(key !== 'attributes' && typeof res[key] === 'object'){
+                                        this.getKeyValue(res[key], key, res, uniqueKey, this);
+                                    }else{
+                                        if(key !== 'RedirectURL'){
+                                            uniqueKey.add(key);
+                                        } 
+                                    }
+                                }
                             });
-                            let uniqueKey = new Set(objKey);
+                            
                             let columns = [];
                             for(let key of uniqueKey){
                                 if(key !== 'attributes'){
@@ -491,6 +499,19 @@ export default class Wb_Query extends LightningElement {
                 console.log('error',error);
                 this.showToastMessage('error', error);
             })
+        }
+    }
+    getKeyValue(jsonObj, ref, res, uniqueKey, that){
+        for(const key in jsonObj){
+            if(key !== 'attributes' && typeof jsonObj[key] === 'object'){
+                that.getKeyValue(jsonObj[key], `${ref}.${key}`, res, uniqueKey, that);
+            }
+            else{
+                if(key !== 'attributes'){
+                    res[`${ref}.${key}`] = jsonObj[key];
+                    uniqueKey.add(`${ref}.${key}`);
+                }
+            }
         }
     }
     fetchRemainingRecords(nextBatchURL) {
