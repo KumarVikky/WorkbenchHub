@@ -90,6 +90,7 @@ export default class Wb_Query extends LightningElement {
             { label: 'Ends With', value: 'endsWith' },
             { label: 'Contains', value: 'contains' },
             { label: 'IN', value: 'in' },
+            { label: 'NOT IN', value: 'not-in' },
         ];
     }
     get nullSequenceOptions(){
@@ -401,6 +402,10 @@ export default class Wb_Query extends LightningElement {
             const valueInQuotes = filterByObj.selectedValue.split(',').map(i => "'" + i.trim() + "'").join(',');
             // eslint-disable-next-line no-useless-concat
             tempQuery = tempQuery + ' ' + 'WHERE' + ' ' + filterByObj.selectedField + ' ' + 'IN' + ' ' + '(' + valueInQuotes + ')';
+        }else if(filterByObj.selectedOperator === 'not-in'){
+            const valueInQuotes = filterByObj.selectedValue.split(',').map(i => "'" + i.trim() + "'").join(',');
+            // eslint-disable-next-line no-useless-concat
+            tempQuery = tempQuery + ' ' + 'WHERE' + ' ' + filterByObj.selectedField + ' ' + 'NOT IN' + ' ' + '(' + valueInQuotes + ')';
         }else{
             if(withoutQuoteType.includes(fieldType) || (filterByObj.selectedValue).toLowerCase().includes('null')){
                 // eslint-disable-next-line no-useless-concat
@@ -436,7 +441,7 @@ export default class Wb_Query extends LightningElement {
             .then(result => {
                 if(result){
                     let response = JSON.parse(result);
-                    //console.log('response',response);
+                    console.log('response',response);
                     let uniqueKey = new Set();
                     if(response.records){
                         if(response.records.length > 0){
@@ -448,10 +453,13 @@ export default class Wb_Query extends LightningElement {
                                     if(key !== 'attributes'){
                                         if(res[key] !== null && typeof res[key] === 'object'){
                                             this.getKeyValue(res[key], key, res, uniqueKey, this);
+                                            if(uniqueKey.has(key)){
+                                                uniqueKey.delete(key);
+                                            }
                                         }else{
                                             if(key !== 'RedirectURL'){
                                                 uniqueKey.add(key);
-                                            } 
+                                            }
                                         }
                                     }
                                 }
