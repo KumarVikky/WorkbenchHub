@@ -130,6 +130,10 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
                     const valueInQuotes = item.selectedValue.split(',').map(i => "'" + i.trim() + "'").join(',');
                     // eslint-disable-next-line no-useless-concat
                     whereClause = whereClause + item.selectedField + ' ' + 'IN' + ' ' + '(' + valueInQuotes + ')';
+                }else if(item.selectedOperator === 'not-in'){
+                    const valueInQuotes = item.selectedValue.split(',').map(i => "'" + i.trim() + "'").join(',');
+                    // eslint-disable-next-line no-useless-concat
+                    whereClause = whereClause + item.selectedField + ' ' + 'NOT IN' + ' ' + '(' + valueInQuotes + ')';
                 }else{
                     if(withoutQuoteType.includes(fieldType) || (item.selectedValue).toLowerCase().includes('null')){
                         // eslint-disable-next-line no-useless-concat

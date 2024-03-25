@@ -343,4 +343,23 @@ public class WB_WorkbenchController {
         }                
         return response;  
     }
+    @AuraEnabled(cacheable=false)
+    public static String metadataQuickDeployRequest(String userId, String recentValidationId, String apiVersion){
+        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        Map<String,String> params = new Map<String,String>();
+        params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+        params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+        params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        String response = null;
+        try{
+            response = WB_DeployMetaData.deployRecentValidationFile(recentValidationId, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
+ 		}catch(Exception e){
+            if(e.getMessage().contains('INVALID_SESSION_ID')){
+                WB_RenewToken renewServ = new WB_RenewToken();
+                String newAccessToken = (String) renewServ.executeService(renewServ,params);
+                response = WB_DeployMetaData.deployRecentValidationFile(recentValidationId, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
+            }
+        }                
+        return response;  
+    }
 }

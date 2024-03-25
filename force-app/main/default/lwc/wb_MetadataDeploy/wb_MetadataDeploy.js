@@ -6,6 +6,7 @@ import jquery from '@salesforce/resourceUrl/jquery';
 import { loadScript } from 'lightning/platformResourceLoader';
 import metadataDeployRequest from '@salesforce/apex/WB_WorkbenchController.metadataDeployRequest';
 import checkAsyncDeployRequest from '@salesforce/apex/WB_WorkbenchController.checkAsyncDeployRequest';
+import metadataQuickDeployRequest from '@salesforce/apex/WB_WorkbenchController.metadataQuickDeployRequest';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import LightningConfirm from 'lightning/confirm';
 
@@ -26,6 +27,11 @@ export default class Wb_MetadataDeploy extends LightningElement {
     deployOptionsObj;
     responseAsJson;
     showTestRun = false;
+    showValidateBtn = false;
+    disableValidatePackageBtn = false;
+    disableQuickDeployBtn = true;
+    disableValidatePackageBtn = true;
+    validationId;
 
     get testLevelOptions() {
         return [
@@ -63,6 +69,11 @@ export default class Wb_MetadataDeploy extends LightningElement {
         let tagName = event.currentTarget.name;
         if(tagName === 'CheckOnly'){
             this.deployOptionsObj.checkOnly = event.currentTarget.checked;
+            if(this.deployOptionsObj.checkOnly){
+                this.showValidateBtn = true;
+            }else{
+                this.showValidateBtn = false;
+            }
         }
         if(tagName === 'IgnoreWarnings'){
             this.deployOptionsObj.ignoreWarnings = event.currentTarget.checked;
@@ -120,30 +131,35 @@ export default class Wb_MetadataDeploy extends LightningElement {
         this.packageItemsData = packageItems;
         this.isLoading = false;
         this.disableDeployPackageBtn = false;
+        this.disableValidatePackageBtn = false;
     }
     handleDeployPackage(){
         this.handleConfirmClick();
     }
     fetchMetadataDeployRequest(){
         this.isLoading = true;
-        //console.log('file=>',JSON.stringify(this.fileData.base64));
-		metadataDeployRequest({ userId: this.userId, metadataZip: JSON.stringify(this.fileData.base64), apiVersion: this.apiValue, deployOptionsJson: JSON.stringify(this.deployOptionsObj)})
+        //console.log('file=>',this.fileData.base64);
+		metadataDeployRequest({ userId: this.userId, metadataZip: this.fileData.base64, apiVersion: this.apiValue, deployOptionsJson: JSON.stringify(this.deployOptionsObj)})
 		.then(result => {
             this.isLoading = false;
             if(result){
                 let response = JSON.parse(result);
                 console.log('response=>',response);
-                if(result !== null){
+                if(response.id !== null){
                     this.deployAsyncResult = response;
                     this.disableDeployPackageBtn = true;
                     this.toggleProgress(true,'active-step');
                     // eslint-disable-next-line @lwc/lwc/no-async-operation
                     this._serverInterval = setInterval(() => {
-                        this.fetchDeployResult();
+                        if(this.deployOptionsObj.checkOnly){
+                            this.fetchValidateResult();
+                        }else{
+                            this.fetchDeployResult();
+                        }
                     }, 10000);
-                }  
-            }else{
-                this.showToastMessage('error', 'Some Error Occured.');
+                }else{
+                    this.showToastMessage('error', 'Some Error Occured.');
+                } 
             }
 		})
 		.catch(error => {
@@ -159,24 +175,25 @@ export default class Wb_MetadataDeploy extends LightningElement {
             if(result !== '' && result !== null){
                 let response = JSON.parse(result);
                 this.responseAsJson = JSON.stringify(response, null, 2);
-                if(result.includes('error')){
-                    console.log('error',result);
+                if(response.errorMessage !== null){
                     clearInterval(this._serverInterval);
                     this.toggleProgress(false,'expired');
                     this.showToastMessage('error', 'Some Error Occured.');
                     this.disableDeployPackageBtn = false;
+                    this.disableValidatePackageBtn = false;
                 }else{
                     clearInterval(this._serverInterval);
                     this.toggleProgress(false,'base-autocomplete');
                     this.disableDeployPackageBtn = false;
+                    this.disableValidatePackageBtn = false;
                     this.showToastMessage('success', 'Selected packages deployed successfully.');
                 }
             }else{
                 this.disableDeployPackageBtn = false;
+                this.disableValidatePackageBtn = false;
                 clearInterval(this._serverInterval);
                 this.toggleProgress(false,'expired');
                 this.showToastMessage('error', 'Some Error Occured.');
-                console.log('error',result);
             }
 		})
 		.catch(error => {
@@ -187,6 +204,63 @@ export default class Wb_MetadataDeploy extends LightningElement {
             this.disableDeployPackageBtn = false;
 		})
     }
+    fetchValidateResult(){
+        checkAsyncDeployRequest({ userId: this.userId, deployAsyncResultJSON: JSON.stringify(this.deployAsyncResult), apiVersion: this.apiValue})
+		.then(result => {
+            if(result !== '' && result !== null){
+                let response = JSON.parse(result);
+                this.responseAsJson = JSON.stringify(response, null, 2);
+                if(response.errorMessage !== null){
+                    clearInterval(this._serverInterval);
+                    this.toggleProgress(false,'expired');
+                    this.showToastMessage('error', 'Some Error Occured.');
+                }else{
+                    clearInterval(this._serverInterval);
+                    this.toggleProgress(false,'base-autocomplete');
+                    this.showToastMessage('success', 'Selected packages validated successfully.');
+                    this.disableQuickDeployBtn = false;
+                    this.disableValidatePackageBtn = true;
+                }
+            }else{
+                clearInterval(this._serverInterval);
+                this.toggleProgress(false,'expired');
+                this.showToastMessage('error', 'Some Error Occured.');
+            }
+		})
+		.catch(error => {
+			console.log('error',error);
+            this.showToastMessage('error', error);
+            clearInterval(this._serverInterval);
+            this.toggleProgress(false,'expired');
+		})
+    }
+    quickDeployRequest(){
+        this.isLoading = true;
+        let quickDeployOption = JSON.parse(JSON.stringify(this.deployOptionsObj));
+        quickDeployOption.checkOnly = false;
+        metadataDeployRequest({ userId: this.userId, metadataZip: this.fileData.base64, apiVersion: this.apiValue, deployOptionsJson: JSON.stringify(quickDeployOption)})
+		.then(result => {
+            this.isLoading = false;
+            if(result){
+                let response = JSON.parse(result);
+                console.log('response=>',response);
+                if(response.id !== null){
+                    this.toggleProgress(true,'active-step');
+                    // eslint-disable-next-line @lwc/lwc/no-async-operation
+                    this._serverInterval = setInterval(() => {
+                        this.fetchDeployResult();
+                    }, 10000);
+                }else{
+                    this.showToastMessage('error', 'Some Error Occured.');
+                }
+            }
+		})
+		.catch(error => {
+            this.isLoading = false;
+			console.log('error',error);
+            this.showToastMessage('error', error);
+		})
+	}
     showToastMessage(variant, message){
         let title = (variant === 'error' ? 'Error:' : 'Success:');
         this.dispatchEvent(
