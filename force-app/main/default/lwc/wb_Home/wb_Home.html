@@ -1,6 +1,9 @@
 <template>
     <template if:true={hasUserToken}>
         <div class="slds-grid slds-wrap">
+            <div class="slds-col">
+                <c-wb_-show-notifications></c-wb_-show-notifications>
+            </div>
             <div class="slds-col slds-size_12-of-12">
                 <span class="slds-var-m-bottom_xx-small spanRight"> 
                     <span>Logged in as: <abbr title={userName}><span class="spanColor">{userFullName}</span></abbr></span> &nbsp;&nbsp;
@@ -20,12 +23,12 @@
         </lightning-tab>
         <lightning-tab label="Metadata Retrieve" value="two">
             <template if:true={hasUserToken}>
-                <c-wb_-metadata-retrieve user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-metadata-retrieve>
+                <c-wb_-metadata-retrieve user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-metadata-retrieve>
             </template>
         </lightning-tab>
         <lightning-tab label="Metadata Deploy" value="three">
             <template if:true={hasUserToken}>
-                <c-wb_-metadata-deploy user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-metadata-deploy>
+                <c-wb_-metadata-deploy user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-metadata-deploy>
             </template>
         </lightning-tab>
     </lightning-tabset>

@@ -43,24 +43,15 @@
                 </div>
                 <div class="slds-box slds-p-around_medium">
                     <lightning-layout multiple-rows>
-                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
-                            <span class="slds-grid slds-grid_vertical-align-center">
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                            <span class="slds-grid slds-wrap">
                                 <span class="slds-col">
                                     <lightning-button icon-name="utility:file" label="Retrieve Package" title="Retrieve Package"
                                     onclick={handleRetrievePackage} variant="brand" disabled={disableRetrievePackageBtn}></lightning-button>
-                                </span>
-                                <template if:true={showRingProgress}>
-                                    <span class="slds-col ringProgress">
-                                        <lightning-progress-ring value={progressValue} variant={progressVariant}></lightning-progress-ring>
+                                    <span class="mobile_btn_pos">
+                                        <lightning-button icon-name="utility:download" label="Download Package" title="Download Package"
+                                        onclick={handleDownloadPackage} variant="brand" disabled={disableDownloadPackageBtn} class="slds-m-left_medium"></lightning-button>
                                     </span>
-                                </template>
-                            </span>
-                        </lightning-layout-item>
-                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
-                            <span class="slds-grid slds-grid_vertical-align-center">
-                                <span>
-                                    <lightning-button icon-name="utility:download" label="Download Package" title="Download Package"
-                                    onclick={handleDownloadPackage} variant="brand" disabled={disableDownloadPackageBtn}></lightning-button>
                                 </span>
                             </span>
                         </lightning-layout-item>

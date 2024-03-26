@@ -1,0 +1,20 @@
+<template>
+    <template if:true={hasNotify}>
+        <div class="slds-region_narrow">
+            <div class="slds-is-absolute container">
+                <div class="slds-notify_container slds-is-relative">
+                    <div class={notification.headerClass} role="status">
+                        <span class="slds-assistive-text">{notification.headerMessage}</span>
+                        <span class="slds-icon_container slds-icon-utility-success slds-var-m-right_small slds-no-flex slds-align-top">
+                            <lightning-icon icon-name={notification.iconName} alternative-text="icon"
+                                styleclass="slds-icon slds-icon_small" variant="inverse" size="small"></lightning-icon>
+                        </span>
+                        <div>
+                            <h2 class="slds-text-heading_small txtContent">{notification.message}</h2>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</template>

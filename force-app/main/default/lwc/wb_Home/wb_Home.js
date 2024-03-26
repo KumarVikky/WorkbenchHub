@@ -162,5 +162,17 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
         });
         console.log(result);
     }
+    showNotification(event){
+        let data = event.detail;
+        if(data.message != null && data.type != null){
+            this.template.querySelector("c-wb_-show-notifications").showNotification(data.type, data.message);
+        }
+    }
+    hideNotification(event){
+        let data = event.detail;
+        if(data === 'close'){
+            this.template.querySelector("c-wb_-show-notifications").hideNotification();
+        }
+    }
     
 }

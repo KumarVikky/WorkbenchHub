@@ -1,0 +1,12 @@
+.container{
+    margin-left: 30%;
+}
+.txtContent{
+    display: inline list-item;
+}
+@media only screen and (max-width: 600px) {
+    .container{
+        margin-left: 0px;
+        width: 92%;
+    }
+}

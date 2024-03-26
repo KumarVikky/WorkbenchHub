@@ -30,9 +30,6 @@ export default class Wb_MetadataRetrieve extends LightningElement {
     retrieveAsyncResult;
     metaDataRetrieveZip;
     disableDownloadPackageBtn = true;
-    progressVariant = 'active-step';
-    progressValue = 0;
-    showRingProgress = false;
     _progressInterval;
     _serverInterval;
 
@@ -201,6 +198,7 @@ export default class Wb_MetadataRetrieve extends LightningElement {
 	}
     fetchMetadataRetrieveRequest(){
         this.isLoading = true;
+        this.showNotification('info','Retrieve request initiated, please wait!.');
 		metadataRetrieveRequest({ userId: this.userId, selectedPackageJSON: JSON.stringify(this.packageItemsData), apiVersion: this.apiValue})
 		.then(result => {
             this.isLoading = false;
@@ -211,7 +209,6 @@ export default class Wb_MetadataRetrieve extends LightningElement {
                     this.disableDownloadPackageBtn = true;
                     //this.fetchMetadataRetrieveResult();
                     this.disableRetrievePackageBtn = true;
-                    this.toggleProgress(true,'active-step');
                     // eslint-disable-next-line @lwc/lwc/no-async-operation
                     this._serverInterval = setInterval(() => {
                         this.fetchRetrieveResult();
@@ -229,7 +226,7 @@ export default class Wb_MetadataRetrieve extends LightningElement {
 	}
     fetchMetadataRetrieveResult(){ //Not in use now
         this.disableRetrievePackageBtn = true;
-        this.toggleProgress(true,'active-step');
+        this.showNotification('info','Fetching retrieve response, please wait!.');
 		checkAsyncRetrieveRequest({ userId: this.userId, retrieveAsyncResultJSON: JSON.stringify(this.retrieveAsyncResult), apiVersion: this.apiValue})
 		.then(result => {
             //console.log('result=>',result);
@@ -239,12 +236,12 @@ export default class Wb_MetadataRetrieve extends LightningElement {
             }else{
                 if(result.includes('error')){
                     this.metaDataRetrieveZip = null;
-                    this.toggleProgress(false,'expired');
+                    this.hideNotification();
                     this.showToastMessage('error', 'Some Error Occured.');
                     this.disableRetrievePackageBtn = false;
                 }else{
                     this.metaDataRetrieveZip = result;
-                    this.toggleProgress(false,'base-autocomplete');
+                    this.hideNotification();
                     this.disableDownloadPackageBtn = false;
                     this.disableRetrievePackageBtn = false;
                 }
@@ -253,24 +250,25 @@ export default class Wb_MetadataRetrieve extends LightningElement {
 		.catch(error => {
 			console.log('error',error);
             this.showToastMessage('error', error);
-            this.toggleProgress(false,'expired');
+            this.hideNotification();
             this.disableRetrievePackageBtn = false;
 		})
 	}
     fetchRetrieveResult(){
+        this.showNotification('info','Fetching retrieve response, please wait!.');
         checkAsyncRetrieveRequest({ userId: this.userId, retrieveAsyncResultJSON: JSON.stringify(this.retrieveAsyncResult), apiVersion: this.apiValue})
 		.then(result => {
             if(result !== '' && result !== null){
                 if(result.includes('error')){
                     this.metaDataRetrieveZip = null;
                     clearInterval(this._serverInterval);
-                    this.toggleProgress(false,'expired');
+                    this.hideNotification();
                     this.showToastMessage('error', 'Some Error Occured.');
                     this.disableRetrievePackageBtn = false;
                 }else{
                     clearInterval(this._serverInterval);
                     this.metaDataRetrieveZip = result;
-                    this.toggleProgress(false,'base-autocomplete');
+                    this.hideNotification();
                     this.disableDownloadPackageBtn = false;
                     this.disableRetrievePackageBtn = false;
                     this.showToastMessage('success', 'Selected packages retrieved successfully.');
@@ -279,7 +277,7 @@ export default class Wb_MetadataRetrieve extends LightningElement {
                 this.disableDownloadPackageBtn = false;
                 this.disableRetrievePackageBtn = false;
                 clearInterval(this._serverInterval);
-                this.toggleProgress(false,'expired');
+                this.hideNotification();
                 this.showToastMessage('error', 'Some Error Occured.');
             }
 		})
@@ -287,7 +285,7 @@ export default class Wb_MetadataRetrieve extends LightningElement {
 			console.log('error',error);
             this.showToastMessage('error', error);
             clearInterval(this._serverInterval);
-            this.toggleProgress(false,'expired');
+            this.hideNotification();
             this.disableRetrievePackageBtn = false;
 		})
     }
@@ -301,19 +299,18 @@ export default class Wb_MetadataRetrieve extends LightningElement {
             }),
         );
     }
-    toggleProgress(isProgressing, variant) {
-        let progressVal = (variant === 'base-autocomplete' || variant === 'warning' ? 100 : 50);
-        if(isProgressing === true){
-            this.showRingProgress = true;
-            // eslint-disable-next-line @lwc/lwc/no-async-operation
-            this._progressInterval = setInterval(() => {
-                this.progressValue = this.progressValue === 100 ? 0 : this.progressValue + 1;
-            }, 1000);
-        }else{
-            clearInterval(this._progressInterval);
-            this.progressVariant = variant;
-            this.progressValue = progressVal;
-            this.showRingProgress = false;
-        }
+    showNotification(type, message){
+        let data = {'type':type, 'message':message};
+        const eve = new CustomEvent('shownotification',{
+            detail:data
+        })
+        this.dispatchEvent(eve);
+    }
+    hideNotification(){
+        let data = 'close';
+        const eve = new CustomEvent('hidenotification',{
+            detail:data
+        })
+        this.dispatchEvent(eve);
     }
 }
