@@ -13,9 +13,12 @@
     border: solid var(--lwc-borderWidthThin, 1px) #eee;
 }
 @media only screen and (max-width: 600px) {
-    .mobile_btn_pos {
-      margin-right: 4px;
-      margin-top: 3px;
-      display: inline-block;
+    .btn2_pos {
+        margin-right: 4px;
+        margin-top: 3px;
+        display: inline-block;
+    }
+    .btn1_pos {
+          margin-left: 1rem;
     }
 }

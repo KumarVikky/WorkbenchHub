@@ -46,9 +46,11 @@
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
                             <span class="slds-grid slds-wrap">
                                 <span class="slds-col">
-                                    <lightning-button icon-name="utility:file" label="Retrieve Package" title="Retrieve Package"
-                                    onclick={handleRetrievePackage} variant="brand" disabled={disableRetrievePackageBtn}></lightning-button>
-                                    <span class="mobile_btn_pos">
+                                    <span class="btn1_pos">
+                                        <lightning-button icon-name="utility:file" label="Retrieve Package" title="Retrieve Package"
+                                        onclick={handleRetrievePackage} variant="brand" disabled={disableRetrievePackageBtn}></lightning-button>
+                                    </span>
+                                    <span class="btn2_pos">
                                         <lightning-button icon-name="utility:download" label="Download Package" title="Download Package"
                                         onclick={handleDownloadPackage} variant="brand" disabled={disableDownloadPackageBtn} class="slds-m-left_medium"></lightning-button>
                                     </span>

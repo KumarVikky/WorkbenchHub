@@ -74,9 +74,11 @@
                                 </template>
                                 <template if:true={showValidateBtn}>
                                     <span class="slds-col">
-                                        <lightning-button icon-name="utility:file" label="Validate Package" title="Validate Package"
-                                        onclick={handleDeployPackage} variant="brand" disabled={disableValidatePackageBtn}></lightning-button>
-                                        <span class="mobile_btn_pos">
+                                        <span class="btn1_pos">
+                                            <lightning-button icon-name="utility:file" label="Validate Package" title="Validate Package"
+                                            onclick={handleDeployPackage} variant="brand" disabled={disableValidatePackageBtn}></lightning-button>
+                                        </span>
+                                        <span class="btn2_pos">
                                             <lightning-button icon-name="utility:file" label="Quick Deploy" title="Quick Deploy"
                                             onclick={quickDeployRequest} variant="brand" disabled={disableQuickDeployBtn} class="slds-m-left_medium"></lightning-button>
                                         </span>
