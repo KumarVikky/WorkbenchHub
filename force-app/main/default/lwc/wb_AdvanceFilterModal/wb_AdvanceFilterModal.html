@@ -9,7 +9,7 @@
         <div class="slds-var-p-around_small">
             <div class="slds-box">
                 <template if:true={hasErrorMsg}>
-                    <div class="slds-align_absolute-center textColor">{errorMsg}</div>
+                    <div class="slds-align_absolute-center slds-text-heading_small slds-m-bottom_xxx-small textColor">{errorMsg}</div>
                 </template>
                 <template iterator:it={selectedMultiFilterByList}>
                     <div key={it.value.id}>
@@ -71,7 +71,17 @@
                 </template>
             </div>
             <div class="slds-box">
-                <lightning-radio-group name="radioGroup" label="Filter Condition" options={filterConditionOption} value={selectedFilterConditionValue} type="radio" onchange={handleFilterCondition}></lightning-radio-group>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                    <lightning-radio-group name="radioGroup" label="Filter Condition" options={filterConditionOption}
+                        value={selectedFilterConditionValue} type="radio" onchange={handleFilterCondition}></lightning-radio-group>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                    <template if:true={hasCustomCondition}>
+                        <lightning-input type="text" name="customConditionValue" label="Custom Condition" placeholder="(1 AND 3) OR 2 ..." value={customConditionValue} onchange={handleCustomCondition}></lightning-input>
+                    </template>
+                </lightning-layout-item>
+            </lightning-layout>
             </div>
         </div>
     </lightning-modal-body>

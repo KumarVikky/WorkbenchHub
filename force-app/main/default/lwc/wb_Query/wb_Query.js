@@ -34,6 +34,7 @@ export default class Wb_Query extends LightningElement {
     previousSelectedMultiFilter;
     previousSelectedMultiSort;
     previousSelectedCondition;
+    previousCustomConditionValue;
     queryString;
     multiFilterString;
     multiSortString
@@ -185,6 +186,8 @@ export default class Wb_Query extends LightningElement {
         this.selectedSortBy = {selectedField : '', selectedOperator : 'ASC'};
         this.previousSelectedMultiFilter = [{id: 1, selectedField : '', selectedOperator : '=', selectedValue : ''}];
         this.previousSelectedMultiSort = [{id: 1, selectedField : '', selectedOperator : 'ASC'}];
+        this.previousSelectedCondition = '';
+        this.previousCustomConditionValue = '';
         this.multiFilterIcon = 'utility:add';
         this.multiSortIcon = 'utility:add';
         this.multiSortString = undefined;
@@ -203,6 +206,7 @@ export default class Wb_Query extends LightningElement {
                 fieldTypeMap: this.fieldTypeMap,
                 previousSelectedMultiFilter: this.previousSelectedMultiFilter,
                 previousSelectedCondition: this.previousSelectedCondition,
+                previousCustomConditionValue: this.previousCustomConditionValue
             });
             if(result && result.whereString && result.whereString !== ''){
                 this.multiFilterString = result.whereString
@@ -212,6 +216,7 @@ export default class Wb_Query extends LightningElement {
                 this.multiFilterIcon = 'utility:check';
                 this.previousSelectedMultiFilter = result.allSelectedMultiFilter;  
                 this.previousSelectedCondition = result.selectedCondition;
+                this.previousCustomConditionValue = result.selectedConditionValue;
             }
         }else{
             this.showToastMessage('warning', 'Please select fields to apply.');
@@ -441,7 +446,7 @@ export default class Wb_Query extends LightningElement {
             .then(result => {
                 if(result){
                     let response = JSON.parse(result);
-                    console.log('response',response);
+                    //console.log('response',response);
                     let uniqueKey = new Set();
                     if(response.records){
                         if(response.records.length > 0){

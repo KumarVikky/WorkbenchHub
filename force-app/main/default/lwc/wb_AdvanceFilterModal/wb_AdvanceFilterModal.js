@@ -10,17 +10,21 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
     @api fieldTypeMap;
     @api previousSelectedMultiFilter;
     @api previousSelectedCondition;
+    @api previousCustomConditionValue;
     @track selectedMultiFilterByList;
     @track hasErrorMsg = false;
     errorMsg;
     disableMultiFilterOpt;
     selectedFilterConditionValue;
+    customConditionValue;
+    hasCustomCondition = false;
     @wire(CurrentPageReference) pageRef;
 
     get filterConditionOption() {
         return [
             { label: 'AND', value: 'AND' },
             { label: 'OR', value: 'OR' },
+            { label: 'Custom', value: 'Custom' }
         ];
     }
 
@@ -32,6 +36,10 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
         }
         if(this.previousSelectedCondition && this.previousSelectedCondition !== ''){
             this.selectedFilterConditionValue = this.previousSelectedCondition;
+            if(this.previousSelectedCondition === 'Custom' && this.previousCustomConditionValue !== ''){
+                this.customConditionValue = this.previousCustomConditionValue;
+                this.hasCustomCondition = true;
+            }
         }else{
             this.selectedFilterConditionValue = 'AND';
         }
@@ -68,6 +76,11 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
     }
     handleFilterCondition(event){
         this.selectedFilterConditionValue = event.target.value;
+        if(event.target.value === 'Custom'){
+            this.hasCustomCondition = true;
+        }else{
+            this.hasCustomCondition = false;
+        }
     }
     handleAddRow(){
         let activeRowLen = this.selectedMultiFilterByList.length;
@@ -87,6 +100,9 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
         this.handleReorderList();
         this.hasErrorMsg = false;
     }
+    handleCustomCondition(event){
+        this.customConditionValue = event.target.value;
+    }
     handleReorderList(){
         for(let item in this.selectedMultiFilterByList){
             if(this.selectedMultiFilterByList[item].id != null){
@@ -98,59 +114,88 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
         this.close('');
     }
     handleApply(){
-        let validate = this.handleInputValidation(this.selectedMultiFilterByList);
+        let validateInput = this.handleInputValidation(this.selectedMultiFilterByList);
         //console.log('validate',validate);
-        if(validate === true){
+        if(validateInput === true){
             this.hasErrorMsg = false;
             //console.log('whereString',this.generateFilterString(this.selectedMultiFilterByList));
-            let response = {whereString: this.generateFilterString(this.selectedMultiFilterByList), allSelectedMultiFilter: this.selectedMultiFilterByList, selectedCondition: this.selectedFilterConditionValue};
+            if(this.selectedFilterConditionValue === 'Custom'){
+                let validateCondition = this.validateCustomCondition(this.selectedMultiFilterByList, this.customConditionValue);
+                if(!validateCondition){
+                    this.errorMsg = 'Invalid condition, please correct!';
+                    this.hasErrorMsg = true;
+                    return;
+                }
+            }
+            let response = {whereString: this.generateFilterString(this.selectedMultiFilterByList), allSelectedMultiFilter: this.selectedMultiFilterByList, selectedCondition: this.selectedFilterConditionValue, selectedConditionValue: this.customConditionValue};
             this.close(response);
         }else{
-            this.errorMsg = 'Please fill all details.';
+            this.errorMsg = 'Please complete all details.';
             this.hasErrorMsg = true;
         }
     }
     generateFilterString(filterList){
         let whereClause = '';
+        let whereClauseTemp = '';
         let withoutQuoteType = ['boolean','double','currency','int','date','datetime'];
+        let conditionValue = this.customConditionValue;
+       
         if(filterList.length > 0){
             for(let item of filterList){
                 let fieldType = this.fieldTypeMap.get(item.selectedField);
-
                 if(item.selectedOperator === 'startsWith'){
                     // eslint-disable-next-line no-useless-concat
-                    whereClause = whereClause + item.selectedField + ' ' + 'LIKE' + ' \'' + item.selectedValue + '%' + '\'';
+                    let filterVal = item.selectedField + ' ' + 'LIKE' + ' \'' + item.selectedValue + '%' + '\'';
+                    whereClause = whereClause + filterVal;
+                    whereClauseTemp = filterVal;
                 }else if(item.selectedOperator === 'endsWith'){
                      // eslint-disable-next-line no-useless-concat
-                     whereClause = whereClause + item.selectedField + ' ' + 'LIKE' + ' \'' + '%' + item.selectedValue + '\'';
+                     let filterVal = item.selectedField + ' ' + 'LIKE' + ' \'' + '%' + item.selectedValue + '\'';
+                     whereClause = whereClause + filterVal;
+                     whereClauseTemp = filterVal;
                 }else if(item.selectedOperator === 'contains'){
                     // eslint-disable-next-line no-useless-concat
-                    whereClause = whereClause + item.selectedField + ' ' + 'LIKE' + ' \'' + '%' + item.selectedValue + '%' + '\'';
+                    let filterVal = item.selectedField + ' ' + 'LIKE' + ' \'' + '%' + item.selectedValue + '%' + '\'';
+                    whereClause = whereClause + filterVal;
+                    whereClauseTemp = filterVal;
                 }else if(item.selectedOperator === 'in'){
                     const valueInQuotes = item.selectedValue.split(',').map(i => "'" + i.trim() + "'").join(',');
                     // eslint-disable-next-line no-useless-concat
-                    whereClause = whereClause + item.selectedField + ' ' + 'IN' + ' ' + '(' + valueInQuotes + ')';
+                    let filterVal = item.selectedField + ' ' + 'IN' + ' ' + '(' + valueInQuotes + ')';
+                    whereClause = whereClause + filterVal;
+                    whereClauseTemp = filterVal;
                 }else if(item.selectedOperator === 'not-in'){
                     const valueInQuotes = item.selectedValue.split(',').map(i => "'" + i.trim() + "'").join(',');
+                    let filterVal = item.selectedField + ' ' + 'NOT IN' + ' ' + '(' + valueInQuotes + ')';
                     // eslint-disable-next-line no-useless-concat
-                    whereClause = whereClause + item.selectedField + ' ' + 'NOT IN' + ' ' + '(' + valueInQuotes + ')';
+                    whereClause = whereClause + filterVal;
+                    whereClauseTemp = filterVal;
                 }else{
                     if(withoutQuoteType.includes(fieldType) || (item.selectedValue).toLowerCase().includes('null')){
                         // eslint-disable-next-line no-useless-concat
-                        whereClause = whereClause + item.selectedField + ' ' + item.selectedOperator + ' ' + item.selectedValue; 
+                        let filterVal = item.selectedField + ' ' + item.selectedOperator + ' ' + item.selectedValue; 
+                        whereClause = whereClause + filterVal;
+                        whereClauseTemp = filterVal;
                     }else{
                         // eslint-disable-next-line no-useless-concat
-                        whereClause = whereClause + item.selectedField + ' ' + item.selectedOperator + ' \'' + item.selectedValue + '\'';
+                        let filterVal = item.selectedField + ' ' + item.selectedOperator + ' \'' + item.selectedValue + '\'';
+                        whereClause = whereClause + filterVal;
+                        whereClauseTemp = filterVal;
                     }
                 }
                 if(filterList[filterList.length - 1].id !== item.id){
                     if(this.selectedFilterConditionValue === 'AND'){
                         // eslint-disable-next-line no-useless-concat
                         whereClause = whereClause + ' ' + 'AND' + ' ';
-                    }else{
+                    }
+                    if(this.selectedFilterConditionValue === 'OR'){
                         // eslint-disable-next-line no-useless-concat
                         whereClause = whereClause + ' ' + 'OR' + ' ';
                     }
+                }
+                if(this.selectedFilterConditionValue === 'Custom' && conditionValue.includes(item.id)){
+                    conditionValue = conditionValue.replace(item.id, whereClauseTemp);
+                    whereClause = conditionValue.trim();
                 }
             }
         }
@@ -173,6 +218,30 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
             if(item.selectedField === '' || item.selectedOperator === '' || item.selectedValue === ''){
                 validate = false;
                 break;
+            }
+        }
+        return validate;
+    }
+    validateCustomCondition(filterList, conditionValue){
+        let validate = true;
+        if(conditionValue === undefined || conditionValue === ''){
+            validate = false;
+        }else{
+            let itemsNumInFilterSet = new Set();
+            for(let item of filterList){
+                itemsNumInFilterSet.add((item.id).toString());
+            }
+
+            let itemNumInCondition = conditionValue.match(/\d/g) || [];
+            let itemNumInConditionSet = new Set(itemNumInCondition);
+            const areBothSetsEqual = (a, b) => a.size === b.size && [...a].every(value => b.has(value));
+            validate = areBothSetsEqual(itemsNumInFilterSet, itemNumInConditionSet);
+
+            if(itemNumInCondition.length !== itemNumInConditionSet.size){
+                validate = false;
+            }
+            if(conditionValue.charAt(conditionValue.length - 1) !== ')' && isNaN(conditionValue.charAt(conditionValue.length - 1))){
+                validate = false;
             }
         }
         return validate;
