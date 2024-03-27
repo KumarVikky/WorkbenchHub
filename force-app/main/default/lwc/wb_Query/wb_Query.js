@@ -763,6 +763,7 @@ export default class Wb_Query extends LightningElement {
                 title: title,
                 message : message,
                 variant: variant,
+                mode: 'dismissible'
             }),
         );
     }

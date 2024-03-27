@@ -267,6 +267,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
                 title: title,
                 message : message,
                 variant: variant,
+                mode: 'dismissible'
             }),
         );
     }

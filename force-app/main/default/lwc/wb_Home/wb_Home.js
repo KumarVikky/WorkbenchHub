@@ -123,6 +123,7 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
                 title: title,
                 message : message,
                 variant: variant,
+                mode: 'dismissible'
             }),
         );
     }

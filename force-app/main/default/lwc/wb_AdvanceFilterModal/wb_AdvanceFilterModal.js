@@ -163,6 +163,7 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
                 title: title,
                 message : message,
                 variant: variant,
+                mode: 'dismissible'
             }),
         );
     }

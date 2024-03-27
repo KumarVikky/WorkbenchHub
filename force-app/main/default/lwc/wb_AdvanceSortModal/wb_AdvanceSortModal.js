@@ -109,6 +109,7 @@ export default class Wb_AdvanceSortModal extends LightningModal {
                 title: title,
                 message : message,
                 variant: variant,
+                mode: 'dismissible'
             }),
         );
     }
