@@ -9,7 +9,7 @@
         <div class="slds-var-p-around_small">
             <div class="slds-box">
                 <template if:true={hasErrorMsg}>
-                    <div class="slds-align_absolute-center textColor">{errorMsg}</div>
+                    <div class="slds-align_absolute-center slds-text-heading_small slds-m-bottom_xxx-small textColor">{errorMsg}</div>
                 </template>
                 <template iterator:it={selectedMultiSortByList}>
                     <div key={it.value.id}>
