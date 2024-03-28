@@ -243,6 +243,10 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
             if(conditionValue.charAt(conditionValue.length - 1) !== ')' && isNaN(conditionValue.charAt(conditionValue.length - 1))){
                 validate = false;
             }
+            let itemAlphaInCondition = (conditionValue.toUpperCase()).replace(/[^A-Za-z]/g, '');
+            if(!itemAlphaInCondition.includes('OR') && !itemAlphaInCondition.includes('AND')){
+                validate = false;
+            }
         }
         return validate;
     }
