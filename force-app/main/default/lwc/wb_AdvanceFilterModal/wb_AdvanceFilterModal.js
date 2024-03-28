@@ -247,7 +247,10 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
                     break;
                 }
             }
-
+            
+            if(!itemAlphaInCondition.includes('OR') && !itemAlphaInCondition.includes('AND')){
+                validate = false;
+            }
             if(itemNumInCondition.length !== itemNumInConditionSet.size){
                 validate = false;
             }
