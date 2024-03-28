@@ -20,12 +20,10 @@
                                 </span> 
                             </lightning-layout-item>
                             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="4" padding="horizontal-small">
-                                <span class="span-pos">
-                                    <label class="slds-form-element__label" for="multiFilterBy">Filter By</label>
-                                </span>
                                 <lightning-combobox data-id={it.value.id} name="multiFilterBy"
-                                    variant="label-hidden"
                                     label="Filter By"
+                                    field-level-help="Multi level filter."
+                                    placeholder="Select field ..."
                                     options={multiFilterByFieldOptions}
                                     onchange={handleMultiFilterByFields}
                                     value={it.value.selectedField}
@@ -35,12 +33,8 @@
                                 </lightning-combobox>
                             </lightning-layout-item>
                             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="3" padding="horizontal-small">
-                                <span class="span-pos">
-                                    <label class="slds-form-element__label" for="multiFilterByFunction">Operator</label>
-                                </span>
                                 <lightning-combobox data-id={it.value.id} name="multiFilterByFunction"
-                                    variant="label-hidden"
-                                    label="Function"
+                                    label="Operator"
                                     value={it.value.selectedOperator}
                                     options={multiFilterByOptions}
                                     onchange={handleMultiFilterByOption}
@@ -49,10 +43,7 @@
                                 </lightning-combobox>
                             </lightning-layout-item>
                             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="3" padding="horizontal-small">
-                                <span class="span-pos">
-                                    <label class="slds-form-element__label" for="multiFilterByValue">Value</label>
-                                </span>
-                                <lightning-input type="text" data-id={it.value.id} name="multiFilterByValue" variant="label-hidden" label="Value" value={it.value.selectedValue} disabled={disableMultiFilterOpt} onchange={handleMultiFilterByValue}></lightning-input>
+                                <lightning-input type="text" data-id={it.value.id} name="multiFilterByValue" label="Value" value={it.value.selectedValue} disabled={disableMultiFilterOpt} onchange={handleMultiFilterByValue}></lightning-input>
                             </lightning-layout-item>
                             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="1" padding="horizontal-small">
                                 <template if:true={it.first}>

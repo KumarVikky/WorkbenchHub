@@ -20,12 +20,10 @@
                                 </span> 
                             </lightning-layout-item>
                             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
-                                <span class="span-pos">
-                                    <label class="slds-form-element__label" for="multiSortBy">Sort By</label>
-                                </span>
                                 <lightning-combobox data-id={it.value.id} name="multiSortBy"
-                                    variant="label-hidden"
                                     label="Sort By"
+                                    field-level-help="Multi level sort."
+                                    placeholder="Select field ..."
                                     options={multiSortByFieldOptions}
                                     onchange={handleMultiSortByFields}
                                     value={it.value.selectedField}
@@ -35,12 +33,8 @@
                                 </lightning-combobox>
                             </lightning-layout-item>
                             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
-                                <span class="span-pos">
-                                    <label class="slds-form-element__label" for="multiSortByFunction">Operator</label>
-                                </span>
                                 <lightning-combobox data-id={it.value.id} name="multiSortByFunction"
-                                    variant="label-hidden"
-                                    label="Function"
+                                    label="Operator"
                                     value={it.value.selectedOperator}
                                     options={multiSortByOptions}
                                     onchange={handleMultiSortByOption}

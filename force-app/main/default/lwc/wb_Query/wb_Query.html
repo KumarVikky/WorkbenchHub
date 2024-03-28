@@ -42,12 +42,10 @@
                     </div>
                     <lightning-layout multiple-rows>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
-                            <span class="span-pos">
-                                <label class="slds-form-element__label" for="sortBy">Sort By</label>
-                            </span>
                             <lightning-combobox name="sortBy"
-                                variant="label-hidden"
                                 label="Sort By"
+                                field-level-help="Single level sort."
+                                placeholder="Select field ..."
                                 options={sortByFieldOptions}
                                 onchange={handleSortByFields}
                                 value={selectedSortBy.selectedField}
@@ -57,11 +55,7 @@
                             </lightning-combobox>
                         </lightning-layout-item>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="3" padding="horizontal-small">
-                            <span class="span-pos">
-                                <label class="slds-form-element__label" for="sortByOrder">Order</label>
-                            </span>
                             <lightning-combobox name="sortByOrder"
-                                variant="label-hidden"
                                 label="Order"
                                 options={sortOptions}
                                 value={selectedSortBy.selectedOperator}
@@ -70,11 +64,7 @@
                             </lightning-combobox>
                         </lightning-layout-item>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="4" padding="horizontal-small">
-                            <span class="span-pos">
-                                <label class="slds-form-element__label" for="nullSequence">Null Sequence</label>
-                            </span>
                             <lightning-combobox name="nullSequence"
-                                variant="label-hidden"
                                 label="Null Sequence"
                                 options={nullSequenceOptions}
                                 onchange={handleNullSequence}
@@ -91,12 +81,10 @@
                     </div>
                     <lightning-layout multiple-rows>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
-                            <span class="span-pos">
-                                <label class="slds-form-element__label" for="filterBy">Filter By</label>
-                            </span>
                             <lightning-combobox name="filterBy"
-                                variant="label-hidden"
                                 label="Filter By"
+                                placeholder="Select field ..."
+                                field-level-help="Single level filter."
                                 options={filterByFieldOptions}
                                 onchange={handleFilterByFields}
                                 value={selectedFilterBy.selectedField}
@@ -106,12 +94,8 @@
                             </lightning-combobox>
                         </lightning-layout-item>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="3" padding="horizontal-small">
-                            <span class="span-pos">
-                                <label class="slds-form-element__label" for="filterByFunction">Operator</label>
-                            </span>
                             <lightning-combobox name="filterByFunction"
-                                variant="label-hidden"
-                                label="Function"
+                                label="Operator"
                                 value={selectedFilterBy.selectedOperator}
                                 options={filterByOptions}
                                 onchange={handleFilterByOption}
@@ -120,20 +104,14 @@
                             </lightning-combobox>
                         </lightning-layout-item>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="4" padding="horizontal-small">
-                            <span class="span-pos">
-                                <label class="slds-form-element__label" for="filterByValue">Value</label>
-                            </span>
-                            <lightning-input type="text" name="filterByValue" variant="label-hidden" label="Value" value={selectedFilterBy.selectedValue} disabled={disableFilterOpt} onchange={handleFilterByValue}></lightning-input>
+                            <lightning-input type="text" name="filterByValue" label="Value" value={selectedFilterBy.selectedValue} disabled={disableFilterOpt} onchange={handleFilterByValue}></lightning-input>
                         </lightning-layout-item>
                     </lightning-layout>
                 </div>
                 <div class="slds-box slds-p-around_medium">
                     <lightning-layout multiple-rows>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="5" padding="horizontal-small">
-                            <span class="span-pos">
-                                <label class="slds-form-element__label" for="maxRecord">Max Records:</label>
-                            </span>
-                            <lightning-input type="number" name="maxRecord" variant="label-hidden" onchange={handleMaxRecord} disabled={disableFilterOpt} value={maxRecordLimit}></lightning-input>
+                            <lightning-input type="number" name="maxRecord" label="Max Records" field-level-help="Limit record rows (default: 200)." onchange={handleMaxRecord} disabled={disableFilterOpt} value={maxRecordLimit}></lightning-input>
                         </lightning-layout-item>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="5" padding="horizontal-small">
                             <lightning-button variant="brand" label="Reset Filters" title="Reset Filters" onclick={handleResetAllFilters} class="resetBtn" disabled={disableFilterOpt}></lightning-button>
@@ -143,12 +121,10 @@
                 <div class="slds-box slds-p-around_medium">
                     <lightning-layout multiple-rows>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="6" padding="horizontal-small">
-                            <span class="span-pos">
-                                <label class="slds-form-element__label" for="supportedScope">Scope Clause</label>
-                            </span>
                             <lightning-combobox name="supportedScope"
-                                variant="label-hidden"
                                 label="Scope Clause"
+                                placeholder="Select scope ..."
+                                field-level-help="Query using scope."
                                 options={supportedScopeOptions}
                                 onchange={handleScopeChange}
                                 value={selectedSupportedScope}
@@ -157,12 +133,10 @@
                             </lightning-combobox>
                         </lightning-layout-item>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="6" padding="horizontal-small">
-                            <span class="span-pos">
-                                <label class="slds-form-element__label" for="listViewRecords">List View</label>
-                            </span>
                             <lightning-combobox name="listViewRecords"
-                                variant="label-hidden"
                                 label="List View"
+                                placeholder="Select list view ..."
+                                field-level-help="Query using list view."
                                 options={listViewOptions}
                                 onchange={handleListViewChange}
                                 value={selectedListView}
@@ -178,8 +152,7 @@
             <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
                 <div class="slds-box">
                     <span>
-                        <h2 class="header">Query Editor:</h2>
-                        <lightning-textarea name="queryEditor" variant="label-hidden" placeholder="soql query..." value={queryString} onchange={handleManualQuery}></lightning-textarea>
+                        <lightning-textarea name="queryEditor" label="Query Editor" placeholder="Soql query ..." field-level-help="Generate query from query builder or type manually." value={queryString} onchange={handleManualQuery}></lightning-textarea>
                     </span>
                     <lightning-layout multiple-rows>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="4">
