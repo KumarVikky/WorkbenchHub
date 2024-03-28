@@ -237,14 +237,21 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
             const areBothSetsEqual = (a, b) => a.size === b.size && [...a].every(value => b.has(value));
             validate = areBothSetsEqual(itemsNumInFilterSet, itemNumInConditionSet);
 
+            let itemAlphaInCondition = (conditionValue.toUpperCase()).replace(/[^A-Za-z]/g, '');
+            let itemAlphaInConditionSet = new Set(itemAlphaInCondition.split(''));
+            let allowedAlphaSet = new Set(['A', 'N', 'D', 'O', 'R']);
+
+            for(let item of itemAlphaInConditionSet){
+                if(!allowedAlphaSet.has(item)){
+                    validate = false;
+                    break;
+                }
+            }
+
             if(itemNumInCondition.length !== itemNumInConditionSet.size){
                 validate = false;
             }
             if(conditionValue.charAt(conditionValue.length - 1) !== ')' && isNaN(conditionValue.charAt(conditionValue.length - 1))){
-                validate = false;
-            }
-            let itemAlphaInCondition = (conditionValue.toUpperCase()).replace(/[^A-Za-z]/g, '');
-            if(!itemAlphaInCondition.includes('OR') && !itemAlphaInCondition.includes('AND')){
                 validate = false;
             }
         }
