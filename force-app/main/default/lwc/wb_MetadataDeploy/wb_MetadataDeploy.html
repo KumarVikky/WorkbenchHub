@@ -40,7 +40,7 @@
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
                             <template if:true={showTestRun}>
                                 <span>
-                                    <lightning-input type="text" label="Test Class Names (coma-sep)" name="RunTests" value={deployOptionsObj.runTests} onchange={handleInputChange}></lightning-input>
+                                    <lightning-input type="text" label="Test Class Names" name="RunTests" placeholder="ex: ClassA, ClassB ..." field-level-help="Use commas for multiple classes." value={deployOptionsObj.runTests} onchange={handleInputChange}></lightning-input>
                                 </span>
                             </template>
                         </lightning-layout-item>

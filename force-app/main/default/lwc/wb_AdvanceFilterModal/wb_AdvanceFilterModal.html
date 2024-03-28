@@ -78,7 +78,7 @@
                 </lightning-layout-item>
                 <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
                     <template if:true={hasCustomCondition}>
-                        <lightning-input type="text" name="customConditionValue" label="Custom Condition" placeholder="(1 AND 3) OR 2 ..." value={customConditionValue} onchange={handleCustomCondition}></lightning-input>
+                        <lightning-input type="text" name="customConditionValue" label="Custom Condition" placeholder="ex: (1 AND 3) OR 2 ..." field-level-help="Use brackets for grouping AND & OR conditions together." value={customConditionValue} onchange={handleCustomCondition}></lightning-input>
                     </template>
                 </lightning-layout-item>
             </lightning-layout>
