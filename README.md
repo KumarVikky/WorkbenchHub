@@ -4,8 +4,7 @@
 
 Watch Demo:
 
-https://github.com/KumarVikky/WorkbenchHub/assets/51625926/85918d41-5938-4aef-aca2-925d8acf8fbe
-
+https://github.com/KumarVikky/WorkbenchHub/assets/51625926/4ca7f92c-ac81-4f7f-ae72-d7bf1acfa2bc
 
 Release updates:
 - Ability to generate query using SOQL Builder.
