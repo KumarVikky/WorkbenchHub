@@ -6,13 +6,15 @@ Watch Demo:
 
 https://github.com/KumarVikky/WorkbenchHub/assets/51625926/85918d41-5938-4aef-aca2-925d8acf8fbe
 
-Release updates.
+
+Release updates:
 - Ability to generate query using SOQL Builder.
-- Manual query supported in Query Editor.
+- Manual query support for Query Editor.
 - Ability to download fetched records as CSV format currently.
 - Ability to perform multi-level sort in SOQL Builder.
 - Ability to perform multi-level filter in SOQL Builder.
 - Ability to fetch & display relationship queries.
+- Ability to add custom condition (AND, OR & both) on multi-level filter.
 - Ability to fetch records using available list view ib salesforce organization.
 - Ability to fetch records using available scopes parameters.
 - Ability to create package.xml file dynamically by selecting different meta-data items.
