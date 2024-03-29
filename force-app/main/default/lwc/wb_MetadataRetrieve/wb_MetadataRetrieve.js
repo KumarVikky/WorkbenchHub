@@ -96,6 +96,10 @@ export default class Wb_MetadataRetrieve extends LightningElement {
         }else{
             this.showToastMessage('warning', 'No item selected.');
         }
+        if(this.packageItemsData.length  === 0){
+            this.disableRetrievePackageBtn = true;
+            this.disableDownloadPackageBtn = true;
+        }
     }
     handleRetrievePackage(){
         this.fetchMetadataRetrieveRequest();
@@ -155,7 +159,7 @@ export default class Wb_MetadataRetrieve extends LightningElement {
                     for(let item of response){
                         this.metadataTypeOptions.push({label: item, value: item});
                     }
-                    this.showToastMessage('success', 'Metadata retrieve successfully');
+                    //this.showToastMessage('success', 'Metadata retrieve successfully');
                 }else{
                     this.showToastMessage('warning', 'No Metadata found.');
                 }
@@ -182,7 +186,7 @@ export default class Wb_MetadataRetrieve extends LightningElement {
                         this.metadataItemsData.push({itemName: item});
                     }
                     this.disableAddPackageBtn = false;
-                    this.showToastMessage('success', 'Metadata Items retrieve successfully');
+                    //this.showToastMessage('success', 'Metadata Items retrieve successfully');
                 }else{
                     this.showToastMessage('warning', 'No Metadata items found.');
                 }

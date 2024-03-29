@@ -16,7 +16,7 @@
         </div>
     </template>
     <lightning-tabset variant="scoped" active-tab-value="one">
-        <lightning-tab label="SOQL Queries" value="one">
+        <lightning-tab label="SOQL Builder" value="one">
             <template if:true={hasUserToken}>
                 <c-wb_-query user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-query>
             </template>

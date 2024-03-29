@@ -256,9 +256,9 @@ export default class Wb_Query extends LightningElement {
                     }
                 }
                 this.isLoading = false;
-                this.showToastMessage('success', 'Objects retrieve successfully');
+                //this.showToastMessage('success', 'Objects retrieve successfully');
             }else{
-                this.showToastMessage('error', 'Some Error Occured.');
+                this.showToastMessage('error', 'Failed to fetch sobjects:'+result);
             }
 		})
 		.catch(error => {
@@ -294,9 +294,9 @@ export default class Wb_Query extends LightningElement {
                 }
                 this.supportedScopeOptions = supportedList;
                 this.isLoading = false;
-                this.showToastMessage('success', 'Fields retrieve successfully');
+                //this.showToastMessage('success', 'Fields retrieve successfully');
             }else{
-                this.showToastMessage('error', 'Some Error Occured.');
+                this.showToastMessage('error', 'Failed to fetch fields:'+result);
             } 
 		})
 		.catch(error => {
