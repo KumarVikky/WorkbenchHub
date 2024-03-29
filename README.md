@@ -15,7 +15,7 @@ Release updates:
 - Ability to perform multi-level filter in SOQL Builder.
 - Ability to fetch & display relationship queries.
 - Ability to add custom condition (AND, OR & both) on multi-level filter.
-- Ability to fetch records using available list view ib salesforce organization.
+- Ability to fetch records using available list view in salesforce organization.
 - Ability to fetch records using available scopes parameters.
 - Ability to create package.xml file dynamically by selecting different meta-data items.
 - Ability to retrieve & download metadata based on the package.xml file as a zip file.
