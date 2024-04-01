@@ -1,7 +1,7 @@
 <!-- sldsValidatorIgnore -->
 <template>
     <div class="slds-box slds-p-around_none slds-m-top_x-small slds-m-bottom_medium slds-m-horizontal_none">
-        <P class="p1">Choose the object, fields, and criteria to build a SOQL Query. [API: {apiValue}]</P>
+        <P class="p1">Choose the object, fields, and criteria to build a SOQL Query. <span class="slds-m-left_x-small">[API: {apiValue}]</span></P>
         <lightning-layout multiple-rows>
             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="around-small">
                 <div class="slds-box slds-p-around_medium">
@@ -104,7 +104,19 @@
                             </lightning-combobox>
                         </lightning-layout-item>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="4" padding="horizontal-small">
-                            <lightning-input type="text" name="filterByValue" label="Value" value={selectedFilterBy.selectedValue} disabled={disableFilterOpt} onchange={handleFilterByValue}></lightning-input>
+                            <template lwc:if={selectedFilterBy.hasPicklistValue}>
+                                <lightning-combobox name="selectedFieldOptions"
+                                label="Value"
+                                value={selectedFilterBy.selectedValue}
+                                options={selectedFilterBy.picklistOptions}
+                                onchange={handleFilterByValue}
+                                dropdown-alignment="left"
+                                disabled={disableFilterOpt}>
+                            </lightning-combobox>
+                            </template>
+                            <template lwc:else>
+                                <lightning-input type="text" name="filterByValue" label="Value" value={selectedFilterBy.selectedValue} disabled={disableFilterOpt} onchange={handleFilterByValue}></lightning-input>
+                            </template>
                         </lightning-layout-item>
                     </lightning-layout>
                 </div>

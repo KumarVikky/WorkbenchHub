@@ -61,6 +61,7 @@ export default class Wb_Query extends LightningElement {
     showSoqlHistoryOpt = false;
     selectedSoqlHistory;
     _showDownloadBtn = false;
+    fieldsPicklistOptionsMap;
 
     get totalRecords(){
         return this.recordList.length;
@@ -102,7 +103,7 @@ export default class Wb_Query extends LightningElement {
     }
 
     connectedCallback(){
-        this.selectedFilterBy = {selectedField : '', selectedOperator : '=', selectedValue : ''};
+        this.selectedFilterBy = {selectedField : '', selectedOperator : '=', selectedValue : '', hasPicklistValue: false, picklistOptions: []};
         this.selectedSortBy = {selectedField : '', selectedOperator : 'ASC'};
         this.fetchSObjects();
         this.soqlHistoryOptions = [];
@@ -140,7 +141,18 @@ export default class Wb_Query extends LightningElement {
     }
     handleFilterByFields(event) {
         this.selectedFilterBy.selectedField = event.detail.value;
-        this.previousSelectedMultiFilter[0].selectedField = event.detail.value;
+        if(this.fieldsPicklistOptionsMap.has(event.detail.value)){
+            this.selectedFilterBy.hasPicklistValue = true;
+            this.selectedFilterBy.picklistOptions = this.fieldsPicklistOptionsMap.get(event.detail.value);
+        }else{
+            this.selectedFilterBy.hasPicklistValue = false;
+            this.selectedFilterBy.picklistOptions = [];
+        }
+        this.selectedFilterBy.selectedValue = '';
+        this.previousSelectedMultiFilter[0].selectedField = this.selectedFilterBy.selectedField
+        this.previousSelectedMultiFilter[0].hasPicklistValue = this.selectedFilterBy.hasPicklistValue;
+        this.previousSelectedMultiFilter[0].picklistOptions = this.selectedFilterBy.picklistOptions;
+        this.previousSelectedMultiFilter[0].selectedValue = this.selectedFilterBy.selectedValue;
         this.generateQuery();
     }
     handleMaxRecord(event) {
@@ -155,9 +167,9 @@ export default class Wb_Query extends LightningElement {
         this.manualQueryString = '';
         this.selectedFieldName = [];
         this.hasRecords = false;
-        this.selectedFilterBy = {selectedField : '', selectedOperator : '=', selectedValue : ''};
+        this.selectedFilterBy = {selectedField : '', selectedOperator : '=', selectedValue : '', hasPicklistValue: false, picklistOptions: []};
         this.selectedSortBy = {selectedField : '', selectedOperator : 'ASC'};
-        this.previousSelectedMultiFilter = [{id: 1, selectedField : '', selectedOperator : '=', selectedValue : ''}];
+        this.previousSelectedMultiFilter = [{id: 1, selectedField : '', selectedOperator : '=', selectedValue : '', hasPicklistValue: false, picklistOptions: []}];
         this.previousSelectedMultiSort = [{id: 1, selectedField : '', selectedOperator : 'ASC'}];
         this.multiFilterIcon = 'utility:add';
         this.multiSortIcon = 'utility:add';
@@ -182,9 +194,9 @@ export default class Wb_Query extends LightningElement {
         this.fetchListViewRecords();
     }
     handleResetAllFilters(){
-        this.selectedFilterBy = {selectedField : '', selectedOperator : '=', selectedValue : ''};
+        this.selectedFilterBy = {selectedField : '', selectedOperator : '=', selectedValue : '', hasPicklistValue: false, picklistOptions: []};
         this.selectedSortBy = {selectedField : '', selectedOperator : 'ASC'};
-        this.previousSelectedMultiFilter = [{id: 1, selectedField : '', selectedOperator : '=', selectedValue : ''}];
+        this.previousSelectedMultiFilter = [{id: 1, selectedField : '', selectedOperator : '=', selectedValue : '', hasPicklistValue: false, picklistOptions: []}];
         this.previousSelectedMultiSort = [{id: 1, selectedField : '', selectedOperator : 'ASC'}];
         this.previousSelectedCondition = '';
         this.previousCustomConditionValue = '';
@@ -204,6 +216,7 @@ export default class Wb_Query extends LightningElement {
                 multiFilterByFieldOptions: this.filterByFieldOptions,
                 multiFilterByOptions: this.filterByOptions,
                 fieldTypeMap: this.fieldTypeMap,
+                fieldsPicklistOptionsMap: this.fieldsPicklistOptionsMap,
                 previousSelectedMultiFilter: this.previousSelectedMultiFilter,
                 previousSelectedCondition: this.previousSelectedCondition,
                 previousCustomConditionValue: this.previousCustomConditionValue
@@ -217,6 +230,9 @@ export default class Wb_Query extends LightningElement {
                 this.previousSelectedMultiFilter = result.allSelectedMultiFilter;  
                 this.previousSelectedCondition = result.selectedCondition;
                 this.previousCustomConditionValue = result.selectedConditionValue;
+                this.selectedFilterBy.selectedField = this.previousSelectedMultiFilter[0].selectedField
+                this.selectedFilterBy.selectedOperator = this.previousSelectedMultiFilter[0].selectedOperator;
+                this.selectedFilterBy.selectedValue = this.previousSelectedMultiFilter[0].selectedValue;
             }
         }else{
             this.showToastMessage('warning', 'Please select fields to apply.');
@@ -238,6 +254,8 @@ export default class Wb_Query extends LightningElement {
             if(result && result.allSelectedMultiSort && result.allSelectedMultiSort !== null){
                 this.multiSortIcon = 'utility:check';
                 this.previousSelectedMultiSort = result.allSelectedMultiSort;  
+                this.selectedSortBy.selectedField =  this.previousSelectedMultiSort[0].selectedField;
+                this.selectedSortBy.selectedOperator = this.previousSelectedMultiSort[0].selectedOperator;
             }
         }else{
             this.showToastMessage('warning', 'Please select fields to apply.');
@@ -277,6 +295,7 @@ export default class Wb_Query extends LightningElement {
                 this.fieldOptions = [];
                 this.sortByFieldOptions = [];
                 this.filterByFieldOptions = [];
+                this.fieldsPicklistOptionsMap = new Map();
                 this.fieldTypeMap = new Map();
                 for(let item of response.fields){
                     this.fieldOptions.push({label: item.name, value: item.name});
@@ -285,6 +304,9 @@ export default class Wb_Query extends LightningElement {
                     }
                     if(item.filterable){
                         this.filterByFieldOptions.push({label: item.name, value: item.name});
+                    }
+                    if(item.picklistValues != null && item.picklistValues.length > 0){
+                        this.getAllPicklistValues(item.name, item.picklistValues);
                     }
                     this.fieldTypeMap.set(item.name, item.type);
                 }
@@ -305,6 +327,13 @@ export default class Wb_Query extends LightningElement {
             this.showToastMessage('error', error);
 		})
 	}
+    getAllPicklistValues(name, picklistValues){
+        let picklistOption = [];
+        for(let item of picklistValues){
+            picklistOption.push({label: item.label, value: item.value});
+        }
+        this.fieldsPicklistOptionsMap.set(name, picklistOption);
+    }
     handleManualQuery(event) {
         this.manualQueryString = event.detail.value;
         this.generateManualQuery();

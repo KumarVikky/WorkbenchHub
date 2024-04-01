@@ -8,6 +8,7 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
     @api multiFilterByFieldOptions;
     @api multiFilterByOptions;
     @api fieldTypeMap;
+    @api fieldsPicklistOptionsMap;
     @api previousSelectedMultiFilter;
     @api previousSelectedCondition;
     @api previousCustomConditionValue;
@@ -32,7 +33,7 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
         if(this.previousSelectedMultiFilter && this.previousSelectedMultiFilter.length > 0){
             this.selectedMultiFilterByList = JSON.parse(JSON.stringify(this.previousSelectedMultiFilter));
         }else{
-            this.selectedMultiFilterByList = [{id: 1, selectedField : '', selectedOperator : '=', selectedValue : ''}];
+            this.selectedMultiFilterByList = [{id: 1, selectedField : '', selectedOperator : '=', selectedValue : '', hasPicklistValue: false, picklistOptions: []}];
         }
         if(this.previousSelectedCondition && this.previousSelectedCondition !== ''){
             this.selectedFilterConditionValue = this.previousSelectedCondition;
@@ -60,6 +61,14 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
         let selectedId = Number(event.currentTarget.dataset.id);
         let filterBy = this.selectedMultiFilterByList.find(e => e.id === selectedId);
         filterBy.selectedField = event.detail.value;
+        if(this.fieldsPicklistOptionsMap.has(event.detail.value)){
+            filterBy.hasPicklistValue = true;
+            filterBy.picklistOptions = this.fieldsPicklistOptionsMap.get(event.detail.value);
+        }else{
+            filterBy.hasPicklistValue = false;
+            filterBy.picklistOptions = [];
+        }
+        filterBy.selectedValue = '';
         //console.log('filterByList',JSON.stringify(this.selectedMultiFilterByList));
     }
     handleMultiFilterByOption(event){
@@ -85,7 +94,7 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
     handleAddRow(){
         let activeRowLen = this.selectedMultiFilterByList.length;
         if(activeRowLen < 6){
-            let filterBy = {id: activeRowLen+1, 'selectedField' : '', selectedOperator : '=', selectedValue : ''};
+            let filterBy = {id: activeRowLen+1, selectedField : '', selectedOperator : '=', selectedValue : '', hasPicklistValue: false, picklistOptions: []};
             this.selectedMultiFilterByList.push(filterBy);
             this.hasErrorMsg = false;
         }else{
@@ -194,7 +203,7 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
                     }
                 }
                 if(this.selectedFilterConditionValue === 'Custom' && conditionValue.includes(item.id)){
-                    conditionValue = conditionValue.replace(item.id, whereClauseTemp);
+                    conditionValue = conditionValue.replaceAll(item.id, whereClauseTemp);
                     whereClause = conditionValue.trim();
                 }
             }
@@ -237,25 +246,17 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
             const areBothSetsEqual = (a, b) => a.size === b.size && [...a].every(value => b.has(value));
             validate = areBothSetsEqual(itemsNumInFilterSet, itemNumInConditionSet);
 
-            let itemAlphaInCondition = (conditionValue.toUpperCase()).replace(/[^A-Za-z]/g, '');
-            let itemAlphaInConditionSet = new Set(itemAlphaInCondition.split(''));
-            let allowedAlphaSet = new Set(['A', 'N', 'D', 'O', 'R']);
-
-            for(let item of itemAlphaInConditionSet){
-                if(!allowedAlphaSet.has(item)){
+            const conditionItems = Array.from(itemNumInConditionSet);
+            for(let i=0; i<conditionItems.length; i++){
+                if(i === (conditionItems.length - 1)){ break; }
+                let currentItem = conditionItems[i];
+                let nextItem = conditionItems[i + 1];
+                let charInBtwn = conditionValue.substring(conditionValue.indexOf(currentItem), conditionValue.indexOf(nextItem));
+                let alphaInChar = charInBtwn.replace(/[^A-Za-z]/g, '').toUpperCase();
+                if(alphaInChar !== 'OR' && alphaInChar !== 'AND'){
                     validate = false;
                     break;
                 }
-            }
-            
-            if(!itemAlphaInCondition.includes('OR') && !itemAlphaInCondition.includes('AND')){
-                validate = false;
-            }
-            if(itemNumInCondition.length !== itemNumInConditionSet.size){
-                validate = false;
-            }
-            if(conditionValue.charAt(conditionValue.length - 1) !== ')' && isNaN(conditionValue.charAt(conditionValue.length - 1))){
-                validate = false;
             }
         }
         return validate;

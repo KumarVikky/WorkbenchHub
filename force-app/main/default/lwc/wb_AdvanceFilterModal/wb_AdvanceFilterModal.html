@@ -43,7 +43,19 @@
                                 </lightning-combobox>
                             </lightning-layout-item>
                             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="3" padding="horizontal-small">
-                                <lightning-input type="text" data-id={it.value.id} name="multiFilterByValue" label="Value" value={it.value.selectedValue} disabled={disableMultiFilterOpt} onchange={handleMultiFilterByValue}></lightning-input>
+                                <template lwc:if={it.value.hasPicklistValue}>
+                                    <lightning-combobox data-id={it.value.id} name="selectedFieldOptions"
+                                    label="Value"
+                                    value={it.value.selectedValue}
+                                    options={it.value.picklistOptions}
+                                    onchange={handleMultiFilterByValue}
+                                    dropdown-alignment="left"
+                                    disabled={disableMultiFilterOpt}>
+                                </lightning-combobox>
+                                </template>
+                                <template lwc:else>
+                                    <lightning-input type="text" data-id={it.value.id} name="multiFilterByValue" label="Value" value={it.value.selectedValue} disabled={disableMultiFilterOpt} onchange={handleMultiFilterByValue}></lightning-input>
+                                </template>
                             </lightning-layout-item>
                             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="1" padding="horizontal-small">
                                 <template if:true={it.first}>
