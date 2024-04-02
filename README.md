@@ -19,4 +19,7 @@ Release updates:
 - Ability to create package.xml file dynamically by selecting different meta-data items.
 - Ability to retrieve & download metadata based on the package.xml file as a zip file.
 - Ability to validate & deploy metadata zip files containing package.xml & its content to different authorized salesforce orgs.
+- Ability to perform Insert operations with user-friendly UI.
+- Ability to perform Update operations with user-friendly UI.
+- Ability to perform Delete operations with user-friendly UI.
 
