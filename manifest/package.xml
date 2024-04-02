@@ -50,6 +50,8 @@
         <members>wb_Query</members>
         <members>wb_ServiceHandler</members>
         <members>wb_WebLogin</members>
+        <members>wb_ShowNotifications</members>
+        <members>wb_DataProcess</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>59.0</version>
