@@ -1,0 +1,20 @@
+.p1{
+    margin-top: 4px;
+    text-align: center;
+}
+.viewPanel{
+    min-height: 95px;
+}
+.recordPanel{
+    margin-bottom: 45px;
+}
+.recordPanel .btnPos{ 
+    float: right;
+}
+.recordPanel .totalRec{ 
+    float: left;
+}
+.recordPanel .resultPanel{
+    margin-left: 8px;
+    display: inline-flex;
+}

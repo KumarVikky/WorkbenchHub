@@ -1,0 +1,90 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="slds-box slds-p-around_none slds-var-m-top_x-small slds-var-m-bottom_medium slds-m-horizontal_none">
+        <P class="p1">Upload CSV data files to perform CRUD operations. <span class="slds-var-m-left_x-small">[API: {apiValue}]</span></P>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                <div class="slds-box slds-var-p-around_medium">
+                    <lightning-input type="file" name="CSVDataFile" label="Upload CSV Files" accept=".csv"  onchange={handleCSVUpload}></lightning-input>
+                </div>
+                <div class="slds-box slds-p-around_medium">
+                    <lightning-layout multiple-rows>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                            <span>
+                                <lightning-radio-group name="selectCrudOperation"
+                                label="CRUD Operation"
+                                options={crudOptions}
+                                value={selectedCrudValue}
+                                onchange={handleActionChange}
+                                type="radio"></lightning-radio-group>
+                            </span>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                            <span>
+                                <lightning-combobox name="object"
+                                label="Select Object"
+                                options={sObjectOptions}
+                                onchange={handleObjectChange}
+                                spinner-active
+                                dropdown-alignment="left"
+                                required>
+                        </lightning-combobox>
+                            </span>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+                <div class="slds-box slds-p-around_medium">
+                    <template lwc:if={isCreatable}>
+                        <span>
+                            <lightning-button icon-name="utility:record_create" label="Insert Records" title="Insert Records"
+                            onclick={performInsert} variant="brand" slot="actions" disabled={disableCrudActionBtn} class="slds-m-bottom_xx-small"></lightning-button>
+                        </span>
+                    </template>
+                    <template lwc:elseif={isUpdatable}>
+                        <span>
+                            <lightning-button icon-name="utility:record_update" label="Update Records" title="Update Records"
+                            onclick={performUpdate} variant="brand" slot="actions" disabled={disableCrudActionBtn} class="slds-m-bottom_xx-small"></lightning-button>
+                        </span>
+                    </template>
+                    <template lwc:else>
+                        <span>
+                            <lightning-button icon-name="utility:record_delete" label="Delete Records" title="Delete Records"
+                            onclick={performDelete} variant="brand" slot="actions" disabled={disableCrudActionBtn} class="slds-m-bottom_xx-small"></lightning-button>
+                        </span>
+                    </template>
+                    <span class="slds-m-left_xx-medium">
+                        <lightning-button icon-name="utility:download" label="Download Response" title="Download Response"
+                        onclick={handleDownloadResponse} variant="brand" disabled={disableDownloadResBtn} class="slds-m-left_medium"></lightning-button>
+                    </span>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                <div class="slds-box slds-var-p-around_medium viewPanel">
+                    <template if:true={hasRecordLoaded}>
+                        <div class="recordPanel">
+                            <span class="totalRec">
+                                <p>Total Records: {totalRecords}</p>
+                            </span>
+                            <span class="resultPanel">
+                                <p>Sucess: {successCount}</p>&nbsp;/&nbsp;<p>Error: {errorCount}</p>
+                            </span>
+                            <span class="btnPos">
+                                <lightning-button icon-name="utility:data_mapping" label="Map Column" title="Map Column"
+                                onclick={mapColumnHeader} variant="brand" slot="actions" disabled={disableMapBtn} class="slds-m-bottom_xx-small"></lightning-button>
+                            </span>
+                        </div>
+                        <div class="slds-scrollable_y"  style="height:15rem;">
+                            <lightning-datatable data={recordData} columns={readColumns} key-field={recordKey} hide-checkbox-column></lightning-datatable>
+                        </div>
+                    </template>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+</template>
