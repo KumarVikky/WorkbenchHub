@@ -1,17 +1,17 @@
-public class WB_DescribeSobject extends WB_ServiceAdapter implements WB_ServiceRequest{
-    private String endPointUrl;
-    private String sObjectName;
+public class WB_CreateRecords extends WB_ServiceAdapter implements WB_ServiceRequest{
+ 	private String endPointUrl;
     private String accessToken;
     private String apiVersion;
+    private String jsonRequestBody;
     
     protected override String setHttpMethod(){
-        return 'GET';
+        return 'POST';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL+'/services/data/v'+apiVersion+'/sobjects/'+sObjectName+'/describe/';
+        return this.endPointURL+'/services/data/v'+apiVersion+'/composite/sobjects';
     }
     protected override String setRequestBody(){
-        return null;
+        return jsonRequestBody;
     }
     protected override Map<String,String> setHttpHeader(){
         Map<String,String> headerValues = new Map<String,String>();
@@ -26,14 +26,13 @@ public class WB_DescribeSobject extends WB_ServiceAdapter implements WB_ServiceR
     }
     
     public Object executeService(Object instance, Map<String,String> params){
-        WB_DescribeSobject service = (WB_DescribeSobject)instance;
+        WB_CreateRecords service = (WB_CreateRecords)instance;
         service.accessToken = params.get(WB_ServiceAppConstant.ACCESS_TOKEN);
         service.endPointURL = params.get(WB_ServiceAppConstant.ENDPOINT_URL);
-        service.sObjectName = params.get(WB_ServiceAppConstant.SOBJECT_NAME);
         service.apiVersion = params.get(WB_ServiceAppConstant.API_VERSION);
+        service.jsonRequestBody = params.get(WB_ServiceAppConstant.REQUESTBODY);
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
-        //System.debug('WB_DescribeSobjectInitial=>'+res.getBody());
         if(res.getBody().contains('Session expired')){
             WB_RenewToken renewServ = new WB_RenewToken();
             String newAccessToken = (String) renewServ.executeService(renewServ,params);
@@ -41,7 +40,6 @@ public class WB_DescribeSobject extends WB_ServiceAdapter implements WB_ServiceR
             req.setHeader('Authorization',authorizationHeader);
             res = service.getResponse(req);
         }
-        //System.debug('WB_DescribeSobjectFinal=>'+res.getBody());
         return res.getBody();
     }
 }

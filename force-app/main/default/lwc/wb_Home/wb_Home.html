@@ -31,6 +31,11 @@
                 <c-wb_-metadata-deploy user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-metadata-deploy>
             </template>
         </lightning-tab>
+        <lightning-tab label="Process Data" value="four">
+            <template if:true={hasUserToken}>
+                <c-wb_-data-process user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-data-process>
+            </template>
+        </lightning-tab>
     </lightning-tabset>
     <div class="spinner">
         <template if:true={isLoading}>

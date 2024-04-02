@@ -12,4 +12,5 @@ public class WB_ServiceAppConstant{
     public static final String REDIRECT_URL = 'https://salesarena-dev-ed.my.site.com/Workbench/s/weblogin/oauthrequest';
     public static final Integer STATUS_OK = 200; 
     public static final String LISTVIEWNAME = 'LISTVIEWNAME';
+    public static final String REQUESTBODY = 'REQUESTBODY';
 }

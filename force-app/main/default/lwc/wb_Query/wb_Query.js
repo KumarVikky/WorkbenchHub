@@ -230,9 +230,11 @@ export default class Wb_Query extends LightningElement {
                 this.previousSelectedMultiFilter = result.allSelectedMultiFilter;  
                 this.previousSelectedCondition = result.selectedCondition;
                 this.previousCustomConditionValue = result.selectedConditionValue;
-                this.selectedFilterBy.selectedField = this.previousSelectedMultiFilter[0].selectedField
+                this.selectedFilterBy.selectedField = this.previousSelectedMultiFilter[0].selectedField;
                 this.selectedFilterBy.selectedOperator = this.previousSelectedMultiFilter[0].selectedOperator;
                 this.selectedFilterBy.selectedValue = this.previousSelectedMultiFilter[0].selectedValue;
+                this.selectedFilterBy.hasPicklistValue = this.previousSelectedMultiFilter[0].hasPicklistValue;
+                this.selectedFilterBy.picklistOptions = this.previousSelectedMultiFilter[0].picklistOptions;
             }
         }else{
             this.showToastMessage('warning', 'Please select fields to apply.');
@@ -817,5 +819,4 @@ export default class Wb_Query extends LightningElement {
             this.progressValue = progressVal;
         }
     }
-
 }

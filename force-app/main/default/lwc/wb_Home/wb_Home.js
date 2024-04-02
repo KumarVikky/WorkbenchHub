@@ -175,5 +175,4 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
             this.template.querySelector("c-wb_-show-notifications").hideNotification();
         }
     }
-    
 }

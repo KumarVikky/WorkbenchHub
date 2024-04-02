@@ -29,6 +29,9 @@
         <members>WB_SessionTriggerHandler</members>
         <members>WB_FetchListViewRecords</members>
         <members>WB_ServiceAppConstant</members>
+        <members>WB_CreateRecords</members>
+        <members>WB_UpdateRequest</members>
+        <members>WB_DeleteRequest</members>
         <name>ApexClass</name>
     </types>
     <types>
