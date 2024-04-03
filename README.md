@@ -22,4 +22,6 @@ Release updates:
 - Ability to perform Insert operations with user-friendly UI.
 - Ability to perform Update operations with user-friendly UI.
 - Ability to perform Delete operations with user-friendly UI.
+- Ability to map data column before CRUD operations.
+- Ability to edit uploaded csv files data before CRUD operations.
 
