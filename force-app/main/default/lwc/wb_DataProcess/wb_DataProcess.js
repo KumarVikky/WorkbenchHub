@@ -1,4 +1,4 @@
-import { LightningElement, api } from 'lwc';
+import { LightningElement, api, track } from 'lwc';
 import getSObjects from '@salesforce/apex/WB_WorkbenchController.getAllSObjects';
 import getFields from '@salesforce/apex/WB_WorkbenchController.getAllFields';
 import createRecordRequest from '@salesforce/apex/WB_WorkbenchController.createRecordRequest';
@@ -16,6 +16,7 @@ export default class Wb_DataProcess extends LightningElement {
     @api userId;
     @api customDomain;
     @api apiValue;
+    @track recordDataDraft;
     sObjectOptions;
     recordColumns =[];
     recordData = [];
@@ -100,7 +101,7 @@ export default class Wb_DataProcess extends LightningElement {
         const lines = csv.split(/\r\n|\n/);
         const headers = lines[0].split(',');
         this.recordColumns = headers.map((header) => {
-            return { label: header, fieldName: header };
+            return { label: header, fieldName: header, type: 'text', editable: true};
         });
         const data = [];
         lines.forEach((line, i) => {
@@ -113,10 +114,12 @@ export default class Wb_DataProcess extends LightningElement {
                 }
             }
             if(Object.keys(obj).length !== 0){
+                obj['uniqueKey'] = Number(i);
                 data.push(obj);
             }
         });
-        this.recordKey = this.recordColumns[0].fieldName;
+        //console.log('data',data);
+        this.recordKey = 'uniqueKey';
         this.recordData = data;
         this.recordResponseData = this.recordData;
         this.hasRecordLoaded = true;
@@ -124,6 +127,22 @@ export default class Wb_DataProcess extends LightningElement {
         this.disableCrudActionBtn = false;
         this.disableDownloadResBtn = true;
         this.totalRecords = this.recordData.length;
+        this.previousRecordList = [];
+    }
+    async handleInLineSave(event){
+        const records = event.detail.draftValues;
+        for(let item of records){
+            let selectedId = Number(item.uniqueKey);
+            let data = this.recordData.find(e => e.uniqueKey == selectedId);
+            console.log('recordData==',data);
+            for (const [key, value] of Object.entries(data)) {
+                if(key !== 'uniqueKey' && item.hasOwnProperty(key)){
+                    data[key] = item[key];
+                }
+            }
+        }
+        //console.log('recordData',this.recordData);
+        this.recordDataDraft = [];
     }
     fetchSObjects(){
         this.isLoading = true;
@@ -175,7 +194,9 @@ export default class Wb_DataProcess extends LightningElement {
         for(let record of recordData){
             let obj = {'attributes': {'type': objectName}};
             for (const [key, value] of Object.entries(record)) {
-                obj[key] = value;
+                if(key !== 'uniqueKey'){
+                    obj[key] = value;
+                }
             }
             records.push(obj);
         }
@@ -367,7 +388,7 @@ export default class Wb_DataProcess extends LightningElement {
         if(validate.value){
             const result = await dataMapModal.open({
                 size: 'medium',
-                description: 'Map Column',
+                description: 'Column Mapping',
                 recordList: this.recordColumns,
                 fieldList: this.fieldList,
                 previousRecordList: this.previousRecordList,
@@ -377,8 +398,10 @@ export default class Wb_DataProcess extends LightningElement {
             if(result && result !== ''){
                 this.recordResponseData = result.finalMappedDataList;
                 this.previousRecordList = result.previousRecordList;
-                console.log('finalMappedDataList',result.finalMappedDataList);
-                console.log('previousRecordList',result.previousRecordList);
+                this.recordData = this.recordResponseData;
+                this.recordColumns = this.previousRecordList;
+                //console.log('finalMappedDataList',result.finalMappedDataList);
+                //console.log('previousRecordList',result.previousRecordList);
             }
         }else{
             this.showToastMessage('warning', validate.message);
@@ -410,7 +433,9 @@ export default class Wb_DataProcess extends LightningElement {
             let rowData = new Set();
             data.forEach(function (record) {
                 Object.keys(record).forEach(function (key) {
-                    rowData.add(key);
+                    if(key !== 'uniqueKey'){
+                        rowData.add(key);
+                    }
                 });
             });
           

@@ -64,22 +64,26 @@ export default class Wb_DataMap extends LightningModal {
             let fromColumn = column.fromColumn;
             columnMap.set(fromColumn,toColumn);
         }
+        let uniqueKey = 1;
         for(let record of responseList){
-            let obj = {};
+            let obj = {'uniqueKey': uniqueKey};
             for (const [key, value] of Object.entries(record)) {
                 if(columnMap.has(key)){
                     obj[columnMap.get(key)] = value;
                 }
             }
             finalMappedDataList.push(obj);
+            uniqueKey ++;
         }
         return finalMappedDataList;
     }
     generateColumn(recordList){
         let renamededRecordColumn = [];
         for (const [key, value] of Object.entries(recordList[0])) {
-            let obj = {'label': key, 'fieldName': key};
-            renamededRecordColumn.push(obj);
+            if(key !== 'uniqueKey'){
+                let obj = {'label': key, 'fieldName': key, 'type': 'text', 'editable': true};
+                renamededRecordColumn.push(obj);
+            }
         }
         return renamededRecordColumn;
     }

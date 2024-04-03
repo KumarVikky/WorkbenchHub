@@ -74,7 +74,7 @@
                             </span>
                         </div>
                         <div class="slds-scrollable_y"  style="height:15rem;">
-                            <lightning-datatable data={recordData} columns={recordColumns} key-field={recordKey} hide-checkbox-column></lightning-datatable>
+                            <lightning-datatable data={recordData} columns={recordColumns} draft-values={recordDataDraft} onsave={handleInLineSave} key-field={recordKey} hide-checkbox-column></lightning-datatable>
                         </div>
                     </template>
                 </div>
