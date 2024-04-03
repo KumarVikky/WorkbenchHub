@@ -134,6 +134,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
     }
     fetchMetadataDeployRequest(){
         this.isLoading = true;
+        this.responseAsJson = '';
         //console.log('file=>',this.fileData.base64);
 		metadataDeployRequest({ userId: this.userId, metadataZip: this.fileData.base64, apiVersion: this.apiValue, deployOptionsJson: JSON.stringify(this.deployOptionsObj)})
 		.then(result => {
@@ -149,7 +150,6 @@ export default class Wb_MetadataDeploy extends LightningElement {
                     // eslint-disable-next-line @lwc/lwc/no-async-operation
                     this._serverInterval = setInterval(() => {
                         if(this.deployOptionsObj.checkOnly){
-                            this.showNotification('info', 'Deploy request initiated, please wait!.');
                             this.fetchValidateResult();
                         }else{
                             this.fetchDeployResult();
@@ -251,6 +251,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
     }
     quickDeployRequest(){
         this.isLoading = true;
+        this.responseAsJson = '';
         this.showNotification('info', 'Deploy request initiated, please wait!.');
         let quickDeployOption = JSON.parse(JSON.stringify(this.deployOptionsObj));
         quickDeployOption.checkOnly = false;

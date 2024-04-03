@@ -174,11 +174,18 @@ export default class Wb_DataProcess extends LightningElement {
         return requestBody;
     }
     performInsert(){
-        this.showNotification('info','Insert request initiated, please wait!.');
-        this.disableCrudActionBtn = true;
-        let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordData);
-        this.recordResponseData = this.recordData;
-        this.createRequest(requestBody);
+        let validate = this.dataValidation('CREATE', this.selectedObjectName, this.recordData);
+        if(validate){
+            this.showNotification('info','Insert request initiated, please wait!.');
+            this.disableCrudActionBtn = true;
+            let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordData);
+            this.recordResponseData = this.recordData;
+            this.successCount = 0;
+            this.errorCount = 0;
+            this.createRequest(requestBody);
+        }else{
+            this.showToastMessage('warning','Please complete all details.');
+        }
     }
     createRequest(requestBody){
         createRecordRequest({ userId: this.userId, apiVersion: this.apiValue, jsonRequestBody: JSON.stringify(requestBody)})
@@ -194,7 +201,9 @@ export default class Wb_DataProcess extends LightningElement {
                         this.successCount ++;
                     }else{
                         let errorObj = response[index].errors[0];
-                        this.recordResponseData[index]['Id'] = '';
+                        if(!this.recordResponseData[index].hasOwnProperty('Id')){
+                            this.recordResponseData[index]['Id'] = '';
+                        }
                         this.recordResponseData[index]['Sucess'] = response[index].success;
                         this.recordResponseData[index]['Error'] = errorObj.message;
                         this.errorCount ++;
@@ -214,11 +223,18 @@ export default class Wb_DataProcess extends LightningElement {
 		})
     }
     performUpdate(){
-        this.showNotification('info','Update request initiated, please wait!.');
-        this.disableCrudActionBtn = true;
-        let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordData);
-        this.recordResponseData = this.recordData;
-        this.updateRequest(requestBody);
+        let validate = this.dataValidation('UPDATE', this.selectedObjectName, this.recordData);
+        if(validate){
+            this.showNotification('info','Update request initiated, please wait!.');
+            this.disableCrudActionBtn = true;
+            let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordData);
+            this.recordResponseData = this.recordData;
+            this.successCount = 0;
+            this.errorCount = 0;
+            this.updateRequest(requestBody);
+        }else{
+            this.showToastMessage('warning','Please complete all details.');
+        }
     }
     updateRequest(requestBody){
         updateRecordRequest({ userId: this.userId, apiVersion: this.apiValue, jsonRequestBody: JSON.stringify(requestBody)})
@@ -264,11 +280,18 @@ export default class Wb_DataProcess extends LightningElement {
         return ids;
     }
     performDelete(){
-        this.showNotification('info','Delete request initiated, please wait!.');
-        this.disableCrudActionBtn = true;
-        let requestIds = this.generateRequestIds(this.recordData);
-        this.recordResponseData = this.recordData;
-        this.deleteRequest(requestIds);
+        let validate = this.dataValidation('DELETE', this.selectedObjectName, this.recordData);
+        if(validate){
+            this.showNotification('info','Delete request initiated, please wait!.');
+            this.disableCrudActionBtn = true;
+            let requestIds = this.generateRequestIds(this.recordData);
+            this.recordResponseData = this.recordData;
+            this.successCount = 0;
+            this.errorCount = 0;
+            this.deleteRequest(requestIds);
+        }else{
+            this.showToastMessage('warning','Please complete all details.');
+        }
     }
     deleteRequest(requestIds){
         deleteRecordRequest({ userId: this.userId, apiVersion: this.apiValue, jsonRequestBody: requestIds})
@@ -300,6 +323,33 @@ export default class Wb_DataProcess extends LightningElement {
 			console.log('error',error);
             this.showToastMessage('error', error);
 		})
+    }
+    dataValidation(operationType, objectName, recordData){
+        let validate = true;
+        switch (operationType) {
+            case 'CREATE': 
+                if(objectName && objectName === null && objectName === ''){
+                    validate = false;
+                }
+                if(recordData && recordData === null && recordData.length === 0){
+                    validate = false;
+                }
+                break;
+            case 'UPDATE':
+                if(objectName && objectName === null && objectName === ''){
+                    validate = false;
+                }
+                if(recordData && recordData === null && recordData.length === 0){
+                    validate = false;
+                }
+                break;
+            case 'DELETE':
+                if(recordData && recordData === null && recordData.length === 0){
+                    validate = false;
+                }
+                break;
+        }
+        return validate;
     }
     mapColumnHeader(){
 
