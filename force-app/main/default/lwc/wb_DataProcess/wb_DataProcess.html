@@ -63,7 +63,7 @@
                     <template if:true={hasRecordLoaded}>
                         <div class="recordPanel">
                             <span class="totalRec">
-                                <p>Total Records: {totalRecords}</p>
+                                <p>Total Records: {totalRecords},</p>
                             </span>
                             <span class="resultPanel">
                                 <p>Sucess: {successCount}</p>&nbsp;/&nbsp;<p>Error: {errorCount}</p>
@@ -74,7 +74,7 @@
                             </span>
                         </div>
                         <div class="slds-scrollable_y"  style="height:15rem;">
-                            <lightning-datatable data={recordData} columns={readColumns} key-field={recordKey} hide-checkbox-column></lightning-datatable>
+                            <lightning-datatable data={recordData} columns={recordColumns} key-field={recordKey} hide-checkbox-column></lightning-datatable>
                         </div>
                     </template>
                 </div>

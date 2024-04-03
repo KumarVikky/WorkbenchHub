@@ -10,13 +10,14 @@ import jszipmin from '@salesforce/resourceUrl/jszipmin';
 import filesaver from '@salesforce/resourceUrl/filesaver';
 import jquery from '@salesforce/resourceUrl/jquery';
 import { loadScript } from 'lightning/platformResourceLoader';
+import dataMapModal from 'c/wb_DataMap';
 
 export default class Wb_DataProcess extends LightningElement {
     @api userId;
     @api customDomain;
     @api apiValue;
     sObjectOptions;
-    readColumns =[];
+    recordColumns =[];
     recordData = [];
     recordKey;
     hasRecordLoaded = false;
@@ -32,6 +33,8 @@ export default class Wb_DataProcess extends LightningElement {
     errorCount = 0;
     recordResponseData = [];
     disableDownloadResBtn = true;
+    fieldList = [];
+    previousRecordList =[];
 
     get crudOptions() {
         return [
@@ -59,10 +62,12 @@ export default class Wb_DataProcess extends LightningElement {
     }
     handleActionChange(event){
         this.selectedCrudValue = event.target.value;
+        this.disableDownloadResBtn = true;
     }
     handleObjectChange(event) {
         this.selectedObjectName = event.detail.value;
         this.fetchFields();
+        this.disableDownloadResBtn = true;
     }
     handleCSVUpload(event){
         const files = event.detail.files;
@@ -94,7 +99,7 @@ export default class Wb_DataProcess extends LightningElement {
     parseCSV(csv) {
         const lines = csv.split(/\r\n|\n/);
         const headers = lines[0].split(',');
-        this.readColumns = headers.map((header) => {
+        this.recordColumns = headers.map((header) => {
             return { label: header, fieldName: header };
         });
         const data = [];
@@ -111,10 +116,13 @@ export default class Wb_DataProcess extends LightningElement {
                 data.push(obj);
             }
         });
-        this.recordKey = this.readColumns[0].fieldName;
+        this.recordKey = this.recordColumns[0].fieldName;
         this.recordData = data;
+        this.recordResponseData = this.recordData;
         this.hasRecordLoaded = true;
         this.disableMapBtn = false;
+        this.disableCrudActionBtn = false;
+        this.disableDownloadResBtn = true;
         this.totalRecords = this.recordData.length;
     }
     fetchSObjects(){
@@ -149,6 +157,7 @@ export default class Wb_DataProcess extends LightningElement {
                 this.fieldOptions = [];
                 for(let item of response.fields){
                     this.fieldOptions.push({label: item.name, value: item.name});
+                    this.fieldList.push(item.name);
                 }
                 this.isLoading = false;
             }else{
@@ -174,17 +183,16 @@ export default class Wb_DataProcess extends LightningElement {
         return requestBody;
     }
     performInsert(){
-        let validate = this.dataValidation('CREATE', this.selectedObjectName, this.recordData);
-        if(validate){
+        let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
+        if(validate.value){
             this.showNotification('info','Insert request initiated, please wait!.');
             this.disableCrudActionBtn = true;
-            let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordData);
-            this.recordResponseData = this.recordData;
+            let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordResponseData);
             this.successCount = 0;
             this.errorCount = 0;
             this.createRequest(requestBody);
         }else{
-            this.showToastMessage('warning','Please complete all details.');
+            this.showToastMessage('warning', validate.message);
         }
     }
     createRequest(requestBody){
@@ -209,7 +217,7 @@ export default class Wb_DataProcess extends LightningElement {
                         this.errorCount ++;
                     }
                 }
-                console.log('recordResponseData',this.recordResponseData);
+                //console.log('recordResponseData',this.recordResponseData);
                 this.hideNotification();
                 this.disableCrudActionBtn = false;
                 this.disableDownloadResBtn = false;
@@ -219,21 +227,20 @@ export default class Wb_DataProcess extends LightningElement {
 		})
 		.catch(error => {
 			console.log('error',error);
-            this.showToastMessage('error', error);
+            this.showToastMessage('error', JSON.stringify(error));
 		})
     }
     performUpdate(){
-        let validate = this.dataValidation('UPDATE', this.selectedObjectName, this.recordData);
-        if(validate){
+        let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
+        if(validate.value){
             this.showNotification('info','Update request initiated, please wait!.');
             this.disableCrudActionBtn = true;
-            let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordData);
-            this.recordResponseData = this.recordData;
+            let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordResponseData);
             this.successCount = 0;
             this.errorCount = 0;
             this.updateRequest(requestBody);
         }else{
-            this.showToastMessage('warning','Please complete all details.');
+            this.showToastMessage('warning', validate.message);
         }
     }
     updateRequest(requestBody){
@@ -254,7 +261,7 @@ export default class Wb_DataProcess extends LightningElement {
                         this.errorCount ++;
                     }
                 }
-                console.log('recordResponseData',this.recordResponseData);
+                //console.log('recordResponseData',this.recordResponseData);
                 this.hideNotification();
                 this.disableCrudActionBtn = false;
                 this.disableDownloadResBtn = false;
@@ -264,7 +271,7 @@ export default class Wb_DataProcess extends LightningElement {
 		})
 		.catch(error => {
 			console.log('error',error);
-            this.showToastMessage('error', error);
+            this.showToastMessage('error', JSON.stringify(error));
 		})
     }
     generateRequestIds(recordData){
@@ -280,17 +287,16 @@ export default class Wb_DataProcess extends LightningElement {
         return ids;
     }
     performDelete(){
-        let validate = this.dataValidation('DELETE', this.selectedObjectName, this.recordData);
-        if(validate){
+        let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
+        if(validate.value){
             this.showNotification('info','Delete request initiated, please wait!.');
             this.disableCrudActionBtn = true;
-            let requestIds = this.generateRequestIds(this.recordData);
-            this.recordResponseData = this.recordData;
+            let requestIds = this.generateRequestIds(this.recordResponseData);
             this.successCount = 0;
             this.errorCount = 0;
             this.deleteRequest(requestIds);
         }else{
-            this.showToastMessage('warning','Please complete all details.');
+            this.showToastMessage('warning', validate.message);
         }
     }
     deleteRequest(requestIds){
@@ -300,18 +306,23 @@ export default class Wb_DataProcess extends LightningElement {
                 let response = JSON.parse(result);
                 console.log('response',response);
                 for(let index in response){
-                    if(response[index].success){
-                        this.recordResponseData[index]['Sucess'] = response[index].success;
-                        this.recordResponseData[index]['Error'] = '';
-                        this.successCount ++;
+                    if(!response[index].hasOwnProperty('errorCode')){
+                        if(response[index].success){
+                            this.recordResponseData[index]['Sucess'] = response[index].success;
+                            this.recordResponseData[index]['Error'] = '';
+                            this.successCount ++;
+                        }else{
+                            let errorObj = response[index].errors[0];
+                            this.recordResponseData[index]['Sucess'] = response[index].success;
+                            this.recordResponseData[index]['Error'] = errorObj.message;
+                            this.errorCount ++;
+                        }
                     }else{
-                        let errorObj = response[index].errors[0];
-                        this.recordResponseData[index]['Sucess'] = response[index].success;
-                        this.recordResponseData[index]['Error'] = errorObj.message;
-                        this.errorCount ++;
+                        this.showToastMessage('error', response[index].message);
+                        break;
                     }
                 }
-                console.log('recordResponseData',this.recordResponseData);
+                //console.log('recordResponseData',this.recordResponseData);
                 this.hideNotification();
                 this.disableCrudActionBtn = false;
                 this.disableDownloadResBtn = false;
@@ -321,38 +332,57 @@ export default class Wb_DataProcess extends LightningElement {
 		})
 		.catch(error => {
 			console.log('error',error);
-            this.showToastMessage('error', error);
+            this.showToastMessage('error', JSON.stringify(error));
 		})
     }
     dataValidation(operationType, objectName, recordData){
-        let validate = true;
+        let validate = {value: true, message: ''};
         switch (operationType) {
             case 'CREATE': 
-                if(objectName && objectName === null && objectName === ''){
-                    validate = false;
-                }
-                if(recordData && recordData === null && recordData.length === 0){
-                    validate = false;
-                }
-                break;
             case 'UPDATE':
-                if(objectName && objectName === null && objectName === ''){
-                    validate = false;
+                if(objectName === null || objectName === ''){
+                    validate.value = false;
+                    validate.message = 'Please select object.';
                 }
-                if(recordData && recordData === null && recordData.length === 0){
-                    validate = false;
+                if(recordData === null || recordData.length === 0){
+                    validate.value = false;
+                    validate.message = 'Please upload csv file.';
                 }
                 break;
             case 'DELETE':
-                if(recordData && recordData === null && recordData.length === 0){
-                    validate = false;
+                if(recordData === null || recordData.length === 0){
+                    validate.value = false;
+                    validate.message = 'Please upload csv file.';
                 }
                 break;
+            default: 
+                validate.value = true;
+                validate.message = '';
         }
         return validate;
     }
-    mapColumnHeader(){
-
+    
+    async mapColumnHeader(){
+        let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
+        if(validate.value){
+            const result = await dataMapModal.open({
+                size: 'medium',
+                description: 'Map Column',
+                recordList: this.recordColumns,
+                fieldList: this.fieldList,
+                previousRecordList: this.previousRecordList,
+                recordResponseList: this.recordResponseData,
+                fieldOptions: this.fieldOptions,
+            });
+            if(result && result !== ''){
+                this.recordResponseData = result.finalMappedDataList;
+                this.previousRecordList = result.previousRecordList;
+                console.log('finalMappedDataList',result.finalMappedDataList);
+                console.log('previousRecordList',result.previousRecordList);
+            }
+        }else{
+            this.showToastMessage('warning', validate.message);
+        }
     }
     handleDownloadResponse(){
         this.disableDownloadResBtn = true;
