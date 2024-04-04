@@ -6,41 +6,24 @@
                 <template if:true={hasErrorMsg}>
                     <div class="slds-align_absolute-center slds-text-heading_small slds-var-m-bottom_xxx-small textColor">{errorMsg}</div>
                 </template>
-                <lightning-layout multiple-rows>
-                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="1">
-                        <span class="slds-align_absolute-center slds-var-m-bottom_x-small">
-                            <p>Sl.No.</p>
-                        </span> 
-                    </lightning-layout-item>
-                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5">
-                        <span class="slds-align_absolute-center slds-var-m-bottom_x-small">
-                            <p>Column</p>
-                        </span>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5">
-                        <span class="slds-align_absolute-center slds-var-m-bottom_x-small">
-                            <p>Field</p>
-                        </span>
-                    </lightning-layout-item>
-                </lightning-layout>
                 <template iterator:it={columnMapData}>
                     <div key={it.value.id}>
                         <lightning-layout multiple-rows >
-                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="1">
+                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="1" padding="horizontal-small">
                                 <div class="slds-align_absolute-center pTop">
                                     <p>{it.value.id}</p>
                                 </div> 
                             </lightning-layout-item>
-                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5">
-                                <div class="slds-align_absolute-center pTop">
-                                    <lightning-formatted-text value={it.value.fromColumn}></lightning-formatted-text>
+                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                                <div>
+                                    <lightning-input type="text" label="Column" value={it.value.fromColumn} disabled></lightning-input>
                                 </div>
                             </lightning-layout-item>
-                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5">
-                                <div class="mBottom">
+                            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="horizontal-small">
+                                <div>
                                     <lightning-combobox data-id={it.value.id} name="columnMapWith"
-                                        label="Map With"
-                                        variant="label-hidden"
+                                        label="Field"
+                                        field-level-help="Select field to map with column."
                                         value={it.value.toColumn}
                                         options={fieldOptions}
                                         onchange={handleFieldColumMap}

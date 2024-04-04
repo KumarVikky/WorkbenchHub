@@ -201,19 +201,18 @@
             <template if:true={recordList}>
                 <div class="slds-p-around_medium">
                     <lightning-card>
-                        <div slot="title">
-                            <div class="slds-p-vertical_x-small slds-grid slds-grid_vertical-align-center">
-                                <span class="slds-col">
-                                    <h3>Total Records: {totalRecords}</h3>
-                                </span>
-                                <span class="slds-col ringProgress">
-                                    <lightning-progress-ring value={progressValue} variant={progressVariant}></lightning-progress-ring>
-                                </span>
-                            </div>
+                        <div class="recordPanel">
+                            <span class="totalRec">
+                                <h3>Total Records: {totalRecords}</h3>
+                            </span>
+                            <span class="resultPanel">
+                                <lightning-progress-ring value={progressValue} variant={progressVariant}></lightning-progress-ring>
+                            </span>
+                            <span class="btnPos">
+                                <lightning-button icon-name="utility:download" label="Download CSV" title="Download CSV File"
+                                onclick={downloadCSVFile} variant="brand" slot="actions" disabled={disableDownloadBtn} class="slds-m-bottom_xx-small"></lightning-button>
+                            </span>
                         </div>
-                        <lightning-button icon-name="utility:download" label="Download CSV" title="Download CSV File"
-                        onclick={downloadCSVFile} variant="brand" slot="actions" disabled={disableDownloadBtn} class="slds-m-left_x-small"></lightning-button>
-                        
                         <div class="slds-scrollable_y"  style="height:15rem;">
                             <lightning-datatable data={recordList} columns={recordColumns} key-field={recordKey} hide-checkbox-column></lightning-datatable>
                         </div>

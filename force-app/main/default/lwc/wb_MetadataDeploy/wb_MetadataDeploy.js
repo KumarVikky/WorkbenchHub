@@ -22,7 +22,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
     isLoading = false;
     deployAsyncResult;
     deployOptionsObj;
-    responseAsJson;
+    @track responseAsJson;
     showTestRun = false;
     showValidateBtn = false;
     disableQuickDeployBtn = true;

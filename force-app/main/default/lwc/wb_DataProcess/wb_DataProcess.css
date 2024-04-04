@@ -18,3 +18,13 @@
     margin-left: 8px;
     display: inline-flex;
 }
+@media only screen and (max-width: 600px) {
+    .btn2_pos {
+      margin-right: 4px;
+      margin-top: 3px;
+      display: inline-block;
+    }
+    .btn1_pos {
+        margin-left: 1rem;
+    }
+}

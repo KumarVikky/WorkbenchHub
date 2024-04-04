@@ -21,19 +21,19 @@
                 <c-wb_-query user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-query>
             </template>
         </lightning-tab>
-        <lightning-tab label="Metadata Retrieve" value="two">
+        <lightning-tab label="Modify Records" value="two">
+            <template if:true={hasUserToken}>
+                <c-wb_-data-process user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-data-process>
+            </template>
+        </lightning-tab>
+        <lightning-tab label="Metadata Retrieve" value="three">
             <template if:true={hasUserToken}>
                 <c-wb_-metadata-retrieve user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-metadata-retrieve>
             </template>
         </lightning-tab>
-        <lightning-tab label="Metadata Deploy" value="three">
+        <lightning-tab label="Metadata Deploy" value="four">
             <template if:true={hasUserToken}>
                 <c-wb_-metadata-deploy user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-metadata-deploy>
-            </template>
-        </lightning-tab>
-        <lightning-tab label="Process Record" value="four">
-            <template if:true={hasUserToken}>
-                <c-wb_-data-process user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-data-process>
             </template>
         </lightning-tab>
     </lightning-tabset>
