@@ -129,8 +129,21 @@ export default class Wb_MetadataDeploy extends LightningElement {
         this.disableDeployPackageBtn = false;
         this.disableValidatePackageBtn = false;
     }
-    handleDeployPackage(){
-        this.handleConfirmClick();
+    async handleDeployPackage(){
+        let toastMessage = '';
+        let alertMessage = '';
+        if(this.deployOptionsObj.checkOnly){
+            toastMessage = 'Validation request initiated, please wait!.';
+            alertMessage = 'Do you want to validate these components?'
+        }else{
+            toastMessage = 'Deploy request initiated, please wait!.';
+            alertMessage = 'Do you want to deploy these components?'
+        }
+        let hasConfirmed = await this.handleConfirmClick(alertMessage);
+        if(hasConfirmed){
+            this.showNotification('info', toastMessage);
+            this.fetchMetadataDeployRequest();
+        }
     }
     fetchMetadataDeployRequest(){
         this.isLoading = true;
@@ -141,7 +154,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
             this.isLoading = false;
             if(result){
                 let response = JSON.parse(result);
-                console.log('response=>',response);
+                //console.log('response=>',response);
                 if(response.id !== null){
                     this.deployAsyncResult = response;
                     this.disableDeployPackageBtn = true;
@@ -249,10 +262,16 @@ export default class Wb_MetadataDeploy extends LightningElement {
             this.disableQuickDeployBtn = true;
 		})
     }
+    async quickDeploy(){
+        let hasConfirmed = await this.handleConfirmClick('Do you want to deploy these components?');
+        if(hasConfirmed){
+            this.showNotification('info', 'Deploy request initiated, please wait!.');
+            this.quickDeployRequest();
+        }
+    }
     quickDeployRequest(){
         this.isLoading = true;
         this.responseAsJson = '';
-        this.showNotification('info', 'Deploy request initiated, please wait!.');
         let quickDeployOption = JSON.parse(JSON.stringify(this.deployOptionsObj));
         quickDeployOption.checkOnly = false;
         metadataDeployRequest({ userId: this.userId, metadataZip: this.fileData.base64, apiVersion: this.apiValue, deployOptionsJson: JSON.stringify(quickDeployOption)})
@@ -260,7 +279,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
             this.isLoading = false;
             if(result){
                 let response = JSON.parse(result);
-                console.log('response=>',response);
+                //console.log('response=>',response);
                 if(response.id !== null){
                     this.disableDeployPackageBtn = true;
                     this.disableValidatePackageBtn = true;
@@ -291,21 +310,14 @@ export default class Wb_MetadataDeploy extends LightningElement {
             }),
         );
     }
-    async handleConfirmClick() {
+    async handleConfirmClick(message) {
         const result = await LightningConfirm.open({
-            message: 'Are you sure you want to deploy all packaged items?',
+            message: message,
             variant: 'header',
             label: 'Confirmation',
             theme:'info',
         });
-        if(result){
-            if(this.deployOptionsObj.checkOnly){
-                this.showNotification('info', 'Validation request initiated, please wait!.');
-            }else{
-                this.showNotification('info', 'Deploy request initiated, please wait!.');
-            }
-            this.fetchMetadataDeployRequest();
-        }
+        return result;
     }
     showNotification(type, message){
         let data = {'type':type, 'message':message};

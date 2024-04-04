@@ -11,6 +11,7 @@ import filesaver from '@salesforce/resourceUrl/filesaver';
 import jquery from '@salesforce/resourceUrl/jquery';
 import { loadScript } from 'lightning/platformResourceLoader';
 import dataMapModal from 'c/wb_DataMap';
+import LightningConfirm from 'lightning/confirm';
 
 export default class Wb_DataProcess extends LightningElement {
     @api userId;
@@ -36,6 +37,7 @@ export default class Wb_DataProcess extends LightningElement {
     disableDownloadResBtn = true;
     fieldList = [];
     previousRecordList =[];
+    hasAdvanceEdit = false;
 
     get crudOptions() {
         return [
@@ -75,6 +77,12 @@ export default class Wb_DataProcess extends LightningElement {
         if (files.length > 0) {
             const file = files[0];
             this.read(file);
+        }
+    }
+    handleInputChange(event) {
+        let tagName = event.currentTarget.name;
+        if(tagName === 'AdvanceEdit'){
+            this.hasAdvanceEdit = event.currentTarget.checked;
         }
     }
     async read(file){
@@ -131,18 +139,52 @@ export default class Wb_DataProcess extends LightningElement {
     }
     async handleInLineSave(event){
         const records = event.detail.draftValues;
+        let overrideMap = new Map();
+        let appendMap = new Map();
         for(let item of records){
             let selectedId = Number(item.uniqueKey);
             let data = this.recordData.find(e => e.uniqueKey == selectedId);
-            console.log('recordData==',data);
+            //console.log('recordData==',data);
             for (const [key, value] of Object.entries(data)) {
                 if(key !== 'uniqueKey' && item.hasOwnProperty(key)){
                     data[key] = item[key];
+                    if(this.hasAdvanceEdit && item[key].includes('*[') && item[key].includes(']*')){
+                        if(item[key].indexOf('*[') === 0 && item[key].indexOf(']*') === item[key].length-2){
+                            overrideMap.set(key,item[key].substring(item[key].indexOf('*[')+2, item[key].indexOf(']*')));
+                        }else{
+                            appendMap.set(key,item[key].substring(item[key].indexOf('*[')+2, item[key].indexOf(']*')));
+                            data[key] = item[key].replace(item[key].substring(item[key].indexOf('*['), item[key].indexOf(']*')+2),'');
+                        }
+                    }
                 }
+            }
+            if(overrideMap.size > 0){
+                this.overrideRecord(overrideMap);
+            }
+            if(appendMap.size > 0){
+                this.appendRecord(appendMap);
             }
         }
         //console.log('recordData',this.recordData);
         this.recordDataDraft = [];
+    }
+    overrideRecord(overrideMap){
+        for(let recObj of this.recordData){
+            for (const [key, value] of Object.entries(recObj)) {
+                if(overrideMap.has(key)){
+                    recObj[key] = overrideMap.get(key);
+                }
+            }
+        }
+    }
+    appendRecord(appendMap){
+        for(let recObj of this.recordData){
+            for (const [key, value] of Object.entries(recObj)) {
+                if(appendMap.has(key)){
+                    recObj[key] = value + appendMap.get(key);
+                }
+            }
+        }
     }
     fetchSObjects(){
         this.isLoading = true;
@@ -203,15 +245,18 @@ export default class Wb_DataProcess extends LightningElement {
         let requestBody = {'allOrNone': false, 'records': records};
         return requestBody;
     }
-    performInsert(){
+    async performInsert(){
         let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
         if(validate.value){
-            this.showNotification('info','Insert request initiated, please wait!.');
-            this.disableCrudActionBtn = true;
             let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordResponseData);
-            this.successCount = 0;
-            this.errorCount = 0;
-            this.createRequest(requestBody);
+            const hasConfirmed = await this.handleConfirmClick('Do you want to insert these records?');
+            if(hasConfirmed){
+                this.showNotification('info','Insert request initiated, please wait!.');
+                this.disableCrudActionBtn = true;
+                this.successCount = 0;
+                this.errorCount = 0;
+                this.createRequest(requestBody);
+            }
         }else{
             this.showToastMessage('warning', validate.message);
         }
@@ -221,7 +266,7 @@ export default class Wb_DataProcess extends LightningElement {
 		.then(result => {
             if(result){
                 let response = JSON.parse(result);
-                console.log('response',response);
+                //console.log('response',response);
                 for(let index in response){
                     if(response[index].success){
                         this.recordResponseData[index]['Id'] = response[index].Id;
@@ -251,15 +296,18 @@ export default class Wb_DataProcess extends LightningElement {
             this.showToastMessage('error', JSON.stringify(error));
 		})
     }
-    performUpdate(){
+    async performUpdate(){
         let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
         if(validate.value){
-            this.showNotification('info','Update request initiated, please wait!.');
-            this.disableCrudActionBtn = true;
             let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordResponseData);
-            this.successCount = 0;
-            this.errorCount = 0;
-            this.updateRequest(requestBody);
+            let hasConfirmed = await this.handleConfirmClick('Do you want to update these records?');
+            if(hasConfirmed){
+                this.showNotification('info','Update request initiated, please wait!.');
+                this.disableCrudActionBtn = true;
+                this.successCount = 0;
+                this.errorCount = 0;
+                this.updateRequest(requestBody);
+            }
         }else{
             this.showToastMessage('warning', validate.message);
         }
@@ -269,7 +317,7 @@ export default class Wb_DataProcess extends LightningElement {
 		.then(result => {
             if(result){
                 let response = JSON.parse(result);
-                console.log('response',response);
+                //console.log('response',response);
                 for(let index in response){
                     if(response[index].success){
                         this.recordResponseData[index]['Sucess'] = response[index].success;
@@ -307,15 +355,18 @@ export default class Wb_DataProcess extends LightningElement {
         }
         return ids;
     }
-    performDelete(){
+    async performDelete(){
         let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
         if(validate.value){
-            this.showNotification('info','Delete request initiated, please wait!.');
-            this.disableCrudActionBtn = true;
             let requestIds = this.generateRequestIds(this.recordResponseData);
-            this.successCount = 0;
-            this.errorCount = 0;
-            this.deleteRequest(requestIds);
+            let hasConfirmed = await this.handleConfirmClick('Do you want to delete these records?');
+            if(hasConfirmed){
+                this.showNotification('info','Delete request initiated, please wait!.');
+                this.disableCrudActionBtn = true;
+                this.successCount = 0;
+                this.errorCount = 0;
+                this.deleteRequest(requestIds);
+            }
         }else{
             this.showToastMessage('warning', validate.message);
         }
@@ -325,7 +376,7 @@ export default class Wb_DataProcess extends LightningElement {
 		.then(result => {
             if(result){
                 let response = JSON.parse(result);
-                console.log('response',response);
+                //console.log('response',response);
                 for(let index in response){
                     if(!response[index].hasOwnProperty('errorCode')){
                         if(response[index].success){
@@ -486,5 +537,14 @@ export default class Wb_DataProcess extends LightningElement {
                 mode: 'dismissible'
             }),
         );
+    }
+    async handleConfirmClick(message) {
+        const result = await LightningConfirm.open({
+            message: message,
+            variant: 'header',
+            label: 'Confirmation',
+            theme:'info',
+        });
+        return result;
     }
 }

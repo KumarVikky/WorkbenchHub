@@ -1,7 +1,7 @@
 <!-- sldsValidatorIgnore -->
 <template>
     <div class="slds-box slds-p-around_none slds-var-m-top_x-small slds-var-m-bottom_medium slds-m-horizontal_none">
-        <P class="p1">Upload CSV data files to perform CRUD operations. <span class="slds-var-m-left_x-small">[API: {apiValue}]</span></P>
+        <P class="p1">Upload CSV data files, and map column, or modify data using inline-edit to perform CRUD operations. <span class="slds-var-m-left_x-small">[API: {apiValue}]</span></P>
         <lightning-layout multiple-rows>
             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
                 <div class="slds-box slds-var-p-around_medium">
@@ -32,6 +32,11 @@
                             </span>
                         </lightning-layout-item>
                     </lightning-layout>
+                </div>
+                <div class="slds-box slds-p-around_medium">
+                    <span>
+                        <lightning-input type="checkbox" field-level-help="Wrap entire text like: *[newtext/oldtext]* to override all rows, or wrap some text like: oldtext*[newtext]* to append this new text to all rows." label="Advance Inline-Edit" name="AdvanceEdit" checked={hasAdvanceEdit} onchange={handleInputChange}></lightning-input>
+                    </span>
                 </div>
                 <div class="slds-box slds-p-around_medium">
                     <template lwc:if={isCreatable}>
@@ -73,7 +78,7 @@
                                 onclick={mapColumnHeader} variant="brand" slot="actions" disabled={disableMapBtn} class="slds-m-bottom_xx-small"></lightning-button>
                             </span>
                         </div>
-                        <div class="slds-scrollable_y"  style="height:15rem;">
+                        <div class="slds-scrollable_y"  style="height:17rem;">
                             <lightning-datatable data={recordData} columns={recordColumns} draft-values={recordDataDraft} onsave={handleInLineSave} key-field={recordKey} hide-checkbox-column></lightning-datatable>
                         </div>
                     </template>
