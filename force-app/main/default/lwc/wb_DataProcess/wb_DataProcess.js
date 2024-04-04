@@ -169,21 +169,35 @@ export default class Wb_DataProcess extends LightningElement {
         this.recordDataDraft = [];
     }
     overrideRecord(overrideMap){
+        let index = 0;
         for(let recObj of this.recordData){
             for (const [key, value] of Object.entries(recObj)) {
                 if(overrideMap.has(key)){
-                    recObj[key] = overrideMap.get(key);
+                    let val = overrideMap.get(key);
+                    if(val.includes('{') && val.includes('}')){
+                        let num = Number(val.substring(val.indexOf('{')+1, val.indexOf('}')));
+                        val = val.replace(val.substring(val.indexOf('{'), val.indexOf('}')+1), num+index);
+                    }
+                    recObj[key] = val;
                 }
             }
+            index ++;
         }
     }
     appendRecord(appendMap){
+        let index = 0;
         for(let recObj of this.recordData){
             for (const [key, value] of Object.entries(recObj)) {
                 if(appendMap.has(key)){
-                    recObj[key] = value + appendMap.get(key);
+                    let val = appendMap.get(key);
+                    if(val.includes('{') && val.includes('}')){
+                        let num = Number(val.substring(val.indexOf('{')+1, val.indexOf('}')));
+                        val = val.replace(val.substring(val.indexOf('{'), val.indexOf('}')+1), num+index);
+                    }
+                    recObj[key] = value + val;
                 }
             }
+            index ++;
         }
     }
     fetchSObjects(){
