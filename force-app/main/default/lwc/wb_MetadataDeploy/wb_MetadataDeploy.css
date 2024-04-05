@@ -3,20 +3,21 @@
     margin-top: 4px;
     text-align: center;
 }
-.boxMargin{
-    margin-top: 14px;
-}
 .scroller {
-    height: 160px;
+    height: 186px;
     overflow: auto;
     padding: var(--lwc-varSpacingXSmall, 8px);
     border: solid var(--lwc-borderWidthThin, 1px) #eee;
+    min-height: 186px;
 }
 .customBox{
-    height: 118px;
+    height: 96px;
 }
 .responsePanel{
-    display: ruby-text;
+    display: ruby;
+}
+.dataTablePanel{
+    height: 22rem !important;
 }
 @media only screen and (max-width: 600px) {
     .btn2_pos {
@@ -26,5 +27,8 @@
     }
     .btn1_pos {
           margin-left: 1rem;
+    }
+    .customBoxMob {
+        height: 116px;
     }
 }

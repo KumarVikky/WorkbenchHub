@@ -15,9 +15,9 @@
                     <lightning-input type="file" name="MetadataZipFile" label="Upload Metadata Zip Files" accept=".zip"  onchange={handleFilesChange}></lightning-input>
                 </div>
                 <template if:true={fileData}>
-                    <p class="slds-m-left_x-small">File Name: {fileData.filename}</p>
+                    <p class="slds-m-left_x-small slds-m-bottom_x-small">File Name: {fileData.filename}</p>
                 </template>
-                <div class="slds-box slds-p-around_medium boxMargin">
+                <div class="slds-box slds-p-around_medium">
                     <lightning-layout multiple-rows>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="3" large-device-size="3">
                             <lightning-input type="checkbox" label="Rollback on Error" name="RollbackOnError" checked={deployOptionsObj.rollbackOnError} onchange={handleInputChange}></lightning-input>
@@ -49,7 +49,7 @@
                         </lightning-layout-item>
                     </lightning-layout> 
                 </div>
-                <div class="slds-box slds-p-around_medium boxMargin">
+                <div class="slds-box slds-p-around_medium">
                     <div class="responsePanel">
                         <span>
                             <p class="slds-m-bottom_x-small">Response:</p>
@@ -69,13 +69,13 @@
                 <div class="slds-box slds-p-around_medium">
                     <div class="slds-theme_default">
                         <lightning-card title="Package Items">
-                            <div class="slds-scrollable_y"  style="height:19rem;">
+                            <div data-id="datatable" class="slds-scrollable_y"  style="height:20.4rem;">
                                 <lightning-datatable hide-checkbox-column data={packageItemsData} columns={packageItemsColumn} key-field="ItemName" onrowselection={handleSelectedPackageItems}></lightning-datatable> 
                             </div>
                         </lightning-card>
                     </div>
                 </div>
-                <div class="slds-box slds-p-around_medium customBox">
+                <div class="slds-box slds-p-around_medium customBox customBoxMob">
                     <lightning-layout multiple-rows>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
                             <span class="slds-grid slds-wrap">

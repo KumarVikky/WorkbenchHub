@@ -104,6 +104,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
             };
             this.isLoading = true;
             this.packageItemsData = [];
+            this.adjustDataPanel();
             this.readPackageXML(this.fileData,this);
         }
         reader.readAsDataURL(file);
@@ -151,6 +152,12 @@ export default class Wb_MetadataDeploy extends LightningElement {
             this.showNotification('info', toastMessage);
             this.fetchMetadataDeployRequest();
         }
+    }
+    adjustDataPanel(){
+        var divblock = this.template.querySelector('[data-id="datatable"]');
+        if(divblock){
+            this.template.querySelector('[data-id="datatable"]').className='dataTablePanel';
+        }       
     }
     fetchMetadataDeployRequest(){
         this.isLoading = true;
