@@ -52,7 +52,6 @@ export default class Wb_MetadataDeploy extends LightningElement {
         this.packageItemsColumn = [{label:'Name',fieldName:'itemName', type:'text'},
                                    {label:'Type',fieldName:'itemType', type:'text'}];
         this.packageItemsData = [];
-        //this.responseAsJson = JSON.stringify(this.blogdetail, null, 2);
         this.deployOptionsObj = {'checkOnly':true, 'ignoreWarnings':false, 'rollbackOnError':true, 'singlePackage':true, 'testLevel':'NoTestRun', 'runTests':''};
         if(this.deployOptionsObj.checkOnly){
             this.showValidateBtn = true;
@@ -156,7 +155,6 @@ export default class Wb_MetadataDeploy extends LightningElement {
     fetchMetadataDeployRequest(){
         this.isLoading = true;
         this.responseAsJson = '';
-        //console.log('file=>',this.fileData.base64);
 		metadataDeployRequest({ userId: this.userId, metadataZip: this.fileData.base64, apiVersion: this.apiValue, deployOptionsJson: JSON.stringify(this.deployOptionsObj)})
 		.then(result => {
             this.isLoading = false;
@@ -234,6 +232,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
         checkAsyncDeployRequest({ userId: this.userId, deployAsyncResultJSON: JSON.stringify(this.deployAsyncResult), apiVersion: this.apiValue})
 		.then(result => {
             if(result !== '' && result !== null){
+                //console.log('result=>',result);
                 let response = JSON.parse(result);
                 this.responseAsJson = JSON.stringify(response, null, 2);
                 if(response.errorMessage !== null){
@@ -289,6 +288,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
                 let response = JSON.parse(result);
                 //console.log('response=>',response);
                 if(response.id !== null){
+                    this.deployAsyncResult = response;
                     this.disableDeployPackageBtn = true;
                     this.disableValidatePackageBtn = true;
                     this.disableQuickDeployBtn = true;
