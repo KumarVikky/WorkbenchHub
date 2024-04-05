@@ -15,6 +15,9 @@
 .customBox{
     height: 118px;
 }
+.responsePanel{
+    display: ruby-text;
+}
 @media only screen and (max-width: 600px) {
     .btn2_pos {
         margin-right: 4px;

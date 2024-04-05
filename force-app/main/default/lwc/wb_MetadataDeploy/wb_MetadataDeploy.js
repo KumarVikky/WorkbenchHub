@@ -37,6 +37,9 @@ export default class Wb_MetadataDeploy extends LightningElement {
             { label: 'RunAllTestsInOrg', value: 'RunAllTestsInOrg' },
         ];
     }
+    get isAllowedCopy(){
+        return this.responseAsJson === '' || this.responseAsJson === undefined ? false : true;
+    }
 
     connectedCallback(){
         Promise.all([
@@ -50,7 +53,12 @@ export default class Wb_MetadataDeploy extends LightningElement {
                                    {label:'Type',fieldName:'itemType', type:'text'}];
         this.packageItemsData = [];
         //this.responseAsJson = JSON.stringify(this.blogdetail, null, 2);
-        this.deployOptionsObj = {'checkOnly':false, 'ignoreWarnings':false, 'rollbackOnError':true, 'singlePackage':true, 'testLevel':'NoTestRun', 'runTests':''};
+        this.deployOptionsObj = {'checkOnly':true, 'ignoreWarnings':false, 'rollbackOnError':true, 'singlePackage':true, 'testLevel':'NoTestRun', 'runTests':''};
+        if(this.deployOptionsObj.checkOnly){
+            this.showValidateBtn = true;
+        }else{
+            this.showValidateBtn = false;
+        }
     }
 
     handleTestLevelChange(event) {
@@ -318,6 +326,18 @@ export default class Wb_MetadataDeploy extends LightningElement {
             theme:'info',
         });
         return result;
+    }
+    handleCopyResponse(){
+        let content = this.refs.jsonContent;
+        if(content !== undefined){
+            const el = document.createElement('textarea');
+            el.value = content.innerHTML;
+            document.body.appendChild(el);
+            el.select();
+            document.execCommand('copy');
+            document.body.removeChild(el);
+            alert('Response copied:' + el.value);
+        }
     }
     showNotification(type, message){
         let data = {'type':type, 'message':message};
