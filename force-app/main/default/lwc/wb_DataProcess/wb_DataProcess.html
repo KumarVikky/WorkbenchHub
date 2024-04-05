@@ -7,6 +7,9 @@
                 <div class="slds-box slds-var-p-around_medium">
                     <lightning-input type="file" name="CSVDataFile" label="Upload CSV Files" accept=".csv"  onchange={handleCSVUpload}></lightning-input>
                 </div>
+                <template if:true={fileData}>
+                    <p class="slds-m-left_x-small slds-m-bottom_x-small">File Name: {fileData.filename}</p>
+                </template>
                 <div class="slds-box slds-p-around_medium">
                     <lightning-layout multiple-rows>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">

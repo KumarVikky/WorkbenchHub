@@ -38,7 +38,8 @@ export default class Wb_DataProcess extends LightningElement {
     fieldList = [];
     previousRecordList =[];
     hasAdvanceEdit = false;
-
+    fileData;
+    
     get crudOptions() {
         return [
             { label: 'Create', value: 'CREATE' },
@@ -76,6 +77,9 @@ export default class Wb_DataProcess extends LightningElement {
         const files = event.detail.files;
         if (files.length > 0) {
             const file = files[0];
+            this.fileData = {
+                'filename': file.name
+            };
             this.read(file);
         }
     }

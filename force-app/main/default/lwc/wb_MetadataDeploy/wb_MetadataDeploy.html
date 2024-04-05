@@ -14,6 +14,9 @@
                 <div class="slds-box slds-p-around_medium">
                     <lightning-input type="file" name="MetadataZipFile" label="Upload Metadata Zip Files" accept=".zip"  onchange={handleFilesChange}></lightning-input>
                 </div>
+                <template if:true={fileData}>
+                    <p class="slds-m-left_x-small">File Name: {fileData.filename}</p>
+                </template>
                 <div class="slds-box slds-p-around_medium boxMargin">
                     <lightning-layout multiple-rows>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="3" large-device-size="3">
