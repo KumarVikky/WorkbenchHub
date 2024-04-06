@@ -278,7 +278,7 @@ export default class Wb_DataProcess extends LightningElement {
         for(let record of recordData){
             let obj = {'attributes': {'type': objectName}};
             for (const [key, value] of Object.entries(record)) {
-                if(key !== 'uniqueKey'){
+                if(key !== 'uniqueKey' && key !== 'Sucess' && key !== 'Error'){
                     obj[key] = value;
                 }
             }
