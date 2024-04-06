@@ -104,7 +104,6 @@ export default class Wb_MetadataDeploy extends LightningElement {
             };
             this.isLoading = true;
             this.packageItemsData = [];
-            this.adjustDataPanel();
             this.readPackageXML(this.fileData,this);
         }
         reader.readAsDataURL(file);
@@ -136,6 +135,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
         this.isLoading = false;
         this.disableDeployPackageBtn = false;
         this.disableValidatePackageBtn = false;
+        this.adjustDataPanel();
     }
     async handleDeployPackage(){
         let toastMessage = '';

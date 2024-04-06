@@ -38,7 +38,7 @@
                 </div>
                 <div class="slds-box slds-p-around_medium">
                     <span>
-                        <lightning-input type="checkbox" field-level-help="Wrap entire text like: *[oldtext/newtext]* to override all rows data, or wrap some text like: oldtext*[newtext]* to append this new text to all rows, or wrap number like: oldtext*[newtext-{1}]* to increment all rows." label="Advance Inline-Edit" name="AdvanceEdit" checked={hasAdvanceEdit} onchange={handleInputChange}></lightning-input>
+                        <lightning-input type="checkbox" field-level-help="Wrap entire text like: *[oldtext/newtext]* to override all rows data, or wrap some text like: oldtext*[newtext]* to append new text at end of all rows, or wrap number like: *[{1}]* to increment all rows, or wrap text like: *[(searchValue,newValue)]* to replace all data rows with newValue." label="Advance Inline-Edit" name="AdvanceEdit" checked={hasAdvanceEdit} onchange={handleInputChange}></lightning-input>
                     </span>
                 </div>
                 <div class="slds-box slds-p-around_medium">

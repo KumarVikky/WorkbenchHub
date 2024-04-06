@@ -148,7 +148,6 @@ export default class Wb_DataProcess extends LightningElement {
         for(let item of records){
             let selectedId = Number(item.uniqueKey);
             let data = this.recordData.find(e => e.uniqueKey == selectedId);
-            //console.log('recordData==',data);
             for (const [key, value] of Object.entries(data)) {
                 if(key !== 'uniqueKey' && item.hasOwnProperty(key)){
                     data[key] = item[key];
@@ -169,7 +168,6 @@ export default class Wb_DataProcess extends LightningElement {
                 this.appendRecord(appendMap);
             }
         }
-        //console.log('recordData',this.recordData);
         this.recordDataDraft = [];
     }
     overrideRecord(overrideMap){
@@ -190,15 +188,41 @@ export default class Wb_DataProcess extends LightningElement {
     }
     appendRecord(appendMap){
         let index = 0;
+        let replaceMap = new Map();
         for(let recObj of this.recordData){
             for (const [key, value] of Object.entries(recObj)) {
                 if(appendMap.has(key)){
                     let val = appendMap.get(key);
-                    if(val.includes('{') && val.includes('}')){
+                    if(val.includes('{') && val.includes('}') && !(val.includes('(') && val.includes(',') && val.includes(')'))){
                         let num = Number(val.substring(val.indexOf('{')+1, val.indexOf('}')));
                         val = val.replace(val.substring(val.indexOf('{'), val.indexOf('}')+1), num+index);
                     }
                     recObj[key] = value + val;
+                    if(val.includes('(') && val.includes(',') && val.includes(')')){
+                        let repString = val.substring(val.indexOf('(')+1, val.indexOf(')'));
+                        replaceMap.set(key, {searchValue: repString.substring(0, repString.indexOf(',')), newValue: repString.substring(repString.indexOf(',')+1, repString.length)});
+                        recObj[key] = recObj[key].replace(recObj[key].substring(recObj[key].indexOf('('), recObj[key].indexOf(')')+1),'');
+                    }
+                }
+            }
+            index ++;
+        }
+        if(replaceMap.size > 0){
+            this.replaceRecord(replaceMap);
+        }
+    }
+    replaceRecord(replaceMap){
+        let index = 0;
+        for(let recObj of this.recordData){
+            for (const [key, value] of Object.entries(recObj)) {
+                if(replaceMap.has(key)){
+                    let searchValue = replaceMap.get(key).searchValue;
+                    let newValue = replaceMap.get(key).newValue;
+                    recObj[key] = value.replaceAll(searchValue, newValue);
+                    if(recObj[key].includes('{') && recObj[key].includes('}')){
+                        let num = Number(recObj[key].substring(recObj[key].indexOf('{')+1, recObj[key].indexOf('}')));
+                        recObj[key] = recObj[key].replace(recObj[key].substring(recObj[key].indexOf('{'), recObj[key].indexOf('}')+1), num+index);
+                    }
                 }
             }
             index ++;
