@@ -32,6 +32,7 @@
         <members>WB_CreateRecords</members>
         <members>WB_UpdateRequest</members>
         <members>WB_DeleteRequest</members>
+        <members>WB_DeploymentStatus</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -52,6 +53,8 @@
         <members>wb_WebLogin</members>
         <members>wb_ShowNotifications</members>
         <members>wb_DataProcess</members>
+        <members>wb_DataMap</members>
+        <members>wb_DeploymentStatus</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>59.0</version>

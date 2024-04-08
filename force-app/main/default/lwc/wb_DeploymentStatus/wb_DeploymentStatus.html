@@ -1,0 +1,56 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <template lwc:if={showParent}>
+        <div class="slds-box slds-p-around_none slds-var-m-top_x-small slds-var-m-bottom_medium slds-m-horizontal_none">
+            <P class="p1">All metadata deployment status, click on view for more details. <span class="slds-m-left_x-small">[API: {apiValue}]</span></span></P>
+            <div align="right">
+                <lightning-button variant="brand" label="Refresh" title="Refresh" icon-name="utility:refresh" class="slds-m-right_x-small" onclick={handleRefresh}></lightning-button>
+            </div>
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                    <div class="slds-var-p-around_x-small">
+                        <b>Succeeded:</b>
+                    </div>
+                    <div class="slds-box slds-var-p-around_medium">
+                        <div class="slds-scrollable_y"  style="height:15rem;">
+                            <lightning-datatable data={successRecordsToDisplay} columns={succeededRecordColumns} key-field={succeededRecordKey} onrowaction={handleRowAction} hide-checkbox-column></lightning-datatable>
+                        </div>
+                        <div align="right">
+                            <lightning-button disabled={btnSuccessDisablePrevious} variant="base" label="Previous" alternative-text="Previous" onclick={previousPageSuccess}></lightning-button>
+                            &nbsp;
+                            <span>({succesPageNumber} &nbsp;-&nbsp; {successTotalPages} &nbsp;of&nbsp;{successTotalRecords})</span>
+                            &nbsp;
+                            <lightning-button disabled={btnSuccessDisableNext} variant="base" label="Next" alternative-text="Next" onclick={nextPageSuccess}></lightning-button>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                    <div class="slds-var-p-around_x-small">
+                        <b>Failed:</b>
+                    </div>
+                    <div class="slds-box slds-var-p-around_x-small">
+                        <div class="slds-scrollable_y"  style="height:15rem;">
+                            <lightning-datatable data={errorRecordsToDisplay} columns={failedRecordColumns} key-field={failedRecordKey} onrowaction={handleRowAction} hide-checkbox-column></lightning-datatable>
+                        </div>
+                        <div align="right">
+                            <lightning-button disabled={btnErrorDisablePrevious} variant="base" label="Previous" alternative-text="Previous" onclick={previousPageError}></lightning-button>
+                            &nbsp;
+                            <span>({errorPageNumber} &nbsp;-&nbsp; {errorTotalPages} &nbsp;of&nbsp;{errorTotalRecords})</span>
+                            &nbsp;
+                            <lightning-button disabled={btnErrorDisableNext} variant="base" label="Next" alternative-text="Next" onclick={nextPageError}></lightning-button>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
+        </div>
+        <div class="spinner">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+                </lightning-spinner>
+            </template>
+        </div>
+    </template>
+    <div>
+        <c-wb_-deployment-details lwc:ref="deployDetailCmp" user-id={userId} api-value={apiValue} custom-domain={customDomain} onshowparent={showDeploymentStatus}></c-wb_-deployment-details>
+    </div>
+</template>

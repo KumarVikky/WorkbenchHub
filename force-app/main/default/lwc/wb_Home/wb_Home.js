@@ -31,24 +31,18 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
             idletimer.deactivate();
             this.logOutSession();
             localStorage.removeItem("WB_SESSIONKEY");
-            this.alertHandler('Session has expired due to inactivity. Please login again.');
+            this.alertHandler('Session has expired due to inactivity, please login again.');
             this.navigateToExperiencePage("WorkbenchLogin__c");
         };
         idletimer = new IdleTimer(onTimeout, 900000);//15 min of inactivity
         idletimer.activate(); 
         let wbSessionKey = localStorage.getItem("WB_SESSIONKEY");
         if(wbSessionKey){
-           const code = wbSessionKey.substring(0, wbSessionKey.indexOf('&'));
-           const state = wbSessionKey.slice(wbSessionKey.indexOf('&') + 1);
-           const env = state.substring(0, state.indexOf('_'));
-           const api = state.slice(state.indexOf('_') + 1);
-           this.codeValue = code;
-           this.envValue = env;
-           this.apiValue = api;
+            this.codeValue = wbSessionKey.substring(0, wbSessionKey.indexOf('&'));
+            const state = wbSessionKey.slice(wbSessionKey.indexOf('&') + 1);
+            this.envValue = state.substring(0, state.indexOf('_'));
+            this.apiValue = state.slice(state.indexOf('_') + 1);
            this.fetchAccessToken();
-           //console.log('code',code);
-           //console.log('env',env);
-           //console.log('api',api);
         }else{
             this.navigateToExperiencePage("WorkbenchLogin__c");
         }
@@ -61,14 +55,13 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
         let endPointURL = (this.envValue === 'P' ? 'https://login.salesforce.com' : 'https://test.salesforce.com');
 		getAccessToken({ codeValue: this.codeValue, endPointURL: endPointURL})
 		.then(result => {
-			//console.log('result',result);
             if(result){
                 this.userId = result;
                 this.hasUserToken = true;
                 this.isLoading = false;
                 this.fetchUserInfo();
             }else{
-                this.showToastMessage('error', 'Session expired! Please login again.');
+                this.showToastMessage('error', 'Session expired or invalid! please login again.');
                 this.navigateToExperiencePage("WorkbenchLogin__c");
             }
 		})
@@ -82,7 +75,6 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
         this.isLoading = true;
 		getUserInfo({ userId: this.userId})
 		.then(result => {
-			//console.log('result',result);
             if(result){
                 let response = JSON.parse(result);
                 this.userName = response.preferred_username;

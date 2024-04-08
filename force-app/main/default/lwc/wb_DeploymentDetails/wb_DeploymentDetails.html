@@ -1,0 +1,47 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <template lwc:if={showChild}>
+        <p><a onclick={goToDeploymentStatus} href="javascript:void(0)">« Back to Deployment Status</a></p>
+        <div class="slds-box slds-p-around_none slds-var-m-top_x-small slds-var-m-bottom_medium slds-m-horizontal_none">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="4" large-device-size="4" padding="around-small">
+                    <div class="slds-var-p-around_x-small dep-con">
+                       <p class="dep-pad"><b>Id:</b>&nbsp;&nbsp;{deployRecord.id}</p>
+                       <p class="dep-pad"><b>Status:</b>&nbsp;&nbsp;{deployRecord.status}</p>
+                       <p class="dep-pad"><b>Start Date:</b>&nbsp;&nbsp;{deployRecord.startDate}</p>
+                       <p class="dep-pad"><b>Completed Date:</b>&nbsp;&nbsp;{deployRecord.completedDate}</p>
+                       <p class="dep-pad"><b>Deployed By:</b>&nbsp;&nbsp;{deployRecord.deployedBy}</p>
+                    </div>
+                </lightning-layout-item>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="8" large-device-size="8" padding="around-small">
+                    <div class="slds-var-p-around_x-small">
+                        <p>Component details</p>
+                    </div>
+                    <div class="slds-box slds-var-p-around_medium">
+                        <div class="slds-scrollable_y"  style="height:15rem;">
+                            <lightning-datatable data={componentData} columns={componentColumns} key-field={componentKey} hide-checkbox-column></lightning-datatable>
+                        </div>
+                    </div>
+                </lightning-layout-item>
+                <template lwc:if={hasErrorList}>
+                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                        <div class="slds-var-p-around_x-small">
+                            <p>Error details</p>
+                        </div>
+                        <div class="slds-box slds-var-p-around_medium">
+                            <div class="slds-scrollable_y"  style="height:15rem;">
+                                <lightning-datatable data={componentErrorData} columns={componentErrorColumns} key-field={componentErrorKey} hide-checkbox-column></lightning-datatable>
+                            </div>
+                        </div>
+                    </lightning-layout-item>
+                </template>
+            </lightning-layout>
+        </div>
+        <div class="spinner">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+                </lightning-spinner>
+            </template>
+        </div>
+    </template>
+</template>
