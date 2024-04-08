@@ -39,7 +39,9 @@ export default class Wb_DataProcess extends LightningElement {
     previousRecordList =[];
     hasAdvanceEdit = false;
     fileData;
-    
+    maxBatchSize = 200;
+    currentBatchSize = 0;
+
     get crudOptions() {
         return [
             { label: 'Create', value: 'CREATE' },
@@ -74,6 +76,7 @@ export default class Wb_DataProcess extends LightningElement {
         this.disableDownloadResBtn = true;
     }
     handleCSVUpload(event){
+        this.isLoading = true;
         const files = event.detail.files;
         if (files.length > 0) {
             const file = files[0];
@@ -140,6 +143,8 @@ export default class Wb_DataProcess extends LightningElement {
         this.disableDownloadResBtn = true;
         this.totalRecords = this.recordData.length;
         this.previousRecordList = [];
+        this.currentBatchSize = 0;
+        this.isLoading = false;
     }
     async handleInLineSave(event){
         const records = event.detail.draftValues;
@@ -290,20 +295,19 @@ export default class Wb_DataProcess extends LightningElement {
     async performInsert(){
         let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
         if(validate.value){
-            let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordResponseData);
             const hasConfirmed = await this.handleConfirmClick('Do you want to insert these records?');
             if(hasConfirmed){
                 this.showNotification('info','Insert request initiated, please wait!.');
                 this.disableCrudActionBtn = true;
                 this.successCount = 0;
                 this.errorCount = 0;
-                this.createRequest(requestBody);
+                this.createRequest();
             }
         }else{
             this.showToastMessage('warning', validate.message);
         }
     }
-    createRequest(requestBody){
+    createRequestBatch(requestBody){
         createRecordRequest({ userId: this.userId, apiVersion: this.apiValue, jsonRequestBody: JSON.stringify(requestBody)})
 		.then(result => {
             if(result){
@@ -326,9 +330,13 @@ export default class Wb_DataProcess extends LightningElement {
                     }
                 }
                 //console.log('recordResponseData',this.recordResponseData);
-                this.hideNotification();
-                this.disableCrudActionBtn = false;
-                this.disableDownloadResBtn = false;
+                if(this.recordResponseData.length > this.currentBatchSize){
+                    this.createRequest();
+                }else{
+                    this.hideNotification();
+                    this.disableCrudActionBtn = false;
+                    this.disableDownloadResBtn = false;
+                }
             }else{
                 this.showToastMessage('error', 'Failed to insert records:'+result);
             } 
@@ -338,23 +346,35 @@ export default class Wb_DataProcess extends LightningElement {
             this.showToastMessage('error', JSON.stringify(error));
 		})
     }
+    createRequest(){
+        let recordChunks = [];
+        for(let i = this.currentBatchSize; i < (this.maxBatchSize + this.currentBatchSize); i++){
+            if(i === this.recordResponseData.length){
+                break;
+            }
+            recordChunks.push(this.recordResponseData[i]);
+            this.currentBatchSize = i + 1;
+        }
+        this.showNotification('info','Processing on '+ this.currentBatchSize + ' records of '+this.recordResponseData.length);
+        let requestBody = this.generateRequestBody(this.selectedObjectName, recordChunks);
+        this.createRequestBatch(requestBody);
+    }
     async performUpdate(){
         let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
         if(validate.value){
-            let requestBody = this.generateRequestBody(this.selectedObjectName, this.recordResponseData);
             let hasConfirmed = await this.handleConfirmClick('Do you want to update these records?');
             if(hasConfirmed){
                 this.showNotification('info','Update request initiated, please wait!.');
                 this.disableCrudActionBtn = true;
                 this.successCount = 0;
                 this.errorCount = 0;
-                this.updateRequest(requestBody);
+                this.updateRequest();
             }
         }else{
             this.showToastMessage('warning', validate.message);
         }
     }
-    updateRequest(requestBody){
+    updateRequestBatch(requestBody){
         updateRecordRequest({ userId: this.userId, apiVersion: this.apiValue, jsonRequestBody: JSON.stringify(requestBody)})
 		.then(result => {
             if(result){
@@ -373,9 +393,13 @@ export default class Wb_DataProcess extends LightningElement {
                     }
                 }
                 //console.log('recordResponseData',this.recordResponseData);
-                this.hideNotification();
-                this.disableCrudActionBtn = false;
-                this.disableDownloadResBtn = false;
+                if(this.recordResponseData.length > this.currentBatchSize){
+                    this.updateRequest();
+                }else{
+                    this.hideNotification();
+                    this.disableCrudActionBtn = false;
+                    this.disableDownloadResBtn = false;
+                }
             }else{
                 this.showToastMessage('error', 'Failed to update records:'+result);
             } 
@@ -384,6 +408,19 @@ export default class Wb_DataProcess extends LightningElement {
 			console.log('error',error);
             this.showToastMessage('error', JSON.stringify(error));
 		})
+    }
+    updateRequest(){
+        let recordChunks = [];
+        for(let i = this.currentBatchSize; i < (this.maxBatchSize + this.currentBatchSize); i++){
+            if(i === this.recordResponseData.length){
+                break;
+            }
+            recordChunks.push(this.recordResponseData[i]);
+            this.currentBatchSize = i + 1;
+        }
+        this.showNotification('info','Processing on '+ this.currentBatchSize + ' records of '+this.recordResponseData.length);
+        let requestBody = this.generateRequestBody(this.selectedObjectName, recordChunks);
+        this.updateRequestBatch(requestBody);
     }
     generateRequestIds(recordData){
         let ids = '';
@@ -400,20 +437,19 @@ export default class Wb_DataProcess extends LightningElement {
     async performDelete(){
         let validate = this.dataValidation(this.selectedCrudValue, this.selectedObjectName, this.recordResponseData);
         if(validate.value){
-            let requestIds = this.generateRequestIds(this.recordResponseData);
             let hasConfirmed = await this.handleConfirmClick('Do you want to delete these records?');
             if(hasConfirmed){
                 this.showNotification('info','Delete request initiated, please wait!.');
                 this.disableCrudActionBtn = true;
                 this.successCount = 0;
                 this.errorCount = 0;
-                this.deleteRequest(requestIds);
+                this.deleteRequest();
             }
         }else{
             this.showToastMessage('warning', validate.message);
         }
     }
-    deleteRequest(requestIds){
+    deleteRequestBatch(requestIds){
         deleteRecordRequest({ userId: this.userId, apiVersion: this.apiValue, jsonRequestBody: requestIds})
 		.then(result => {
             if(result){
@@ -437,17 +473,34 @@ export default class Wb_DataProcess extends LightningElement {
                     }
                 }
                 //console.log('recordResponseData',this.recordResponseData);
-                this.hideNotification();
-                this.disableCrudActionBtn = false;
-                this.disableDownloadResBtn = false;
+                if(this.recordResponseData.length > this.currentBatchSize){
+                    this.deleteRequest();
+                }else{
+                    this.hideNotification();
+                    this.disableCrudActionBtn = false;
+                    this.disableDownloadResBtn = false;
+                }
             }else{
-                this.showToastMessage('error', 'Failed to update records:'+result);
+                this.showToastMessage('error', 'Failed to delete records:'+result);
             } 
 		})
 		.catch(error => {
 			console.log('error',error);
             this.showToastMessage('error', JSON.stringify(error));
 		})
+    }
+    deleteRequest(){
+        let recordChunks = [];
+        for(let i = this.currentBatchSize; i < (this.maxBatchSize + this.currentBatchSize); i++){
+            if(i === this.recordResponseData.length){
+                break;
+            }
+            recordChunks.push(this.recordResponseData[i]);
+            this.currentBatchSize = i + 1;
+        }
+        this.showNotification('info','Processing on '+ this.currentBatchSize + ' records of '+this.recordResponseData.length);
+        let requestIds = this.generateRequestIds(recordChunks);
+        this.deleteRequestBatch(requestIds);
     }
     dataValidation(operationType, objectName, recordData){
         let validate = {value: true, message: ''};

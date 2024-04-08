@@ -3,12 +3,17 @@
 }
 
 .txtContent {
-    display: inline list-item;
+    display: inline-block;
+}
+.cusNotifyContainer{
+    position: relative;
+    text-align: center;
+    bottom: 45px;
 }
 
 /* HTML: <div class="loader"></div> */
 .loader {
-    width: 20px;
+    width: 12px;
     display: inline-block;
     margin-left: 10px;
     aspect-ratio: 1.154;
