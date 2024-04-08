@@ -425,4 +425,47 @@ public class WB_WorkbenchController {
         }
         return result;
     }
+    @AuraEnabled(cacheable=false)
+    public static String retrieveAllDeploymentStatus(String userId, String apiVersion){
+        String result = null;
+        try{
+            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            Map<String,String> params = new Map<String,String>();
+            params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+            params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+            params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
+            String query = 'SELECT+Id,+Type,+CheckOnly,+Status,+StartDate,+CompletedDate,+CreatedBy.Name+FROM+DeployRequest+ORDER+BY+CompletedDate+DESC';
+            params.put(WB_ServiceAppConstant.QUERY,query);
+            Type classType = Type.forName('WB_DeploymentStatus');
+            Object instance = classType.newInstance();
+            WB_ServiceRequest request = (WB_ServiceRequest)instance;
+            result = (String) request.executeService(instance,params);            
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return result;
+    }
+    @AuraEnabled(cacheable=false)
+    public static String retrieveDeploymentDetails(String userId, String apiVersion, String deployRequestId){
+        String result = null;
+        try{
+            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            Map<String,String> params = new Map<String,String>();
+            params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+            params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+            params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
+            params.put(WB_ServiceAppConstant.REQUESTBODY,deployRequestId);
+            Type classType = Type.forName('WB_DeploymentDetails');
+            Object instance = classType.newInstance();
+            WB_ServiceRequest request = (WB_ServiceRequest)instance;
+            result = (String) request.executeService(instance,params);            
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return result;
+    }
 }
