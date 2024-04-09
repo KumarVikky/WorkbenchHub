@@ -8,8 +8,8 @@
                     <div class="slds-var-p-around_x-small dep-con">
                        <p class="dep-pad"><b>Id:</b>&nbsp;&nbsp;{deployRecord.id}</p>
                        <p class="dep-pad"><b>Status:</b>&nbsp;&nbsp;{deployRecord.status}</p>
-                       <p class="dep-pad"><b>Start Date:</b>&nbsp;&nbsp;{deployRecord.startDate}</p>
-                       <p class="dep-pad"><b>Completed Date:</b>&nbsp;&nbsp;{deployRecord.completedDate}</p>
+                       <p class="dep-pad"><b>Start Date:</b>&nbsp;&nbsp;<lightning-formatted-date-time value={deployRecord.startDate} year="numeric" day="2-digit" month="long" hour="2-digit" minute="2-digit" second="2-digit"></lightning-formatted-date-time></p>
+                       <p class="dep-pad"><b>Completed Date:</b>&nbsp;&nbsp;<lightning-formatted-date-time value={deployRecord.completedDate} year="numeric" day="2-digit" month="long" hour="2-digit" minute="2-digit" second="2-digit"></lightning-formatted-date-time></p>
                        <p class="dep-pad"><b>Deployed By:</b>&nbsp;&nbsp;{deployRecord.deployedBy}</p>
                     </div>
                 </lightning-layout-item>
