@@ -1,26 +1,27 @@
 # Workbench
 
-[Workbench](https://salesarena-dev-ed.my.site.com/Workbench/s/) is my latest GitHub project, and it is mainly build on LWC & Apex using Salesforce Rest API's  for querying Salesforce objects records based on various parameters, ability to filter, sort & downloads these records. Ability to perform CRUD operations on Salesforce records with multi functionalities, also has ability to retrieve & deploy metadata files across Salesforce different environments using Salesforce SOAP API's.
+[Workbench](https://salesarena-dev-ed.my.site.com/Workbench/s/) is the latest project that I have created on Lightning Experience. It is mainly built on LWC & Apex, it can query data & its metadata based on various parameters from an authorized Salesforce Organization using Force.com Rest APIs. It also can filter, sort, and download these records. Additionally, it can perform CRUD operations on Salesforce records with multiple functionalities. Furthermore, it can retrieve & deploy metadata files across different Salesforce environments using Metadata SOAP APIs & Tooling API's.
+
 
 Watch Demo:
 
 https://github.com/KumarVikky/WorkbenchHub/assets/51625926/3d7cabd4-89f3-4069-8b62-f828629aa262
 
 Release updates:
-- Ability to generate query using SOQL Builder or Manually using Query Editor.
-- Ability to download fetched records as CSV format.
-- Ability to perform multi-level sort in SOQL Builder.
-- Ability to perform multi-level filter in SOQL Builder.
-- Ability to fetch & display relationship queries.
-- Ability to add custom condition (AND, OR & both) on multi-level filter.
-- Ability to fetch records using available list view in Salesforce organization.
-- Ability to fetch records using available scopes parameters.
-- Ability to create package.xml file dynamically by selecting different meta-data items.
-- Ability to retrieve & download metadata based on the package.xml file as a zip file.
-- Ability to validate & deploy metadata zip files containing package.xml & its content to different authorized Salesforce organization.
-- Ability to copy response to clipboard.
-- Ability to perform Insert, Update & Delete operations with user-friendly UI.
-- Ability to map data column with available fields of selected object.
-- Ability to edit uploaded csv files data before CRUD operations.
-- Ability to perform advance editing on multiple rows like Replace text, Increment Number, Append text, Override text.
-
+- It can generate queries using SOQL Builder or manually using Query Editor.
+- It can download fetched records in CSV format.
+- It can perform multi-level sorting in SOQL Builder.
+- It can perform multi-level filters in SOQL Builder.
+- It can fetch & display relationship queries.
+- It can add custom conditions (AND, OR & both) on multi-level filters.
+- It can fetch records using available list views in the Salesforce organization.
+- It can fetch records using available scope parameters.
+- It can create a package.xml file dynamically by selecting different metadata items.
+- It can retrieve & download metadata based on the package.xml file as a zip file.
+- It can validate & deploy metadata zip files containing package.xml & its content to different authorized Salesforce organizations.
+- It can copy the response to a clipboard.
+- It can perform Insert, Update & Delete operations with user-friendly UI.
+- It can map data columns with available fields of the selected object.
+- It can edit uploaded CSV file data before CRUD operations.
+- It can perform advanced editing on multiple rows like Replace text, Increment Number, Append text, and Override text.
+- It can show all deployment history with status & metadata components.
