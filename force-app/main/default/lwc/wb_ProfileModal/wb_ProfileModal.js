@@ -13,8 +13,17 @@ export default class Wb_ProfileModal extends LightningModal  {
     phoneNumber;
     userId;
     organizationId;
+    zoneInfo;
+    locale;
+    language;
+    address;
+
     @wire(CurrentPageReference) pageRef;
 
+    get headerLabel(){
+        return this.name + ' (' + this.nameInitials + ')';
+    }
+    
     connectedCallback(){
         let proData = this.profileData;
         if(proData !== ''){
@@ -26,6 +35,10 @@ export default class Wb_ProfileModal extends LightningModal  {
             this.phoneNumber = proData.phoneNumber;
             this.userId = proData.userId;
             this.organizationId = proData.organizationId;
+            this.zoneInfo = proData.zoneInfo;
+            this.locale = proData.locale;
+            this.language = proData.language;
+            this.address = proData.address;
         }
         if(this.pageRef){
             registerListener('closeAllModal', this.handleEvent, this);

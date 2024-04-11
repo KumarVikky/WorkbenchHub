@@ -34,6 +34,11 @@
         <members>WB_DeleteRequest</members>
         <members>WB_DeploymentStatus</members>
         <members>WB_DeploymentDetails</members>
+        <members>WB_AnonymousService</members>
+        <members>WB_LogTraceFlag</members>
+        <members>WB_FetchDebugLevel</members>
+        <members>WB_FetchDebugLog</members>
+        <members>WB_FetchRawLog</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -57,6 +62,8 @@
         <members>wb_DataMap</members>
         <members>wb_DeploymentStatus</members>
         <members>wb_DeploymentDetails</members>
+        <members>wb_ExecuteAnonymous</members>
+        <members>wb_ViewLog</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>59.0</version>

@@ -1,52 +1,61 @@
 <template>
-    <lightning-modal-header label="Profile Details"></lightning-modal-header>
+    <lightning-modal-header label={headerLabel}></lightning-modal-header>
     <lightning-modal-body>
-        <div class="slds-var-p-around_small">
-            <div class="slds-box">
-                <lightning-layout multiple-rows>
-                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="4" padding="around-small">
-                        <div align="center">
-                            <div class="name-initials">{nameInitials}</div>
-                        </div>
-                    </lightning-layout-item>
-                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="8" padding="around-small">
-                        <div class="slds-scrollable slds-var-m-around_medium slds-list_horizontal slds-wrap">
-                            <table class="slds-table" role="grid">
-                               <thead>
-                                    <tr>
-                                        <th style="background:#f3eded;">Name</th>
-                                        <td>{name}</td>
-                                    </tr>
-                                    <tr>
-                                        <th style="background:#f3eded;">Nickname</th>
-                                        <td>{nickName}</td>
-                                    </tr>
-                                    <tr>
-                                        <th style="background:#f3eded;">Username</th>
-                                        <td>{userName}</td>
-                                    </tr>
-                                    <tr>
-                                        <th style="background:#f3eded;">Email</th>
-                                        <td>{emailId}</td>
-                                    </tr>
-                                    <tr>
-                                        <th style="background:#f3eded;">Phone</th>
-                                        <td>{phoneNumber}</td>
-                                    </tr>
-                                    <tr>
-                                        <th style="background:#f3eded;">User Id</th>
-                                        <td>{userId}</td>
-                                    </tr>
-                                    <tr>
-                                        <th style="background:#f3eded;">Organization Id</th>
-                                        <td>{organizationId}</td>
-                                    </tr>
-                                </thead>
-                            </table>
-                        </div>
-                    </lightning-layout-item>
-                </lightning-layout>
-            </div>
+        <div class="slds-box">
+            <lightning-layout multiple-rows>
+                <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
+                    <div class="slds-scrollable slds-var-m-around_small slds-list_horizontal slds-wrap">
+                        <table class="slds-table" role="grid">
+                            <thead>
+                                <tr>
+                                    <th style="background:#f3eded;">Name</th>
+                                    <td>{name}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">Nickname</th>
+                                    <td>{nickName}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">Username</th>
+                                    <td>{userName}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">Email</th>
+                                    <td>{emailId}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">Phone</th>
+                                    <td>{phoneNumber}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">Address</th>
+                                    <td>{address}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">User Id</th>
+                                    <td>{userId}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">Organization Id</th>
+                                    <td>{organizationId}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">Zone Info</th>
+                                    <td>{zoneInfo}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">Locale</th>
+                                    <td>{locale}</td>
+                                </tr>
+                                <tr>
+                                    <th style="background:#f3eded;">Language</th>
+                                    <td>{language}</td>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+                </lightning-layout-item>
+            </lightning-layout>
         </div>
     </lightning-modal-body>
     <lightning-modal-footer>

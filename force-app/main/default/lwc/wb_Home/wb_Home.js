@@ -77,11 +77,13 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
 		.then(result => {
             if(result){
                 let response = JSON.parse(result);
+                //console.log('response',response);
                 this.userName = response.preferred_username;
                 this.customDomain = response.urls.custom_domain;
                 this.userFullName = response.name;
                 let initials = response.name.split(" ").map((n)=>n[0]).join("");
-                this.profileObj = {'nameInitials':initials, 'name':response.name, 'nickName':response.nickname, 'userName':response.preferred_username, 'emailId':response.email, 'phoneNumber':response.phone_number, 'userId':response.user_id, 'organizationId': response.organization_id};
+                let address = response.address.street_address + ' ' + response.address.country + '-' + response.address.postal_code;
+                this.profileObj = {'nameInitials':initials, 'name':response.name, 'nickName':response.nickname, 'userName':response.preferred_username, 'emailId':response.email, 'phoneNumber':response.phone_number, 'userId':response.user_id, 'organizationId':response.organization_id, 'zoneInfo':response.zoneinfo,'locale':response.locale, 'language':response.language, 'address':address};
                 this.isLoading = false;
             }else{
                 this.showToastMessage('error', 'Failed to retrieve user info.');

@@ -1,0 +1,35 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <lightning-modal-header label="Debug Log"></lightning-modal-header>
+    <lightning-modal-body>
+        <div class="slds-box slds-var-p-around_medium">
+            <div class="responsePanel">
+                <span>
+                    <p class="slds-var-m-bottom_x-small">Response:</p>
+                </span>
+                <template if:true={isAllowedCopy}>
+                    <span> 
+                        <lightning-button-icon icon-name="utility:copy" alternative-text="Copy" class="slds-m-left_x-small" title="Copy" size="x-small" onclick={handleCopyResponse}></lightning-button-icon>
+                    </span>
+                </template>
+            </div>
+            <div class="scroller">
+                <pre lwc:ref="rawContent">{rawLogValue}</pre>
+            </div>
+        </div>
+        <div class="spinner">
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+                </lightning-spinner>
+            </template>
+        </div>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <div class="slds-var-m-top_small slds-align_absolute-center">
+            <lightning-button variant="brand" label="Close" class="slds-var-m-left_x-small" onclick={handleClose}>
+            </lightning-button>
+            <lightning-button variant="brand" label="Download" class="slds-var-m-left_x-small" onclick={handleDownload}>
+            </lightning-button>
+        </div>
+    </lightning-modal-footer>
+</template>

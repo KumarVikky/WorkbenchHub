@@ -343,7 +343,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
             el.select();
             document.execCommand('copy');
             document.body.removeChild(el);
-            alert('Response copied:' + el.value);
+            alert('Response copied:  ' + el.value);
         }
     }
     showNotification(type, message){

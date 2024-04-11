@@ -1,0 +1,10 @@
+.responsePanel{
+    display: ruby;
+}
+.scroller {
+    height: 300px;
+    overflow: auto;
+    padding: var(--lwc-varSpacingXSmall, 8px);
+    border: solid var(--lwc-borderWidthThin, 1px) #eee;
+    min-height: 300px;
+}

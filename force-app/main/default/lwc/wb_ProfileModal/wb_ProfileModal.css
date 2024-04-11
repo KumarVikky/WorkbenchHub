@@ -21,17 +21,3 @@ th:first-child, td:first-child {
 th:last-child, td:last-child {
     padding-right: 3em;
 }
-
-.name-initials {
-    font-family: "Helvetica Neue", helvetica, serif;
-    font-size: 60px;
-    color: #bbb;
-    background: #eee;
-    text-align: center;
-    line-height: 200px;
-    width: 200px;
-    height: 200px;
-    margin:0; 
-    border-radius: 100%;
-    margin: 20px;
-}

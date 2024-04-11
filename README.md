@@ -25,3 +25,5 @@ Release updates:
 - It can edit uploaded CSV file data before CRUD operations.
 - It can perform advanced editing on multiple rows like Replace text, Increment Number, Append text, and Override text.
 - It can show all deployment history with status & metadata components.
+- It can execute apex code anonymously & show debug statements.
+- It can also download raw debug logs.

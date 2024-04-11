@@ -468,4 +468,108 @@ public class WB_WorkbenchController {
         }
         return result;
     }
+    @AuraEnabled(cacheable=false)
+    public static String executeAnonymous(String userId, String apiVersion, String codeSnippet){
+        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        Map<String,String> params = new Map<String,String>();
+        params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+        params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+        params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        ApexService.ExecuteAnonymousResult response = null;
+        try{
+            response = WB_AnonymousService.executeCode(codeSnippet, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
+        }catch(Exception e){
+            if(e.getMessage().contains('INVALID_SESSION_ID')){
+                WB_RenewToken renewServ = new WB_RenewToken();
+                String newAccessToken = (String) renewServ.executeService(renewServ,params);
+                response = WB_AnonymousService.executeCode(codeSnippet, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
+            }
+        }                
+        return JSON.serialize(response);  
+    }
+    @AuraEnabled(cacheable=false)
+    public static String retrieveDebugLevels(String userId, String apiVersion){
+        String result = null;
+        try{
+            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            Map<String,String> params = new Map<String,String>();
+            params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+            params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+            params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
+            String query = 'SELECT+Id,+DeveloperName+FROM+DebugLevel+ORDER+BY+CreatedDate+DESC';
+            params.put(WB_ServiceAppConstant.QUERY,query);
+            Type classType = Type.forName('WB_FetchDebugLevel');
+            Object instance = classType.newInstance();
+            WB_ServiceRequest request = (WB_ServiceRequest)instance;
+            result = (String) request.executeService(instance,params);            
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return result;
+    }
+    @AuraEnabled(cacheable=false)
+    public static String setTraceFlag(String userId, String apiVersion, String traceValue){
+        String result = null;
+        try{
+            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            Map<String,String> params = new Map<String,String>();
+            params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+            params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+            params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
+            params.put(WB_ServiceAppConstant.REQUESTBODY,traceValue);
+            Type classType = Type.forName('WB_LogTraceFlag');
+            Object instance = classType.newInstance();
+            WB_ServiceRequest request = (WB_ServiceRequest)instance;
+            result = (String) request.executeService(instance,params);            
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return result;
+    }
+    @AuraEnabled(cacheable=false)
+    public static String retrieveDebugLog(String userId, String apiVersion){
+        String result = null;
+        try{
+            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            Map<String,String> params = new Map<String,String>();
+            params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+            params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+            params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
+            params.put(WB_ServiceAppConstant.REQUESTBODY,userId);
+            Type classType = Type.forName('WB_FetchDebugLog');
+            Object instance = classType.newInstance();
+            WB_ServiceRequest request = (WB_ServiceRequest)instance;
+            result = (String) request.executeService(instance,params);            
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return result;
+    }
+    @AuraEnabled(cacheable=false)
+    public static String retrieveRawLog(String userId, String apiVersion, String logId){
+        String result = null;
+        try{
+            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            Map<String,String> params = new Map<String,String>();
+            params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+            params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+            params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
+            params.put(WB_ServiceAppConstant.REQUESTBODY,logId);
+            Type classType = Type.forName('WB_FetchRawLog');
+            Object instance = classType.newInstance();
+            WB_ServiceRequest request = (WB_ServiceRequest)instance;
+            result = (String) request.executeService(instance,params);            
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return result;
+    }
 }
