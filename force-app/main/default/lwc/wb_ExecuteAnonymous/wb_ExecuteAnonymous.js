@@ -20,7 +20,7 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
     @api customDomain;
     @api apiValue;
     @api userDetails;
-    @track debugLogsData;
+    @track debugLogsData = [];
     debugLogsColumn = columnData;
     codeSnippet = '';
     selectedStartDate;
@@ -31,6 +31,13 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
     traceFlagId;
     selectedApexLogId;
     isLoading = false;
+
+    get disabledExecutionBtn(){
+        return this.codeSnippet === undefined || this.codeSnippet === '' ? true : false;
+    }
+    get showDebugLog(){
+        return this.debugLogsData !== undefined && this.debugLogsData.length > 0 ? true : false;
+    }
 
     connectedCallback(){
         let currentDateTime = new Date();
@@ -58,6 +65,14 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
     }
     handleAnonymousExecute(){
        this.executeAnonymousRequest(this.codeSnippet);
+    }
+    handleExecuteHighlighted(){
+        let textArea = this.refs.textAreaRef;
+        console.log('va',textArea);
+        console.log('vaa',textArea.value);
+        console.log('vaa',textArea.selectionStart);
+        console.log('vaaa',textArea.selectionEnd);
+
     }
     handleTraceFlag(){
         this.generateTraceFlag();

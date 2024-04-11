@@ -5,3 +5,6 @@
 :host {
     --sds-c-textarea-sizing-min-height: 230px;
  }
+ .textAreaFont{
+    font-size: medium;
+ }

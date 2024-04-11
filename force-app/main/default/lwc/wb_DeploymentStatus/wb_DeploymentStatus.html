@@ -8,36 +8,40 @@
             </div>
             <lightning-layout multiple-rows>
                 <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
-                    <div class="slds-var-p-around_x-small">
-                        <b>Succeeded:</b>
-                    </div>
-                    <div class="slds-box slds-var-p-around_medium">
-                        <div class="slds-scrollable_y"  style="height:15rem;">
-                            <lightning-datatable data={successRecordsToDisplay} columns={succeededRecordColumns} key-field={succeededRecordKey} onrowaction={handleRowAction} hide-checkbox-column></lightning-datatable>
+                    <div class="slds-box">
+                        <div class="slds-var-p-around_x-small">
+                            <b>Succeeded:</b>
                         </div>
-                        <div align="right">
-                            <lightning-button disabled={btnSuccessDisablePrevious} variant="base" label="Previous" alternative-text="Previous" onclick={previousPageSuccess}></lightning-button>
-                            &nbsp;
-                            <span>({succesPageNumber} &nbsp;-&nbsp; {successTotalPages} &nbsp;of&nbsp;{successTotalRecords})</span>
-                            &nbsp;
-                            <lightning-button disabled={btnSuccessDisableNext} variant="base" label="Next" alternative-text="Next" onclick={nextPageSuccess}></lightning-button>
+                        <div class="slds-box slds-var-p-around_medium">
+                            <div class="slds-scrollable_y"  style="height:15rem;">
+                                <lightning-datatable data={successRecordsToDisplay} columns={succeededRecordColumns} key-field={succeededRecordKey} onrowaction={handleRowAction} hide-checkbox-column></lightning-datatable>
+                            </div>
+                            <div align="right">
+                                <lightning-button disabled={btnSuccessDisablePrevious} variant="base" label="Previous" alternative-text="Previous" onclick={previousPageSuccess}></lightning-button>
+                                &nbsp;
+                                <span>({succesPageNumber} &nbsp;-&nbsp; {successTotalPages} &nbsp;of&nbsp;{successTotalRecords})</span>
+                                &nbsp;
+                                <lightning-button disabled={btnSuccessDisableNext} variant="base" label="Next" alternative-text="Next" onclick={nextPageSuccess}></lightning-button>
+                            </div>
                         </div>
                     </div>
                 </lightning-layout-item>
                 <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-small">
-                    <div class="slds-var-p-around_x-small">
-                        <b>Failed:</b>
-                    </div>
-                    <div class="slds-box slds-var-p-around_x-small">
-                        <div class="slds-scrollable_y"  style="height:15rem;">
-                            <lightning-datatable data={errorRecordsToDisplay} columns={failedRecordColumns} key-field={failedRecordKey} onrowaction={handleRowAction} hide-checkbox-column></lightning-datatable>
+                    <div class="slds-box">
+                        <div class="slds-var-p-around_x-small">
+                            <b>Failed:</b>
                         </div>
-                        <div align="right">
-                            <lightning-button disabled={btnErrorDisablePrevious} variant="base" label="Previous" alternative-text="Previous" onclick={previousPageError}></lightning-button>
-                            &nbsp;
-                            <span>({errorPageNumber} &nbsp;-&nbsp; {errorTotalPages} &nbsp;of&nbsp;{errorTotalRecords})</span>
-                            &nbsp;
-                            <lightning-button disabled={btnErrorDisableNext} variant="base" label="Next" alternative-text="Next" onclick={nextPageError}></lightning-button>
+                        <div class="slds-box slds-var-p-around_x-small">
+                            <div class="slds-scrollable_y"  style="height:15rem;">
+                                <lightning-datatable data={errorRecordsToDisplay} columns={failedRecordColumns} key-field={failedRecordKey} onrowaction={handleRowAction} hide-checkbox-column></lightning-datatable>
+                            </div>
+                            <div align="right">
+                                <lightning-button disabled={btnErrorDisablePrevious} variant="base" label="Previous" alternative-text="Previous" onclick={previousPageError}></lightning-button>
+                                &nbsp;
+                                <span>({errorPageNumber} &nbsp;-&nbsp; {errorTotalPages} &nbsp;of&nbsp;{errorTotalRecords})</span>
+                                &nbsp;
+                                <lightning-button disabled={btnErrorDisableNext} variant="base" label="Next" alternative-text="Next" onclick={nextPageError}></lightning-button>
+                            </div>
                         </div>
                     </div>
                 </lightning-layout-item>

@@ -1,19 +1,18 @@
+<!-- sldsValidatorIgnore -->
 <template>
     <template if:true={hasNotify}>
-        <div class="slds-region_narrow">
-            <div class="slds-is-absolute container">
-                <div class="cusNotifyContainer">
-                    <div class={notification.headerClass} role="status">
-                        <span class="slds-assistive-text">{notification.headerMessage}</span>
-                        <span class="slds-icon_container slds-icon-utility-success slds-var-m-right_small slds-no-flex slds-align-top">
-                            <lightning-icon icon-name={notification.iconName} alternative-text="icon"
-                                styleclass="slds-icon slds-icon_small" variant="inverse" size="small"></lightning-icon>
-                        </span>
-                        <div>
-                            <h2 class="slds-text-heading_small txtContent">{notification.message}</h2>
-                            <div class="loader"></div>
-                        </div>
-                    </div>
+        <div class="slds-notify_container">
+            <div class={outerClass} role="status">
+                <span class="slds-assistive-text">{type}</span>
+                <span class={innerClass} title={message}>
+                    <lightning-icon icon-name={getIconName} alternative-text="icon" styleclass="slds-icon slds-icon_small" variant="inverse" size="small"></lightning-icon>
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small txtContent">{message}</h2>
+                    <div class="loader"></div>
+                </div>
+                <div class="slds-notify__close">
+                    <lightning-button-icon icon-name="utility:close" size="small" variant="border-filled" class="slds-button slds-button_icon slds-button_icon-inverse" alternative-text="next" onclick={closeModel}></lightning-button-icon>
                 </div>
             </div>
         </div>
