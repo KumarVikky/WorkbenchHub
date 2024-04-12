@@ -1,7 +1,7 @@
 <!-- sldsValidatorIgnore -->
 <template>
     <div class="slds-box slds-p-around_none slds-var-m-top_x-small slds-var-m-bottom_medium slds-m-horizontal_none">
-        <P class="p1">Rest request. <span class="slds-var-m-left_x-small">[API: {apiValue}]</span></P>
+        <P class="p1">Rest Reuest Builder: Build & Execute any Rest Resouces API's. <span class="slds-var-m-left_x-small">[API: {apiValue}]</span></P>
         <lightning-layout multiple-rows>
             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="around-small">
                 <div class="slds-box slds-var-p-around_x-small">
@@ -37,13 +37,13 @@
                     </div>
                 </div>
                 <div class="slds-box">
-                    <lightning-textarea name="requestBody" label="Request Body" max-length="20000" value={requestBodyValue} onchange={handleRequestBodyChange}></lightning-textarea>
+                    <lightning-textarea name="requestBody" label="Request Body" max-length="20000" value={requestBodyValue} onchange={handleRequestBodyChange} field-level-help="Request body."></lightning-textarea>
                 </div>
             </lightning-layout-item>
             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="7" padding="around-small">
                 <div class="slds-box">
                     <div class="slds-var-p-around_x-small">
-                        <lightning-textarea name="requestURL" label="Request URL" max-length="200" value={urlValue} class="textAreaFont" onchange={handleUrlChange}></lightning-textarea>
+                        <lightning-textarea name="requestURL" label="Request URL" max-length="200" value={urlValue} class="textAreaFont" onchange={handleUrlChange} field-level-help="Endpoint url"></lightning-textarea>
                     </div>
                     <div align="right">
                         <lightning-button variant="brand" label="Execute" title="Execute" onclick={handleRestRequest} disabled={disabledExecutionBtn} class="slds-var-m-right_x-small"></lightning-button>

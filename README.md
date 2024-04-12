@@ -27,3 +27,4 @@ Release updates:
 - It can show all deployment history with status & metadata components.
 - It can execute apex code anonymously & show debug statements.
 - It can also download raw debug logs.
+- It can build and execute any Rest Resouces API's using Rest Reuest Builder.
