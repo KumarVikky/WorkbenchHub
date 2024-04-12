@@ -572,4 +572,40 @@ public class WB_WorkbenchController {
         }
         return result;
     }
+    @AuraEnabled(cacheable=false)
+    public static String restRequest(String userId, String restParamsJson){
+        WB_RestResponseWrapper result = null;
+        try{
+            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            Map<String,String> params = new Map<String,String>();
+            params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+            params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+            params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.REQUESTBODY,restParamsJson);
+            Type classType = Type.forName('WB_RestExplorer');
+            Object instance = classType.newInstance();
+            WB_ServiceRequest request = (WB_ServiceRequest)instance;
+            result = (WB_RestResponseWrapper) request.executeService(instance,params);            
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return JSON.serialize(result);
+    }
+    @AuraEnabled(cacheable=false)
+    public static String addRemoteSite(String hostURL){
+        String result = null;
+        try{
+            Boolean res = WB_RemoteSiteSettingManager.createRemoteSiteSettings('WB_ExternalSite',hostURL);  
+            if(res){
+                result = 'success';
+            }else{
+                result = 'fail';
+            }
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return result;
+    }
 }

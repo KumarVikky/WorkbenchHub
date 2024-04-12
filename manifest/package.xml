@@ -39,6 +39,9 @@
         <members>WB_FetchDebugLevel</members>
         <members>WB_FetchDebugLog</members>
         <members>WB_FetchRawLog</members>
+        <members>WB_RestExplorer</members>
+        <members>WB_RestRequestWrapper</members>
+        <members>WB_RestResponseWrapper</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -64,6 +67,7 @@
         <members>wb_DeploymentDetails</members>
         <members>wb_ExecuteAnonymous</members>
         <members>wb_ViewLog</members>
+        <members>wb_RestExplorer</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>59.0</version>

@@ -16,7 +16,7 @@ public abstract class WB_ServiceAdapter{
                 req.setHeader(header, headerValues.get(header));
             }
         }
-        if(this.setRequestBody() != null){
+        if(this.setRequestBody() != null && this.setRequestBody() != ''){
             req.setBody(this.setRequestBody());
         }
         return req;
