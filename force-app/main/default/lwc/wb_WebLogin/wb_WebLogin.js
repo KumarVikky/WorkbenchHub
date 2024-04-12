@@ -35,15 +35,15 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
     fetchConsumerInfo(){
         this.isLoading = true;
 		getConsumerInfo()
-		.then(result => {
+        .then(result => {
             this.isLoading = false;
             this.clientId = result.CLIENT_ID;
             this.clientSecret = result.CLIENT_SECRET;
-		})
-		.catch(error => {
+        })
+        .catch(error => {
             console.log('error',error);
             this.isLoading = false;
-		})
+        })
 	} 
     handleLogin(){
         let authURL = 'https://login.salesforce.com/services/oauth2/authorize';
@@ -77,11 +77,9 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
         });
     }
     handleEnvChange(event) {
-        //console.log('env=>',event.detail.value);
         this.envValue = event.detail.value;
     }
     handleApiChange(event) {
-        //console.log('api=>',event.detail.value);
         this.apiVersionValue = event.detail.value;
     }
     

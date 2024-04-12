@@ -37,7 +37,6 @@ public class WB_RenewToken extends WB_ServiceAdapter implements WB_ServiceReques
         HttpResponse res = service.getResponse(req);
         Object response = null;
         if(res.getStatusCode() == WB_ServiceAppConstant.STATUS_OK){
-            //System.debug('WB_RenewToken=>'+res.getBody());
             WB_RenewTokenWrapper resWrap = WB_RenewTokenWrapper.parse(res.getBody());
             Id userId = (Id) resWrap.id.substringAfterLast('/');
             Id orgId = (Id) resWrap.id.substringBetween('id/','/');

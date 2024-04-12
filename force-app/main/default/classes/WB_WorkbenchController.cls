@@ -18,7 +18,6 @@ public class WB_WorkbenchController {
             Object instance = classType.newInstance();
             WB_ServiceRequest request = (WB_ServiceRequest)instance;
             userId = (String) request.executeService(instance,params);
-            //System.debug('userId==>'+userId); 
         }catch(Exception ex){
             WB_LogLevel.logException(ex);
             new AuraHandledException(ex.getMessage());
@@ -593,10 +592,14 @@ public class WB_WorkbenchController {
         return JSON.serialize(result);
     }
     @AuraEnabled(cacheable=false)
-    public static String addRemoteSite(String hostURL){
+    public static String addRemoteSite(String userId, String name, String hostURL){
         String result = null;
         try{
-            Boolean res = WB_RemoteSiteSettingManager.createRemoteSiteSettings('WB_ExternalSite',hostURL);  
+            if(hostURL == null || hostURL == ''){
+       			WB_WorkbenchSession__c wbs = [SELECT WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];  
+                hostURL = wbs.WB_DomainURL__c;
+            }
+            Boolean res = WB_RemoteSiteSettingManager.createRemoteSiteSettings(name + userId, hostURL);  
             if(res){
                 result = 'success';
             }else{

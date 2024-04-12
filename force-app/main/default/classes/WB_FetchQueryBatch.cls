@@ -35,7 +35,6 @@ public class WB_FetchQueryBatch extends WB_ServiceAdapter implements WB_ServiceR
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
         if(res.getStatusCode() == WB_ServiceAppConstant.STATUS_OK){
-            //System.debug('WB_FetchQueryBatchInitial=>'+res.getBody());
             if(res.getBody().contains('Session expired')){
                 WB_RenewToken renewServ = new WB_RenewToken();
                 String newAccessToken = (String) renewServ.executeService(renewServ,params);
@@ -43,7 +42,6 @@ public class WB_FetchQueryBatch extends WB_ServiceAdapter implements WB_ServiceR
                 req.setHeader('Authorization',authorizationHeader);
                 res = service.getResponse(req);
             }
-            //System.debug('WB_FetchQueryBatchFinal=>'+res.getBody());
         }else{
             WB_LogLevel.logException(new AppException(res.getBody()));
         }

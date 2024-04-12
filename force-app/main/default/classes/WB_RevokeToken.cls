@@ -29,7 +29,6 @@ public class WB_RevokeToken extends WB_ServiceAdapter implements WB_ServiceReque
         HttpResponse res = service.getResponse(req);
         Object response = null;
         if(res.getstatusCode() == 200){
-            //System.debug('WB_RevokeToken=>'+res.getBody());
             response = 'Success';
         }else{
             response = 'Error';

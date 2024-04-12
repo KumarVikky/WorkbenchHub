@@ -5,6 +5,7 @@ import LightningAlert from 'lightning/alert';
 import getAccessToken from '@salesforce/apex/WB_WorkbenchController.getAccessToken';
 import getUserInfo from '@salesforce/apex/WB_WorkbenchController.getUserDetails';
 import revokeAccess from '@salesforce/apex/WB_WorkbenchController.revokeAccess';
+import addRemoteSite from '@salesforce/apex/WB_WorkbenchController.addRemoteSite';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { fireEvent } from 'c/wb_PubSub';
 import profileSection from 'c/wb_ProfileModal';
@@ -57,9 +58,7 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
 		.then(result => {
             if(result){
                 this.userId = result;
-                this.hasUserToken = true;
-                this.isLoading = false;
-                this.fetchUserInfo();
+                this.addURLToRemoteSiteSetting();
             }else{
                 this.showToastMessage('error', 'Session expired or invalid! please login again.');
                 this.navigateToExperiencePage("WorkbenchLogin__c");
@@ -70,28 +69,44 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
             this.isLoading = false;
             this.showToastMessage('error', error);
 		})
-	} 
+	}
+    addURLToRemoteSiteSetting(){
+        addRemoteSite({userId: this.userId, name:'WB_InternalSite_', hostURL: ''})
+        .then(result => {
+            if(result){
+                if(result === 'success'){
+                    this.hasUserToken = true;
+                    this.fetchUserInfo();
+                    this.isLoading = false;
+                }else{
+                    this.showToastMessage('error', 'Failed to add to Remote Site Setting.');
+                    this.navigateToExperiencePage("WorkbenchLogin__c");
+                }
+            }
+        })
+        .catch(error => {
+            this.isLoading = false;
+            console.log('error',error);
+            this.showToastMessage('error', error);
+        })
+    } 
     fetchUserInfo(){
-        this.isLoading = true;
 		getUserInfo({ userId: this.userId})
 		.then(result => {
             if(result){
                 let response = JSON.parse(result);
-                //console.log('response',response);
                 this.userName = response.preferred_username;
                 this.customDomain = response.urls.custom_domain;
                 this.userFullName = response.name;
                 let initials = response.name.split(" ").map((n)=>n[0]).join("");
                 let address = response.address.street_address + ' ' + response.address.country + '-' + response.address.postal_code;
                 this.profileObj = {'nameInitials':initials, 'name':response.name, 'nickName':response.nickname, 'userName':response.preferred_username, 'emailId':response.email, 'phoneNumber':response.phone_number, 'userId':response.user_id, 'organizationId':response.organization_id, 'zoneInfo':response.zoneinfo,'locale':response.locale, 'language':response.language, 'address':address};
-                this.isLoading = false;
             }else{
                 this.showToastMessage('error', 'Failed to retrieve user info.');
             }
 		})
 		.catch(error => {
             console.log('error',error);
-            this.isLoading = false;
             this.showToastMessage('error', error);
 		})
 	}
@@ -122,7 +137,6 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
         );
     }
     handleUserMenu(event){
-        //console.log('menu=>',event.detail.value);
         let menuItem = event.detail.value;
         if(menuItem === 'LogOut'){
             this.logOutSession();
@@ -135,7 +149,6 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
         this.isLoading = true;
         revokeAccess({ userId: this.userId})
 		.then(result => {
-			//console.log('result',result);
             if(result === 'Success'){
                 this.showToastMessage('success', 'Logged out successfully.');
             }
@@ -155,7 +168,6 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
             description: 'Profile modal',
             profileData:  this.profileObj,
         });
-        console.log(result);
     }
     showNotification(event){
         let data = event.detail;

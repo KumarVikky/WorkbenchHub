@@ -36,9 +36,16 @@
                         </template>
                     </div>
                 </div>
-                <div class="slds-box">
-                    <lightning-textarea name="requestBody" label="Request Body" max-length="20000" value={requestBodyValue} onchange={handleRequestBodyChange} field-level-help="Request body."></lightning-textarea>
-                </div>
+                <template lwc:if={showRequestBody}>
+                    <div class="slds-box">
+                        <lightning-textarea name="requestBody" label="Request Body" max-length="20000" value={requestBodyValue} onchange={handleRequestBodyChange} field-level-help="Request body."></lightning-textarea>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <div class="slds-box custom-box">
+                       <!--empty-->
+                    </div>
+                </template>
             </lightning-layout-item>
             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="7" padding="around-small">
                 <div class="slds-box">

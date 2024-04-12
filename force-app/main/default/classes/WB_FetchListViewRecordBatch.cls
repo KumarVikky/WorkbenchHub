@@ -35,7 +35,6 @@ public class WB_FetchListViewRecordBatch extends WB_ServiceAdapter implements WB
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
         if(res.getStatusCode() == WB_ServiceAppConstant.STATUS_OK){
-            //System.debug('WB_FetchListViewRecordBatchInitial=>'+res.getBody());
             if(res.getBody().contains('Session expired')){
                 WB_RenewToken renewServ = new WB_RenewToken();
                 String newAccessToken = (String) renewServ.executeService(renewServ,params);
@@ -43,7 +42,6 @@ public class WB_FetchListViewRecordBatch extends WB_ServiceAdapter implements WB
                 req.setHeader('Authorization',authorizationHeader);
                 res = service.getResponse(req);
             }
-            //System.debug('WB_FetchListViewRecordBatchFinal=>'+res.getBody());
         }else{
             WB_LogLevel.logException(new AppException(res.getBody()));
         }

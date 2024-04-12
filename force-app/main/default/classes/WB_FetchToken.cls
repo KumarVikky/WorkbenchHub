@@ -41,12 +41,10 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
         HttpResponse res = service.getResponse(req);
         Object response = null;
         if(res.getStatusCode() == WB_ServiceAppConstant.STATUS_OK){
-            //System.debug('WB_FetchToken=>'+res.getBody());
             WB_TokenWrapper resWrap = WB_TokenWrapper.parse(res.getBody());
             Id userId = (Id) resWrap.id.substringAfterLast('/');
             Id orgId = (Id) resWrap.id.substringBetween('id/','/');
             String orgURL = resWrap.instance_url;
-            WB_RemoteSiteSettingManager.createRemoteSiteSettings('WB'+orgId,orgURL);
             Map<String,String> sessionParams = new Map<String,String>{'access_token' => resWrap.access_token,'refresh_token' => resWrap.refresh_token, 'orgURL' => orgURL, 'userId' => userId, 'orgId' => orgId};  
             createSession(sessionParams);
             response = userId;
@@ -63,7 +61,7 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
         record.WB_DomainURL__c = sessionParams.get('orgURL');
         record.WB_UserId__c = sessionParams.get('userId');
         record.WB_OrganizationId__c = sessionParams.get('orgId');
-        Database.insert(record,true);   
+        Database.insert(record, true);   
     }
     
 }

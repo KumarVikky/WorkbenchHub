@@ -30,6 +30,9 @@ export default class Wb_RestExplorer extends LightningElement {
     get isAllowedCopy(){
         return this.responseBody === '' || this.responseBody === undefined ? false : true;
     }
+    get showRequestBody(){
+        return this.httpMethodValue === 'GET' ? false : true;
+    }
 
     connectedCallback(){
         this.urlValue = this.customDomain + '/services/data/v' + this.apiValue + '/';
@@ -72,6 +75,7 @@ export default class Wb_RestExplorer extends LightningElement {
         this.headerList.splice(index,1);
     }
     handleReset(){
+        this.urlValue = this.customDomain + '/services/data/v' + this.apiValue + '/';
         this.headerList = [];
         let headers = [{id: 1, key: 'Authorization', value: 'Bearer {CurrentUserToken}'},
                         {id: 2, key: 'Accept', value: '*/*'},
@@ -115,13 +119,14 @@ export default class Wb_RestExplorer extends LightningElement {
     }
     addURLToRemoteSiteSetting(hostURL){
         this.isLoading = true;
-        addRemoteSite({ hostURL: hostURL})
+        addRemoteSite({userId: this.userId, name:'WB_ExternalSite_', hostURL: hostURL})
         .then(result => {
             if(result){
                 this.isLoading = false;
                 if(result === 'success'){
                     this.remoteSiteSuccessList.push(hostURL);
                     this.showAddRemoteSiteBtn = false;
+                    this.showToastMessage('success', 'Sucessfully added to Remote Site Setting.');
                 }
             }else{
                 this.isLoading = false;
@@ -136,7 +141,7 @@ export default class Wb_RestExplorer extends LightningElement {
     }
     executeRestRequest(restParams){
         this.isLoading = true;
-        restRequest({ userId: this.userId, restParamsJson: JSON.stringify(restParams)})
+        restRequest({userId: this.userId, restParamsJson: JSON.stringify(restParams)})
 		.then(result => {
             if(result){
                 this.isLoading = false;
@@ -157,7 +162,7 @@ export default class Wb_RestExplorer extends LightningElement {
     removeCurrentToken(){
         for(let item of this.headerList){
             if(item.value.includes('{CurrentUserToken}')){
-                item.value = 'type value...';
+                item.value = 'token_removed';
             }
         }
     }

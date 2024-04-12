@@ -5,6 +5,9 @@
 :host {
     --sds-c-textarea-sizing-min-height: 100px;
 }
+.custom-box{
+    min-height: 155px;
+}
 .textAreaFont{
     font-size: medium;
 }

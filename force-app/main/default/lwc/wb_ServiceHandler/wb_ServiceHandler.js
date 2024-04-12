@@ -4,7 +4,6 @@ import { NavigationMixin } from 'lightning/navigation';
 export default class Wb_ServiceHandler extends NavigationMixin(LightningElement) {
     connectedCallback(){
         let wbSessionKey = localStorage.getItem("WB_SESSIONKEY");
-        //console.log('wbSessionKey',wbSessionKey);
         if(wbSessionKey){
             this.navigateToExperiencePage('WorkbenchHome__c');
         }else{

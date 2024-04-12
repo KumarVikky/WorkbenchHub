@@ -43,7 +43,6 @@ public class WB_SelfTokenRequest extends WB_ServiceAdapter implements WB_Service
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
         if(res.getStatusCode() == WB_ServiceAppConstant.STATUS_OK){
-            //System.debug('WB_SelfTokenRequest=>'+res.getBody());
             Map<String,Object> resultMap = (Map<String,Object>)JSON.deserializeUntyped(res.getBody());
             accesstoken = (String)resultMap.get('access_token');
             instanceURL = (String)resultMap.get('instance_url');
