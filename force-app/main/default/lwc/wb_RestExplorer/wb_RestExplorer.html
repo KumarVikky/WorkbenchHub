@@ -38,7 +38,7 @@
                 </div>
                 <template lwc:if={showRequestBody}>
                     <div class="slds-box">
-                        <lightning-textarea name="requestBody" label="Request Body" max-length="20000" value={requestBodyValue} onchange={handleRequestBodyChange} field-level-help="Request body."></lightning-textarea>
+                        <lightning-textarea name="requestBody" label="Request Body" max-length="20000" value={requestBodyValue} class="restBodyFont" onchange={handleRequestBodyChange} field-level-help="Request body."></lightning-textarea>
                     </div>
                 </template>
                 <template lwc:else>
@@ -50,7 +50,7 @@
             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="7" padding="around-small">
                 <div class="slds-box">
                     <div class="slds-var-p-around_x-small">
-                        <lightning-textarea name="requestURL" label="Request URL" max-length="200" value={urlValue} class="textAreaFont" onchange={handleUrlChange} field-level-help="Endpoint url"></lightning-textarea>
+                        <lightning-textarea name="requestURL" label="Request URL" max-length="200" value={urlValue} class="urlFont" onchange={handleUrlChange} field-level-help="Endpoint url"></lightning-textarea>
                     </div>
                     <div align="right">
                         <lightning-button variant="brand" label="Execute" title="Execute" onclick={handleRestRequest} disabled={disabledExecutionBtn} class="slds-var-m-right_x-small"></lightning-button>

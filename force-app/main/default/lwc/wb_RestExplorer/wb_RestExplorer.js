@@ -76,6 +76,7 @@ export default class Wb_RestExplorer extends LightningElement {
     }
     handleReset(){
         this.urlValue = this.customDomain + '/services/data/v' + this.apiValue + '/';
+        this.httpMethodValue = 'GET';
         this.headerList = [];
         let headers = [{id: 1, key: 'Authorization', value: 'Bearer {CurrentUserToken}'},
                         {id: 2, key: 'Accept', value: '*/*'},
@@ -94,21 +95,25 @@ export default class Wb_RestExplorer extends LightningElement {
     }
     handleRestRequest(){
         let params = this.generateRestParams();
-        //console.log('params',params);
-        if(this.urlValue.includes(this.customDomain)){
-            this.executeRestRequest(params);
-        }else{
-            let aTag = document.createElement('a');
-            aTag.href = this.urlValue;
-            let hostURL = 'https://' + aTag.hostname;
-            if(!this.remoteSiteSuccessList.includes(hostURL)){
-                this.showToastMessage('warning', 'Please add this hostname to Remote Site Setting for rest callout.');
-                this.showAddRemoteSiteBtn = true;
-                this.removeCurrentToken();
-            }else{
-                this.showAddRemoteSiteBtn = false;
+        let validate = this.handleHeadersValidation(this.headerList);
+        if(validate){
+            if(this.urlValue.includes(this.customDomain)){
                 this.executeRestRequest(params);
+            }else{
+                let aTag = document.createElement('a');
+                aTag.href = this.urlValue;
+                let hostURL = 'https://' + aTag.hostname;
+                if(!this.remoteSiteSuccessList.includes(hostURL)){
+                    this.showToastMessage('warning', 'Please add this hostname to Remote Site Setting for rest callout.');
+                    this.showAddRemoteSiteBtn = true;
+                    this.removeCurrentToken();
+                }else{
+                    this.showAddRemoteSiteBtn = false;
+                    this.executeRestRequest(params);
+                }
             }
+        }else{
+            this.showToastMessage('warning', 'Headers can not have blank key or values.');
         }
     }
     handleRemoteSite(){
@@ -146,8 +151,13 @@ export default class Wb_RestExplorer extends LightningElement {
             if(result){
                 this.isLoading = false;
                 let response = JSON.parse(result);
-                let responseBody = {status: response.status, statusCode: response.statusCode, body: JSON.parse(response.body)};
-                this.responseBody = JSON.stringify(responseBody, null, 4);
+                let responseBodyTemp;
+                if(this.isValidJson(response.body)){
+                    responseBodyTemp = {status: response.status, statusCode: response.statusCode, body: JSON.parse(response.body)};
+                }else{
+                    responseBodyTemp = response;
+                }
+                this.responseBody = JSON.stringify(responseBodyTemp, null, 4);
             }else{
                 this.isLoading = false;
                 this.showToastMessage('error', 'Failed to execute rest request:'+result);
@@ -166,6 +176,14 @@ export default class Wb_RestExplorer extends LightningElement {
             }
         }
     }
+    isValidJson(content){
+        try{
+            JSON.parse(content);
+        }catch(e){
+            return false;
+        }
+        return true;
+    }
     handleCopyResponse(){
         let content = this.refs.responseContent;
         if(content !== undefined){
@@ -177,6 +195,16 @@ export default class Wb_RestExplorer extends LightningElement {
             document.body.removeChild(el);
             alert('Response copied:  ' + el.value);
         }
+    }
+    handleHeadersValidation(headerList){
+        let validate = true;
+        for(let item of headerList){
+            if(item.key === '' || item.value === ''){
+                validate = false;
+                break;
+            }
+        }
+        return validate;
     }
     showToastMessage(variant, message){
         let title = (variant === 'error' ? 'Error:' : 'Success:');

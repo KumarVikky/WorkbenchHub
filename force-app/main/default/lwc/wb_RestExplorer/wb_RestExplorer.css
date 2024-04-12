@@ -8,7 +8,10 @@
 .custom-box{
     min-height: 155px;
 }
-.textAreaFont{
+.urlFont{
+    font-size: medium;
+}
+.restBodyFont{
     font-size: medium;
 }
 .responsePanel{
