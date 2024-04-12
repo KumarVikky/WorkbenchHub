@@ -46,6 +46,11 @@
                 <c-wb_-execute-anonymous user-id={userId} api-value={apiValue} custom-domain={customDomain} user-details={profileObj}></c-wb_-execute-anonymous>
             </template>
         </lightning-tab>
+        <lightning-tab label="Rest Explorer" value="seven">
+            <template if:true={hasUserToken}>
+                <c-wb_-rest-explorer user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-rest-explorer>
+            </template>
+        </lightning-tab>
     </lightning-tabset>
     <div class="spinner">
         <template if:true={isLoading}>

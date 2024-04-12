@@ -66,14 +66,6 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
     handleAnonymousExecute(){
        this.executeAnonymousRequest(this.codeSnippet);
     }
-    handleExecuteHighlighted(){
-        let textArea = this.refs.textAreaRef;
-        console.log('va',textArea);
-        console.log('vaa',textArea.value);
-        console.log('vaa',textArea.selectionStart);
-        console.log('vaaa',textArea.selectionEnd);
-
-    }
     handleTraceFlag(){
         this.generateTraceFlag();
     }
@@ -82,7 +74,6 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
         const actionName = event.detail.action.name;
         if(actionName === 'View'){
             this.selectedApexLogId = logId;
-            console.log('logId',logId);
             this.viewDebugLog(this.selectedApexLogId);
         }
     }

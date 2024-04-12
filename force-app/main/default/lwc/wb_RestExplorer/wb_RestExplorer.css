@@ -1,0 +1,20 @@
+.p1{
+    margin-top: 4px;
+    text-align: center;
+}
+:host {
+    --sds-c-textarea-sizing-min-height: 100px;
+}
+.textAreaFont{
+    font-size: medium;
+}
+.responsePanel{
+    display: ruby;
+}
+.scroller {
+    height: 320px;
+    overflow: auto;
+    padding: var(--lwc-varSpacingXSmall, 8px);
+    border: solid var(--lwc-borderWidthThin, 1px) #eee;
+    min-height: 320px;
+}

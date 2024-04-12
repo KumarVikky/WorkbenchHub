@@ -30,7 +30,7 @@
             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="8" padding="around-small">
                 <div class="slds-box">
                     <div class="slds-var-p-around_x-small">
-                        <lightning-textarea lwc-ref="textAreaRef" name="codeSnippet" label="Code Editor" max-length="20000" value={codeSnippet} class="textAreaFont" onchange={handleInputChange}></lightning-textarea>
+                        <lightning-textarea name="codeSnippet" label="Code Editor" max-length="20000" value={codeSnippet} class="textAreaFont" onchange={handleInputChange}></lightning-textarea>
                     </div>
                     <div align="right">
                         <lightning-button variant="brand" label="Execute" title="Execute" onclick={handleAnonymousExecute} disabled={disabledExecutionBtn} class="slds-var-m-right_x-small"></lightning-button>

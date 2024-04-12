@@ -1,0 +1,81 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="slds-box slds-p-around_none slds-var-m-top_x-small slds-var-m-bottom_medium slds-m-horizontal_none">
+        <P class="p1">Rest request. <span class="slds-var-m-left_x-small">[API: {apiValue}]</span></P>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="5" padding="around-small">
+                <div class="slds-box slds-var-p-around_x-small">
+                    <lightning-radio-group name="httpMethod" label="Http Method" options={httpMethodOptions} value={httpMethodValue} onchange={handleMethodChange}></lightning-radio-group>
+                </div>
+                <div class="slds-box">
+                    <div class="slds-var-p-around_x-small">
+                        <lightning-button variant="brand" label="Add Header" title="Add Header" onclick={handleAddHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                        <lightning-button variant="brand" label="Remove Header" title="Remove Header" onclick={handleRemoveHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                        <lightning-button variant="brand" label="Reset" title="Reset" onclick={handleReset} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                    </div>
+                    <div class="slds-var-p-top_x-small">
+                        <template iterator:it={headerList}>
+                            <div key={it.value.id}>
+                                <lightning-layout multiple-rows >
+                                    <template if:true={it.first}>
+                                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                            <lightning-input type="text" variant="label-hidden" name="headerKeyLabel" label="KeyLabel" value="Key" read-only="true" class="slds-var-m-bottom_x-small"></lightning-input>
+                                        </lightning-layout-item>
+                                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                            <lightning-input type="text" variant="label-hidden" name="headerValueLabel" label="ValueLabel" value="Value" read-only="true" class="slds-var-m-bottom_x-small"></lightning-input>
+                                        </lightning-layout-item>
+                                    </template>
+                                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                        <lightning-input type="text" data-id={it.value.id} variant="label-hidden" name="headerKey" label="Key" value={it.value.key} class="slds-var-m-bottom_x-small" onchange={handleHeaderKeyChange}></lightning-input>
+                                    </lightning-layout-item>
+                                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                        <lightning-input type="text" data-id={it.value.id} variant="label-hidden" name="headerValue" label="Value" value={it.value.value} class="slds-var-m-bottom_x-small" onchange={handleHeaderValueChange}></lightning-input>
+                                    </lightning-layout-item>
+                                </lightning-layout>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+                <div class="slds-box">
+                    <lightning-textarea name="requestBody" label="Request Body" max-length="20000" value={requestBodyValue} onchange={handleRequestBodyChange}></lightning-textarea>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="7" padding="around-small">
+                <div class="slds-box">
+                    <div class="slds-var-p-around_x-small">
+                        <lightning-textarea name="requestURL" label="Request URL" max-length="200" value={urlValue} class="textAreaFont" onchange={handleUrlChange}></lightning-textarea>
+                    </div>
+                    <div align="right">
+                        <lightning-button variant="brand" label="Execute" title="Execute" onclick={handleRestRequest} disabled={disabledExecutionBtn} class="slds-var-m-right_x-small"></lightning-button>
+                        <template lwc:if={showAddRemoteSiteBtn}>
+                            <lightning-button variant="brand" label="Add Remote Site" title="Add Remote Site" onclick={handleRemoteSite} disabled={disabledExecutionBtn} class="slds-var-m-right_x-small"></lightning-button>
+                        </template>
+                    </div>
+                </div>
+                <div class="slds-box">
+                    <div class="slds-var-p-around_x-small">
+                        <div class="responsePanel">
+                            <span>
+                                <p class="slds-var-m-bottom_x-small">Response Body:</p>
+                            </span>
+                            <template if:true={isAllowedCopy}>
+                                <span> 
+                                    <lightning-button-icon icon-name="utility:copy" alternative-text="Copy" class="slds-m-left_x-small" title="Copy" size="x-small" onclick={handleCopyResponse}></lightning-button-icon>
+                                </span>
+                            </template>
+                        </div>
+                        <div class="scroller">
+                            <pre lwc:ref="responseContent">{responseBody}</pre>
+                        </div>
+                    </div>
+                </div>
+            </lightning-layout-item>
+         </lightning-layout>
+    </div>
+    <div class="spinner">
+        <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+            </lightning-spinner>
+        </template>
+    </div>
+</template>
