@@ -7,7 +7,11 @@ public class WB_RestExplorer extends WB_ServiceAdapter implements WB_ServiceRequ
         return restParams.httpMethod;
     }
     protected override String setEndPointURL(){
-        return restParams.endPointURL;
+        String endPointURL = restParams.endPointURL;
+        if(endPointURL.contains('access_token') && endPointURL.contains('{CurrentUserToken}')){
+            endPointURL = endPointURL.replace('{CurrentUserToken}',this.currentAccessToken);
+        }
+        return endPointURL;
     }
     protected override String setRequestBody(){
        return restParams.requestBody;

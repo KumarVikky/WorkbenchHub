@@ -41,6 +41,8 @@ export default class Wb_DataProcess extends LightningElement {
     fileData;
     maxBatchSize = 200;
     currentBatchSize = 0;
+    disableAbortBtn = true;
+    hasProcessAborted = false;
 
     get crudOptions() {
         return [
@@ -233,6 +235,9 @@ export default class Wb_DataProcess extends LightningElement {
             index ++;
         }
     }
+    handleAbortProcess(){
+        this.hasProcessAborted = true;
+    }
     fetchSObjects(){
         this.isLoading = true;
 		getSObjects({ userId: this.userId, apiVersion: this.apiValue})
@@ -308,6 +313,11 @@ export default class Wb_DataProcess extends LightningElement {
         }
     }
     createRequestBatch(requestBody){
+        if(this.hasProcessAborted){ 
+            this.showToastMessage('success', 'Aborted successfully.'); 
+            this.disableAbortBtn = true;
+            return; 
+        };
         createRecordRequest({ userId: this.userId, apiVersion: this.apiValue, jsonRequestBody: JSON.stringify(requestBody)})
 		.then(result => {
             if(result){
@@ -357,6 +367,7 @@ export default class Wb_DataProcess extends LightningElement {
         }
         this.showNotification('info','Processing on '+ this.currentBatchSize + ' records of '+this.recordResponseData.length);
         let requestBody = this.generateRequestBody(this.selectedObjectName, recordChunks);
+        this.disableAbortBtn = false;
         this.createRequestBatch(requestBody);
     }
     async performUpdate(){
@@ -375,6 +386,11 @@ export default class Wb_DataProcess extends LightningElement {
         }
     }
     updateRequestBatch(requestBody){
+        if(this.hasProcessAborted){ 
+            this.showToastMessage('success', 'Aborted successfully.'); 
+            this.disableAbortBtn = true;
+            return; 
+        };
         updateRecordRequest({ userId: this.userId, apiVersion: this.apiValue, jsonRequestBody: JSON.stringify(requestBody)})
 		.then(result => {
             if(result){
@@ -420,6 +436,7 @@ export default class Wb_DataProcess extends LightningElement {
         }
         this.showNotification('info','Processing on '+ this.currentBatchSize + ' records of '+this.recordResponseData.length);
         let requestBody = this.generateRequestBody(this.selectedObjectName, recordChunks);
+        this.disableAbortBtn = false;
         this.updateRequestBatch(requestBody);
     }
     generateRequestIds(recordData){
@@ -450,6 +467,11 @@ export default class Wb_DataProcess extends LightningElement {
         }
     }
     deleteRequestBatch(requestIds){
+        if(this.hasProcessAborted){ 
+            this.showToastMessage('success', 'Aborted successfully.'); 
+            this.disableAbortBtn = true;
+            return; 
+        };
         deleteRecordRequest({ userId: this.userId, apiVersion: this.apiValue, jsonRequestBody: requestIds})
 		.then(result => {
             if(result){
@@ -500,6 +522,7 @@ export default class Wb_DataProcess extends LightningElement {
         }
         this.showNotification('info','Processing on '+ this.currentBatchSize + ' records of '+this.recordResponseData.length);
         let requestIds = this.generateRequestIds(recordChunks);
+        this.disableAbortBtn = false;
         this.deleteRequestBatch(requestIds);
     }
     dataValidation(operationType, objectName, recordData){

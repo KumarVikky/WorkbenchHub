@@ -2,25 +2,30 @@
     margin-top: 4px;
     text-align: center;
 }
-:host {
+.urlTextArea{
     --sds-c-textarea-sizing-min-height: 100px;
-}
-.custom-box{
-    min-height: 155px;
-}
-.urlFont{
     font-size: medium;
 }
-.restBodyFont{
-    font-size: medium;
+.bodyTextArea{
+    --sds-c-textarea-sizing-min-height: 270px;
+    font-size: 14px;
 }
 .responsePanel{
     display: ruby;
 }
-.scroller {
+.scroller{
     height: 320px;
     overflow: auto;
     padding: var(--lwc-varSpacingXSmall, 8px);
     border: solid var(--lwc-borderWidthThin, 1px) #eee;
     min-height: 320px;
+}
+.authClass{
+    min-height: 298px;
+}
+.headerClass{
+    min-height: 296px;
+}
+.paramClass{
+    min-height: 296px;
 }

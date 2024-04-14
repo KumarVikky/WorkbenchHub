@@ -62,6 +62,8 @@ export default class Wb_Query extends LightningElement {
     selectedSoqlHistory;
     _showDownloadBtn = false;
     fieldsPicklistOptionsMap;
+    disableAbortBtn = true;
+    hasProcessAborted = false;
 
     get totalRecords(){
         return this.recordList.length;
@@ -211,7 +213,7 @@ export default class Wb_Query extends LightningElement {
     async handleAdvanceFilter(){
         if(this.selectedFieldName  && this.selectedFieldName.length > 0){
             const result = await advanceFilterModal.open({
-                size: 'medium', //small, medium, or large default :medium
+                size: 'medium',
                 description: 'Multi-level filter modal',
                 multiFilterByFieldOptions: this.filterByFieldOptions,
                 multiFilterByOptions: this.filterByOptions,
@@ -243,7 +245,7 @@ export default class Wb_Query extends LightningElement {
     async handleAdvanceSort(){
         if(this.selectedFieldName  && this.selectedFieldName.length > 0){
             const result = await advanceSortModal.open({
-                size: 'medium', //small, medium, or large default :medium
+                size: 'medium',
                 description: 'Multi-level sort modal',
                 multiSortByFieldOptions: this.sortByFieldOptions,
                 multiSortByOptions: this.sortOptions,
@@ -364,6 +366,9 @@ export default class Wb_Query extends LightningElement {
         }else{
             this.showSoqlHistoryOpt = true;
         }
+    }
+    handleAbortProcess(){
+        this.hasProcessAborted = true;
     }
     handleSoqlHistoryChange(event){
         this.selectedSoqlHistory = event.detail.value;
@@ -522,6 +527,7 @@ export default class Wb_Query extends LightningElement {
                         }
                     }
                     if(!response.done){
+                        this.disableAbortBtn = false;
                         this.fetchRemainingRecords(response.nextRecordsUrl);
                     }else{
                         this.toggleProgress(false, 'base-autocomplete');
@@ -562,6 +568,11 @@ export default class Wb_Query extends LightningElement {
         }
     }
     fetchRemainingRecords(nextBatchURL) {
+        if(this.hasProcessAborted){ 
+            this.showToastMessage('success', 'Aborted successfully.'); 
+            this.disableAbortBtn = true;
+            return; 
+        };
 		getRecordsBatch({ userId: this.userId, nextQueryBatch: nextBatchURL})
 		.then(result => {
             if(result){
@@ -666,6 +677,7 @@ export default class Wb_Query extends LightningElement {
                     this.recordList = allRecords;
                     this.hasRecords = true;
                     if(response.nextPageUrl !== null){
+                        this.disableAbortBtn = false;
                         this.fetchListViewRecordsBatch(response.nextPageUrl);
                     }else{
                         this.showToastMessage('success', 'Records retrieve successfully');
@@ -687,6 +699,11 @@ export default class Wb_Query extends LightningElement {
 		})
 	}
     fetchListViewRecordsBatch(nextPageUrl){
+        if(this.hasProcessAborted){ 
+            this.showToastMessage('success', 'Aborted successfully.'); 
+            this.disableAbortBtn = true;
+            return; 
+        };
 		getListViewRecordBatch({ userId: this.userId, nextViewBatch: nextPageUrl})
 		.then(result => {
             if(result){
@@ -723,25 +740,18 @@ export default class Wb_Query extends LightningElement {
 		})
 	}
     downloadCSVFile() { 
-        //console.log('csvData');
         this.disableDownloadBtn = true; 
         this.downloadCSVFileAsync(this.recordList,this); 
     }
     downloadCSVFileAsync(recordList, that){
-        //console.log('recordList',recordList);
         return that.generateCSVFile(recordList)
         .then(function(csvData) {
-            //console.log('result',csvData);
             let downloadElement = document.createElement('a');
-            // This  encodeURI encodes special characters, except: , / ? : @ & = + $ # (Use encodeURIComponent() to encode these characters).
             downloadElement.href = 'data:text/csv;charset=utf-8,' + encodeURI(csvData);
             downloadElement.target = '_self';
             let objectName = (that.objectNameFromQuery !== undefined && that.objectNameFromQuery !== '') ? that.objectNameFromQuery : that.selectedObjectName;
-            // CSV File Name
             downloadElement.download = objectName +' Data.csv';
-            // below statement is required if you are using firefox browser
             document.body.appendChild(downloadElement);
-            // click() Javascript function to download CSV file
             downloadElement.click();
             that.disableDownloadBtn = false;  
             that.showToastMessage('success', 'CSV File generated.');
@@ -752,9 +762,7 @@ export default class Wb_Query extends LightningElement {
             let data = recordList;
             let rowEnd = '\n';
             let csvString = '';
-            // this set elminates the duplicates if have any duplicate keys
             let rowData = new Set();
-            // getting keys from data
             data.forEach(function (record) {
                 Object.keys(record).forEach(function (key) {
                     if(key !== 'attributes' && key !== 'RedirectURL'){
@@ -762,26 +770,18 @@ export default class Wb_Query extends LightningElement {
                     }
                 });
             });
-            // Array.from() method returns an Array object from any object with a length property or an iterable object.
             rowData = Array.from(rowData);
-            // splitting using ','
             csvString += rowData.join(',');
             csvString += rowEnd;
-            // main for loop to get the data based on key value
             for(let i=0; i < data.length; i++){
                 let colValue = 0;
-                // validating keys in data
                 for(let key in rowData) {
                     // eslint-disable-next-line no-prototype-builtins
                     if(rowData.hasOwnProperty(key)) {
-                        // Key value 
-                        // Ex: Id, Name
                         let rowKey = rowData[key];
-                        // add , after every value except the first.
                         if(colValue > 0){
                             csvString += ',';
                         }
-                        // If the column is undefined, it as blank in the CSV file.
                         let value = data[i][rowKey] === undefined ? '' : data[i][rowKey];
                         csvString += '"'+ value +'"';
                         colValue++;
@@ -804,16 +804,13 @@ export default class Wb_Query extends LightningElement {
         );
     }
     toggleProgress(isProgressing, variant) {
-        //console.log('isProgressing',isProgressing);//
         let progressVal = (variant === 'base-autocomplete' || variant === 'warning' ? 100 : 50);
         if(isProgressing === true){
-            // start
             // eslint-disable-next-line @lwc/lwc/no-async-operation
             this.interval = setInterval(() => {
                 this.progressValue = this.progressValue === 100 ? 0 : this.progressValue + 1;
             }, 10);
         }else{
-            // stop
             clearInterval(this.interval);
             this.progressVariant = variant;
             this.progressValue = progressVal;

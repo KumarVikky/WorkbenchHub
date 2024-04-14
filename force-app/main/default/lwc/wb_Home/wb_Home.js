@@ -74,12 +74,12 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
         addRemoteSite({userId: this.userId, name:'WB_InternalSite_', hostURL: ''})
         .then(result => {
             if(result){
-                if(result === 'success'){
+                if(result.includes('success')){
                     this.hasUserToken = true;
                     this.fetchUserInfo();
                     this.isLoading = false;
                 }else{
-                    this.showToastMessage('error', 'Failed to add to Remote Site Setting.');
+                    this.showToastMessage('error', 'Failed to add domain to Remote Site Setting: ' + result);
                     this.navigateToExperiencePage("WorkbenchLogin__c");
                 }
             }

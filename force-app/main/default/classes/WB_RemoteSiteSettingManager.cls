@@ -1,6 +1,6 @@
 public class WB_RemoteSiteSettingManager {
-    public static Boolean createRemoteSiteSettings(String siteName, String siteUrl){
-        Boolean isSucessfull=false;
+    public static String createRemoteSiteSettings(String siteName, String siteUrl){
+        String response = null;
         Map<String,String> RemoteSiteMap = new Map<String,String>();
         RemoteSiteMap.put(siteName,siteUrl);
         List<MetadataService.Metadata> allMetadataList = new List<MetadataService.Metadata>();
@@ -10,22 +10,21 @@ public class WB_RemoteSiteSettingManager {
             remoteSiteDetails.description = siteVal;
             remoteSiteDetails.disableProtocolSecurity  = false;
             remoteSiteDetails.isActive  = true;
-            remoteSiteDetails.url=RemoteSiteMap.get(siteVal);
+            remoteSiteDetails.url = RemoteSiteMap.get(siteVal);
             allMetadataList.add(remoteSiteDetails);
         }        
-        if(allMetadataList.size()>0){
+        if(allMetadataList.size() > 0){
             MetadataService.MetadataPort service = createService();
             List<MetadataService.UpsertResult> results = service.upsertMetadata(allMetadataList);
             for(MetadataService.UpsertResult result: results){
                 if(result.success){
-                    system.debug('Success : Added remote site setting : '+result);
-                    isSucessfull=true;
+                    response = 'success: ' + result;
                 }else{
-                    system.debug('Error : While adding remote site settings : '+result.errors[0].message);
+                    response = 'error: ' + result.errors[0].message;
                 }   
             } 
         }
-        return isSucessfull;
+        return response;
     }   
     private static MetadataService.MetadataPort createService(){
         WB_SelfTokenRequest ser = new WB_SelfTokenRequest();

@@ -8,54 +8,103 @@
                     <lightning-radio-group name="httpMethod" label="Http Method" options={httpMethodOptions} value={httpMethodValue} onchange={handleMethodChange}></lightning-radio-group>
                 </div>
                 <div class="slds-box">
-                    <div class="slds-var-p-around_x-small">
-                        <lightning-button variant="brand" label="Add Header" title="Add Header" onclick={handleAddHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
-                        <lightning-button variant="brand" label="Remove Header" title="Remove Header" onclick={handleRemoveHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
-                        <lightning-button variant="brand" label="Reset" title="Reset" onclick={handleReset} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
-                    </div>
-                    <div class="slds-var-p-top_x-small">
-                        <template iterator:it={headerList}>
-                            <div key={it.value.id}>
-                                <lightning-layout multiple-rows >
-                                    <template if:true={it.first}>
-                                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
-                                            <lightning-input type="text" variant="label-hidden" name="headerKeyLabel" label="KeyLabel" value="Key" read-only="true" class="slds-var-m-bottom_x-small"></lightning-input>
-                                        </lightning-layout-item>
-                                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
-                                            <lightning-input type="text" variant="label-hidden" name="headerValueLabel" label="ValueLabel" value="Value" read-only="true" class="slds-var-m-bottom_x-small"></lightning-input>
-                                        </lightning-layout-item>
-                                    </template>
+                    <lightning-tabset variant="scoped" active-tab-value="one">
+                        <lightning-tab label="Authorization" value="one">
+                            <div class="authClass">
+                                <lightning-layout multiple-rows>
                                     <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
-                                        <lightning-input type="text" data-id={it.value.id} variant="label-hidden" name="headerKey" label="Key" value={it.value.key} class="slds-var-m-bottom_x-small" onchange={handleHeaderKeyChange}></lightning-input>
+                                        <lightning-combobox name="AuthorizationType" label="Authorization Type" options={authorizationTypeOptions} value={authorizationTypeValue} onchange={handleAuthorizationType} dropdown-alignment="left"></lightning-combobox>
                                     </lightning-layout-item>
                                     <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
-                                        <lightning-input type="text" data-id={it.value.id} variant="label-hidden" name="headerValue" label="Value" value={it.value.value} class="slds-var-m-bottom_x-small" onchange={handleHeaderValueChange}></lightning-input>
+                                        <template lwc:if={hasOAuth2}>
+                                            <lightning-input type="text" name="HeaderPrefix" label="Header Prefix" value={headerPrefixValue} class="slds-var-m-bottom_x-small" onchange={handlecOAuth2}></lightning-input>
+                                            <lightning-input type="text" name="Token" label="Token" value={tokenValue} class="slds-var-m-bottom_x-small" onchange={handlecOAuth2}></lightning-input>
+                                        </template>
                                     </lightning-layout-item>
                                 </lightning-layout>
+                                <template lwc:if={hasOAuth2}>
+                                    <lightning-combobox name="AddAuthData" label="Add Authorization data to" options={addAuthDataOptions} value={addAuthDataValue} onchange={handleAddAuthData} dropdown-alignment="left"></lightning-combobox>    
+                                </template>
                             </div>
-                        </template>
-                    </div>
+                        </lightning-tab>
+                        <lightning-tab label="Header" value="two">
+                            <div class="headerClass">
+                                <div class="slds-var-p-around_x-small">
+                                    <lightning-button variant="brand" label="Add Header" title="Add Header" onclick={handleAddHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                                    <lightning-button variant="brand" label="Remove Header" title="Remove Header" onclick={handleRemoveHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                                    <lightning-button variant="brand" label="Reset" title="Reset" onclick={handleResetHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                                </div>
+                                <div class="slds-var-p-top_x-small">
+                                    <template iterator:it={headerList}>
+                                        <div key={it.value.id}>
+                                            <lightning-layout multiple-rows>
+                                                <template if:true={it.first}>
+                                                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                                        <lightning-input type="text" variant="label-hidden" name="headerKeyLabel" label="KeyLabel" value="Key" read-only="true" class="slds-var-m-bottom_x-small"></lightning-input>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                                        <lightning-input type="text" variant="label-hidden" name="headerValueLabel" label="ValueLabel" value="Value" read-only="true" class="slds-var-m-bottom_x-small"></lightning-input>
+                                                    </lightning-layout-item>
+                                                </template>
+                                                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                                    <lightning-input type="text" data-id={it.value.id} variant="label-hidden" name="headerKey" label="Key" value={it.value.key} class="slds-var-m-bottom_x-small" onchange={handleHeaderKeyChange}></lightning-input>
+                                                </lightning-layout-item>
+                                                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                                    <lightning-input type="text" data-id={it.value.id} variant="label-hidden" name="headerValue" label="Value" value={it.value.value} class="slds-var-m-bottom_x-small" onchange={handleHeaderValueChange}></lightning-input>
+                                                </lightning-layout-item>
+                                            </lightning-layout>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </lightning-tab>
+                        <lightning-tab label="Params" value="three">
+                            <div class="paramClass">
+                                <div class="slds-var-p-around_x-small">
+                                    <lightning-button variant="brand" label="Add Params" title="Add Params" onclick={handleAddParams} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                                    <lightning-button variant="brand" label="Remove Params" title="Remove Params" onclick={handleRemoveParams} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                                </div>
+                                <div class="slds-var-p-top_x-small">
+                                    <template iterator:it={paramList}>
+                                        <div key={it.value.id}>
+                                            <lightning-layout multiple-rows>
+                                                <template if:true={it.first}>
+                                                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                                        <lightning-input type="text" variant="label-hidden" name="paramKeyLabel" label="KeyLabel" value="Key" read-only="true" class="slds-var-m-bottom_x-small"></lightning-input>
+                                                    </lightning-layout-item>
+                                                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                                        <lightning-input type="text" variant="label-hidden" name="paramValueLabel" label="ValueLabel" value="Value" read-only="true" class="slds-var-m-bottom_x-small"></lightning-input>
+                                                    </lightning-layout-item>
+                                                </template>
+                                                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                                    <lightning-input type="text" data-id={it.value.id} variant="label-hidden" name="paramKey" label="Key" value={it.value.key} class="slds-var-m-bottom_x-small" onchange={handleParamKeyChange}></lightning-input>
+                                                </lightning-layout-item>
+                                                <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                                                    <lightning-input type="text" data-id={it.value.id} variant="label-hidden" name="paramValue" label="Value" value={it.value.value} class="slds-var-m-bottom_x-small" onchange={handleParamValueChange}></lightning-input>
+                                                </lightning-layout-item>
+                                            </lightning-layout>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </lightning-tab>
+                        <lightning-tab label="Body" value="four">
+                           <div class="bodyClass">
+                                <lightning-textarea name="requestBody" label="Request Body" value={requestBodyValue} class="bodyTextArea" onchange={handleRequestBodyChange} field-level-help="Request body."></lightning-textarea>
+                           </div>  
+                        </lightning-tab>
+                    </lightning-tabset>
                 </div>
-                <template lwc:if={showRequestBody}>
-                    <div class="slds-box">
-                        <lightning-textarea name="requestBody" label="Request Body" max-length="20000" value={requestBodyValue} class="restBodyFont" onchange={handleRequestBodyChange} field-level-help="Request body."></lightning-textarea>
-                    </div>
-                </template>
-                <template lwc:else>
-                    <div class="slds-box custom-box">
-                       <!--empty-->
-                    </div>
-                </template>
             </lightning-layout-item>
             <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="7" padding="around-small">
                 <div class="slds-box">
                     <div class="slds-var-p-around_x-small">
-                        <lightning-textarea name="requestURL" label="Request URL" max-length="200" value={urlValue} class="urlFont" onchange={handleUrlChange} field-level-help="Endpoint url"></lightning-textarea>
+                        <lightning-textarea name="requestURL" label="Request URL" max-length="200" value={urlValue} class="urlTextArea" onchange={handleUrlChange} field-level-help="Endpoint url"></lightning-textarea>
                     </div>
                     <div align="right">
                         <lightning-button variant="brand" label="Execute" title="Execute" onclick={handleRestRequest} disabled={disabledExecutionBtn} class="slds-var-m-right_x-small"></lightning-button>
                         <template lwc:if={showAddRemoteSiteBtn}>
-                            <lightning-button variant="brand" label="Add Remote Site" title="Add Remote Site" onclick={handleRemoteSite} disabled={disabledExecutionBtn} class="slds-var-m-right_x-small"></lightning-button>
+                            <lightning-button variant="brand" label="Add Domain" title="Add Domain" onclick={handleRemoteSite} disabled={disabledExecutionBtn} class="slds-var-m-right_x-small"></lightning-button>
                         </template>
                     </div>
                 </div>

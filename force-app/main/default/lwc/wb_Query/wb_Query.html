@@ -128,6 +128,9 @@
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="5" padding="horizontal-small">
                             <lightning-button variant="brand" label="Reset Filters" title="Reset Filters" onclick={handleResetAllFilters} class="resetBtn" disabled={disableFilterOpt}></lightning-button>
                         </lightning-layout-item>
+                        <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2" padding="horizontal-small">
+                            <lightning-button variant="brand" label="Abort" title="Abort" onclick={handleAbortProcess} class="resetBtn" disabled={disableAbortBtn}></lightning-button>
+                        </lightning-layout-item>
                     </lightning-layout>
                 </div>
                 <div class="slds-box slds-p-around_medium">

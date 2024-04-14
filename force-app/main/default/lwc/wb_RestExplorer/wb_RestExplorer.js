@@ -8,6 +8,7 @@ export default class Wb_RestExplorer extends LightningElement {
     @api customDomain;
     @api apiValue;
     @track headerList;
+    @track paramList;
     httpMethodValue = 'GET'; 
     urlValue = '';
     responseBody = '';
@@ -16,6 +17,11 @@ export default class Wb_RestExplorer extends LightningElement {
     showAddRemoteSiteBtn = false;
     remoteSiteSuccessList = [];
     disabledExecutionBtn = false;
+    authorizationTypeValue = 'OAuth2';
+    headerPrefixValue = 'Bearer';
+    tokenValue = '{CurrentUserToken}';
+    addAuthDataValue = 'RequestHeader';
+    
 
     get httpMethodOptions() {
         return [
@@ -27,18 +33,31 @@ export default class Wb_RestExplorer extends LightningElement {
             { label: 'HEAD', value: 'HEAD' }
         ];
     }
+    get authorizationTypeOptions() {
+        return [
+            { label: 'No Auth', value: 'NoAuth' },
+            { label: 'OAuth 2.0', value: 'OAuth2' }
+        ];
+    }
+    get addAuthDataOptions() {
+        return [
+            { label: 'Request Headers', value: 'RequestHeader' },
+            { label: 'Request URL', value: 'RequestURL' }
+        ];
+    }
     get isAllowedCopy(){
         return this.responseBody === '' || this.responseBody === undefined ? false : true;
     }
-    get showRequestBody(){
-        return this.httpMethodValue === 'GET' ? false : true;
+    get hasOAuth2(){
+        return this.authorizationTypeValue === 'OAuth2' ? true : false;
     }
 
     connectedCallback(){
         this.urlValue = this.customDomain + '/services/data/v' + this.apiValue + '/';
         this.headerList = [{id: 1, key: 'Authorization', value: 'Bearer {CurrentUserToken}'},
-                            {id: 2, key: 'Accept', value: '*/*'},
-                            {id: 3, key: 'Content-Type', value: 'application/json'}];
+                          {id: 2, key: 'Content-Type', value: 'application/json'},
+                          {id: 3, key: 'Accept', value: '*/*'}];
+        this.paramList = [{id: 1, key: '', value: ''}];
     }
 
     handleUrlChange(event){
@@ -50,13 +69,76 @@ export default class Wb_RestExplorer extends LightningElement {
     handleMethodChange(event){
         this.httpMethodValue = event.target.value;
     }
+    handleAuthorizationType(event){
+        this.authorizationTypeValue = event.target.value;
+        let index = this.headerList.findIndex(e => e.key === 'Authorization');
+        if(this.authorizationTypeValue === 'NoAuth'){
+            if(index !== -1){
+                this.headerList.splice(index,1);
+            }
+        }else{
+            if(index === -1){
+                this.headerList.unshift({id: this.headerList.length + 1, key: 'Authorization', value: this.headerPrefixValue + ' ' + this.tokenValue});
+            }
+        }
+    }
+    handlecOAuth2(event){
+        let tageName = event.target.name;
+        let tagValue = event.target.value;
+        if(tageName === 'Token'){
+            this.tokenValue = tagValue;
+        }else{
+            this.headerPrefixValue = tagValue; 
+        }
+        let index = this.headerList.findIndex(e => e.key === 'Authorization');
+        if(index !== -1){
+            this.headerList[index].value = this.headerPrefixValue + ' ' + this.tokenValue;
+        }else{
+            this.headerList.unshift({id: this.headerList.length + 1, key: 'Authorization', value: this.headerPrefixValue + ' ' + this.tokenValue});
+        }
+    }
+    handleAddAuthData(event){
+        this.addAuthDataValue = event.target.value;
+        let index = this.headerList.findIndex(e => e.key === 'Authorization');
+        if(this.addAuthDataValue === 'RequestHeader'){
+            if(index === -1){
+                this.headerList.unshift({id: this.headerList.length + 1, key: 'Authorization', value: this.headerPrefixValue + ' ' + this.tokenValue});
+            }
+            if(this.urlValue.includes('?access_token=')){
+                let tokenToRemoved = this.urlValue.substring(this.urlValue.indexOf('?access_token='), this.urlValue.length);
+                this.urlValue = this.urlValue.replace(tokenToRemoved, '');
+            }
+            else if(this.urlValue.includes('access_token=')){
+                let tokenToRemoved = this.urlValue.substring(this.urlValue.indexOf('access_token='), this.urlValue.length);
+                this.urlValue = this.urlValue.replace(tokenToRemoved, '');
+            }
+        }else{
+            if(index !== -1){
+                this.headerList.splice(index,1);
+            }
+            if(this.urlValue.includes('?')){
+                this.urlValue = this.urlValue + '&access_token=' + this.tokenValue;
+            }else{
+                this.urlValue = this.urlValue + '?access_token=' + this.tokenValue;
+            }
+        }
+    }
     handleAddHeaders(){
         let activeRowLen = this.headerList.length;
         if(activeRowLen < 6){
-            let headerObj = {id: activeRowLen+1, key: '', value: ''};
+            let headerObj = {id: activeRowLen + 1, key: '', value: ''};
             this.headerList.push(headerObj);
         }else{
             this.showToastMessage('warning', 'No more headers allowed.');
+        }
+    }
+    handleAddParams(){
+        let activeRowLen = this.paramList.length;
+        if(activeRowLen < 6){
+            let paramObj = {id: activeRowLen+1, key: '', value: ''};
+            this.paramList.push(paramObj);
+        }else{
+            this.showToastMessage('warning', 'No more params allowed.');
         }
     }
     handleHeaderKeyChange(event){
@@ -69,19 +151,43 @@ export default class Wb_RestExplorer extends LightningElement {
         let header = this.headerList.find(e => e.id === selectedId);
         header.value = event.detail.value;
     }
+    handleParamKeyChange(event){
+        let selectedId = Number(event.currentTarget.dataset.id);
+        let param = this.paramList.find(e => e.id === selectedId);
+        param.key = event.detail.value;
+        this.generateQueryParams();
+    }
+    handleParamValueChange(event){
+        let selectedId = Number(event.currentTarget.dataset.id);
+        let param = this.paramList.find(e => e.id === selectedId);
+        param.value = event.detail.value;
+        this.generateQueryParams();
+    }
     handleRemoveHeaders(){
         let selectedLastRow = this.headerList.length;
-        let index = this.headerList.findIndex(e => e.id === selectedLastRow);
-        this.headerList.splice(index,1);
+        let index = this.headerList.findIndex(e => e.id === selectedLastRow && e.key !== 'Authorization');
+        if(index !== -1){
+            this.headerList.splice(index,1);
+        }
     }
-    handleReset(){
+    handleRemoveParams(){
+        let selectedLastRow = this.paramList.length;
+        let index = this.paramList.findIndex(e => e.id === selectedLastRow);
+        if(index !== -1){
+            this.paramList.splice(index,1);
+        }
+        this.generateQueryParams();
+    }
+    handleResetHeaders(){
         this.urlValue = this.customDomain + '/services/data/v' + this.apiValue + '/';
         this.httpMethodValue = 'GET';
-        this.headerList = [];
-        let headers = [{id: 1, key: 'Authorization', value: 'Bearer {CurrentUserToken}'},
-                        {id: 2, key: 'Accept', value: '*/*'},
-                        {id: 3, key: 'Content-Type', value: 'application/json'}];
-        this.headerList = headers;                
+        this.headerList = [{id: 1, key: 'Authorization', value: 'Bearer {CurrentUserToken}'},
+                          {id: 2, key: 'Content-Type', value: 'application/json'},
+                          {id: 3, key: 'Accept', value: '*/*'}];
+        this.authorizationTypeValue = 'OAuth2';
+        this.headerPrefixValue = 'Bearer';
+        this.tokenValue = '{CurrentUserToken}';
+        this.addAuthDataValue === 'RequestHeader';             
     }
     generateRestParams(){
         let headerValues = [];
@@ -92,6 +198,29 @@ export default class Wb_RestExplorer extends LightningElement {
         this.urlValue = this.urlValue.replace("\t","");
         let restParams = {httpMethod: this.httpMethodValue, endPointURL: this.urlValue, restHeaders: headerValues, requestBody: this.requestBodyValue};
         return restParams;
+    }
+    generateQueryParams(){
+        let paramValues = '';
+        let endPointURL = this.urlValue.substring(0, this.urlValue.lastIndexOf('/') + 1);
+        for(let index in this.paramList){
+            if(this.paramList[index].key !== '' && this.paramList[index].value !== ''){
+                if(Number(index) === (this.paramList.length - 1)){
+                    paramValues = paramValues + this.paramList[index].key + '=' + this.paramList[index].value;
+                }else{
+                    paramValues = paramValues + this.paramList[index].key + '=' + this.paramList[index].value + '&';
+                }
+            }
+        }
+        if(paramValues !== ''){
+            if(this.urlValue.includes('?access_token')){
+                this.urlValue = endPointURL + '?' + paramValues + '&' + '?access_token=' + this.tokenValue;
+            }else{
+                this.urlValue = endPointURL + '?' + paramValues;
+            }
+        }
+        if(this.paramList.length === 0){
+            this.urlValue = endPointURL;
+        }
     }
     handleRestRequest(){
         let params = this.generateRestParams();
@@ -104,7 +233,7 @@ export default class Wb_RestExplorer extends LightningElement {
                 aTag.href = this.urlValue;
                 let hostURL = 'https://' + aTag.hostname;
                 if(!this.remoteSiteSuccessList.includes(hostURL)){
-                    this.showToastMessage('warning', 'Please add this hostname to Remote Site Setting for rest callout.');
+                    this.showToastMessage('warning', 'Please add this domain to Remote Site Setting for Rest Callouts.');
                     this.showAddRemoteSiteBtn = true;
                     this.removeCurrentToken();
                 }else{
@@ -128,14 +257,14 @@ export default class Wb_RestExplorer extends LightningElement {
         .then(result => {
             if(result){
                 this.isLoading = false;
-                if(result === 'success'){
+                if(result.includes('success')){
                     this.remoteSiteSuccessList.push(hostURL);
                     this.showAddRemoteSiteBtn = false;
-                    this.showToastMessage('success', 'Sucessfully added to Remote Site Setting.');
+                    this.showToastMessage('success', 'Domain added successfully to Remote Site Setting.');
                 }
             }else{
                 this.isLoading = false;
-                this.showToastMessage('error', 'Failed to add to Remote Site Setting:'+result);
+                this.showToastMessage('error', 'Failed to add domain to Remote Site Setting: ' + result);
             }
         })
         .catch(error => {

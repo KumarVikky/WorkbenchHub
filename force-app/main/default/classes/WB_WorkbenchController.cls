@@ -434,7 +434,7 @@ public class WB_WorkbenchController {
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
-            String query = 'SELECT+Id,+Type,+CheckOnly,+Status,+StartDate,+CompletedDate,+CreatedBy.Name+FROM+DeployRequest+ORDER+BY+CompletedDate+DESC';
+            String query = 'SELECT+Id,+Type,+CheckOnly,+Status,+StartDate,+CompletedDate,+CreatedBy.Name+FROM+DeployRequest+ORDER+BY+CompletedDate+DESC+LIMIT+5000';
             params.put(WB_ServiceAppConstant.QUERY,query);
             Type classType = Type.forName('WB_DeploymentStatus');
             Object instance = classType.newInstance();
@@ -599,12 +599,7 @@ public class WB_WorkbenchController {
        			WB_WorkbenchSession__c wbs = [SELECT WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];  
                 hostURL = wbs.WB_DomainURL__c;
             }
-            Boolean res = WB_RemoteSiteSettingManager.createRemoteSiteSettings(name + userId, hostURL);  
-            if(res){
-                result = 'success';
-            }else{
-                result = 'fail';
-            }
+            result = WB_RemoteSiteSettingManager.createRemoteSiteSettings(name + userId, hostURL);
         }catch(Exception ex){
             WB_LogLevel.logException(ex);
             new AuraHandledException(ex.getMessage());

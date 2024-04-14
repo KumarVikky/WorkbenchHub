@@ -90,7 +90,6 @@ export default class Wb_MetadataDeploy extends LightningElement {
         if(tagName === 'RunTests'){
             this.deployOptionsObj.runTests = event.currentTarget.value;
         }
-        //console.log('deployoption=',this.deployOptionsObj);
     }
 
     handleFilesChange(event){

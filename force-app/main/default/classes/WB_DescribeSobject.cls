@@ -33,7 +33,6 @@ public class WB_DescribeSobject extends WB_ServiceAdapter implements WB_ServiceR
         service.apiVersion = params.get(WB_ServiceAppConstant.API_VERSION);
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
-        //System.debug('WB_DescribeSobjectInitial=>'+res.getBody());
         if(res.getBody().contains('Session expired')){
             WB_RenewToken renewServ = new WB_RenewToken();
             String newAccessToken = (String) renewServ.executeService(renewServ,params);
@@ -41,7 +40,6 @@ public class WB_DescribeSobject extends WB_ServiceAdapter implements WB_ServiceR
             req.setHeader('Authorization',authorizationHeader);
             res = service.getResponse(req);
         }
-        //System.debug('WB_DescribeSobjectFinal=>'+res.getBody());
         return res.getBody();
     }
 }

@@ -42,7 +42,7 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
     connectedCallback(){
         let currentDateTime = new Date();
         this.selectedStartDate = currentDateTime.toISOString();
-        let logExpireDateTime = new Date(currentDateTime.getTime() + (20*60000));
+        let logExpireDateTime = new Date(currentDateTime.getTime() + (5*60000));
         this.selectedExpirationDate = logExpireDateTime.toISOString();
         this.fetchDebugLevels();
     }
@@ -64,7 +64,7 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
         this.selectedDebugLevel = event.target.value;
     }
     handleAnonymousExecute(){
-       this.executeAnonymousRequest(this.codeSnippet);
+        this.executeAnonymousRequest(this.codeSnippet);
     }
     handleTraceFlag(){
         this.generateTraceFlag();
@@ -75,6 +75,16 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
         if(actionName === 'View'){
             this.selectedApexLogId = logId;
             this.viewDebugLog(this.selectedApexLogId);
+        }
+    }
+    showTraceFlagBtn(){
+        let expirationDateTime = new Date(this.selectedExpirationDate);
+        let startDateTime = new Date(this.selectedStartDate);
+        let timeDiff = expirationDateTime.getTime() - startDateTime.getTime();
+        if(this.disabledLogLevelInputs){
+            setTimeout(() => {
+                this.disabledLogLevelInputs = false;
+            }, timeDiff);
         }
     }
     fetchDebugLevels(){
@@ -139,11 +149,13 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
             if(result){
                 this.isLoading = false;
                 let response = JSON.parse(result);
-                console.log('response',response);
                 if(response.success){
                     this.disabledLogLevelInputs = true;
                     this.traceFlagId = response.id;
-                    this.showToastMessage('success', 'Trace Flag is created with Id: '+response.id);
+                    let timeDiff = Math.abs(new Date(this.selectedExpirationDate) - new Date(this.selectedStartDate));
+                    let diffInMint = Math.floor((timeDiff/1000)/60);
+                    this.showToastMessage('success', 'Trace Flag is successfully set for ' + diffInMint + ' mintues');
+                    this.showTraceFlagBtn();
                 }else{
                     if(response.message){
                         this.showToastMessage('error', response.message);
