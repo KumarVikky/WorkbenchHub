@@ -4,7 +4,7 @@
 
 
 Watch Demo:
-[![Watch demo](https://drive.google.com/file/d/1WS0TZUOPLOObjlHn9Aj4XPzibPVEkGzn/view?usp=sharing)](https://drive.google.com/file/d/1ojGmQnyb6CZvIqAoYvu451jfkbpr1_MQ/view?usp=drive_link)
+[![WorkbenchHub](https://drive.google.com/file/d/1WS0TZUOPLOObjlHn9Aj4XPzibPVEkGzn/view?usp=sharing)](https://drive.google.com/file/d/1ojGmQnyb6CZvIqAoYvu451jfkbpr1_MQ/view?usp=drive_link)
 
 Release updates:
 - It can generate queries using SOQL Builder or manually using Query Editor.
