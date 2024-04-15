@@ -37,7 +37,7 @@ export default class Wb_Query extends LightningElement {
     previousCustomConditionValue;
     queryString;
     multiFilterString;
-    multiSortString
+    multiSortString;
     manualQueryString;
     queryStringURI;
     isLoading = false;

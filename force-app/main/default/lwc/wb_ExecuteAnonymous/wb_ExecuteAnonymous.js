@@ -118,13 +118,13 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
             if(result){
                 this.isLoading = false;
                 let response = JSON.parse(result);
-                if(response.compiled && response.success){
-                    this.fetchDebugLog();
-                }else{
-                    if(response.compileProblem){
-                        this.showToastMessage('error', 'Compilation error: '+response.compileProblem);
-                    }
+                if(!response.compiled && response.compileProblem){
+                    this.showToastMessage('error', 'Compile error: '+response.compileProblem);
                 }
+                else if(!response.success && response.exceptionMessage){
+                    this.showToastMessage('error', 'Exception: '+response.exceptionMessage);
+                }
+                this.fetchDebugLog();
             }else{
                 if(response.compileProblem){
                     this.showToastMessage('error', 'Failed to execute anonymous code:'+result);

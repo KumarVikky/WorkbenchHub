@@ -18,13 +18,16 @@
     margin-left: 8px;
     display: inline-flex;
 }
+.btn3_pos{
+    float: right;
+}
 @media only screen and (max-width: 600px) {
-    .btn2_pos {
+    .btn2_pos_mob {
       margin-right: 4px;
       margin-top: 3px;
       display: inline-block;
     }
-    .btn1_pos {
+    .btn1_pos_mob {
         margin-left: 1rem;
     }
 }
