@@ -55,7 +55,7 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
         let responseTypeCode = 'code';
         let prompType = 'login';
         let envKey = (this.envValue === 'Production' ? 'P' : 'S');
-        let redirectURI = 'https://salesarena-dev-ed.my.site.com/Workbench/s/weblogin/oauthrequest';
+        let redirectURI = 'https://salesarena-dev-ed.my.site.com/workbenchhub/s/weblogin/oauthrequest';
         let params = '?response_type=' + responseTypeCode +
             '&client_id=' + encodeURIComponent(this.clientId) +
             '&client_secret=' + encodeURIComponent(this.clientSecret) +

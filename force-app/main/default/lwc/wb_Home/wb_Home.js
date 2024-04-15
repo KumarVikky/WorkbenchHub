@@ -21,34 +21,35 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
     userName;
     userFullName;
     profileObj;
+    _idletimer;
     @wire(CurrentPageReference) pageRef;
 
     connectedCallback(){
-        var  idletimer;
         const onTimeout = () => {
             if(this.pageRef){
                 fireEvent(this.pageRef, 'closeAllModal', true);
             }
-            idletimer.deactivate();
+            this._idletimer.deactivate();
             this.logOutSession();
             localStorage.removeItem("WB_SESSIONKEY");
             this.alertHandler('Session has expired due to inactivity, please login again.');
             this.navigateToExperiencePage("WorkbenchLogin__c");
         };
-        idletimer = new IdleTimer(onTimeout, 900000);//15 min of inactivity
-        idletimer.activate(); 
+        this._idletimer = new IdleTimer(onTimeout, 900000);//15 min of inactivity
+        this._idletimer.activate(); 
         let wbSessionKey = localStorage.getItem("WB_SESSIONKEY");
         if(wbSessionKey){
             this.codeValue = wbSessionKey.substring(0, wbSessionKey.indexOf('&'));
             const state = wbSessionKey.slice(wbSessionKey.indexOf('&') + 1);
             this.envValue = state.substring(0, state.indexOf('_'));
             this.apiValue = state.slice(state.indexOf('_') + 1);
-           this.fetchAccessToken();
+            this.fetchAccessToken();
         }else{
             this.navigateToExperiencePage("WorkbenchLogin__c");
         }
     }
     disconnectedCallback() {
+        this._idletimer.deactivate();
         this.logOutSession();
     }
     fetchAccessToken(){
@@ -154,6 +155,7 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
             }
             this.isLoading = false;
             localStorage.removeItem("WB_SESSIONKEY");
+            this._idletimer.deactivate();
             this.navigateToExperiencePage("WorkbenchLogin__c");
 		})
 		.catch(error => {
