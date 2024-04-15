@@ -1,12 +1,14 @@
 import { LightningElement, track} from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getConsumerInfo from '@salesforce/apex/WB_WorkbenchController.getConsumerDetails';
+import WORKBENCH from '@salesforce/resourceUrl/Workbench'
 export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
     @track envValue = 'Production';
     @track apiVersionValue = '60.0';
     @track isLoading = false;
     @track clientId;
     @track clientSecret;
+    heartIcon = WORKBENCH + '/Workbench/heart.svg';
 
     get envOptions() {
         return [

@@ -126,9 +126,7 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
                 }
                 this.fetchDebugLog();
             }else{
-                if(response.compileProblem){
-                    this.showToastMessage('error', 'Failed to execute anonymous code:'+result);
-                }
+                this.showToastMessage('error', 'Failed to execute anonymous code:'+result);
             }
 		})
 		.catch(error => {
