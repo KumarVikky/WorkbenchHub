@@ -30,4 +30,10 @@
     .btn1_pos_mob {
         margin-left: 1rem;
     }
+    .btn3_pos_mob {
+        float: none;
+        margin-right: 4px;
+        margin-top: 3px;
+        display: inline-block;
+    }
 }

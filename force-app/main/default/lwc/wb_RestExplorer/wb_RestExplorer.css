@@ -29,3 +29,18 @@
 .paramClass{
     min-height: 296px;
 }
+
+@media only screen and (max-width: 600px) {
+    .btn2_pos_mob {
+      margin-top: 2px;
+      display: inline-block;
+    }
+    .btn1_pos_mob {
+        margin-top: 1px;
+    }
+    .btn3_pos_mob {
+        float: none;
+        margin-top: 2px;
+        display: inline-block;
+    }
+}

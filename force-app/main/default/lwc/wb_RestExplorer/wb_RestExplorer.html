@@ -30,9 +30,9 @@
                         <lightning-tab label="Header" value="two">
                             <div class="headerClass">
                                 <div class="slds-var-p-around_x-small">
-                                    <lightning-button variant="brand" label="Add Header" title="Add Header" onclick={handleAddHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
-                                    <lightning-button variant="brand" label="Remove Header" title="Remove Header" onclick={handleRemoveHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
-                                    <lightning-button variant="brand" label="Reset" title="Reset" onclick={handleResetHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                                    <lightning-button variant="brand" label="Add Header" title="Add Header" onclick={handleAddHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small btn1_pos_mob"></lightning-button>
+                                    <lightning-button variant="brand" label="Remove Header" title="Remove Header" onclick={handleRemoveHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small btn2_pos_mob"></lightning-button>
+                                    <lightning-button variant="brand" label="Reset" title="Reset" onclick={handleResetHeaders} class="slds-var-m-left_x-small slds-var-m-bottom_x-small btn3_pos_mob"></lightning-button>
                                 </div>
                                 <div class="slds-var-p-top_x-small">
                                     <template iterator:it={headerList}>
@@ -61,8 +61,8 @@
                         <lightning-tab label="Params" value="three">
                             <div class="paramClass">
                                 <div class="slds-var-p-around_x-small">
-                                    <lightning-button variant="brand" label="Add Params" title="Add Params" onclick={handleAddParams} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
-                                    <lightning-button variant="brand" label="Remove Params" title="Remove Params" onclick={handleRemoveParams} class="slds-var-m-left_x-small slds-var-m-bottom_x-small"></lightning-button>
+                                    <lightning-button variant="brand" label="Add Params" title="Add Params" onclick={handleAddParams} class="slds-var-m-left_x-small slds-var-m-bottom_x-small btn1_pos_mob"></lightning-button>
+                                    <lightning-button variant="brand" label="Remove Params" title="Remove Params" onclick={handleRemoveParams} class="slds-var-m-left_x-small slds-var-m-bottom_x-small btn2_pos_mob"></lightning-button>
                                 </div>
                                 <div class="slds-var-p-top_x-small">
                                     <template iterator:it={paramList}>

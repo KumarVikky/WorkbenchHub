@@ -10,13 +10,13 @@ public abstract class WB_ServiceAdapter{
         req.setEndpoint(this.setEndPointURL());
         req.setMethod(this.setHttpMethod());
         req.setTimeout(this.setHttpTimeOut());
-        if(!this.setHttpHeader().isEmpty()){
+        if(this.setHttpHeader()?.size() > 0){
             Map<String,String> headerValues = this.setHttpHeader();
             for(String header : headerValues.keySet()){
                 req.setHeader(header, headerValues.get(header));
             }
         }
-        if(!String.isEmpty(this.setRequestBody())){
+        if(this.setRequestBody()?.length() > 0){
             req.setBody(this.setRequestBody());
         }
         return req;

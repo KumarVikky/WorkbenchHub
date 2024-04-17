@@ -341,6 +341,7 @@ export default class Wb_DataProcess extends LightningElement {
                 }
                 //console.log('recordResponseData',this.recordResponseData);
                 if(this.recordResponseData.length > this.currentBatchSize){
+                    this.disableAbortBtn = false;
                     this.createRequest();
                 }else{
                     this.hideNotification();
@@ -367,7 +368,6 @@ export default class Wb_DataProcess extends LightningElement {
         }
         this.showNotification('info','Processing on '+ this.currentBatchSize + ' records of '+this.recordResponseData.length);
         let requestBody = this.generateRequestBody(this.selectedObjectName, recordChunks);
-        this.disableAbortBtn = false;
         this.createRequestBatch(requestBody);
     }
     async performUpdate(){
@@ -410,6 +410,7 @@ export default class Wb_DataProcess extends LightningElement {
                 }
                 //console.log('recordResponseData',this.recordResponseData);
                 if(this.recordResponseData.length > this.currentBatchSize){
+                    this.disableAbortBtn = false;
                     this.updateRequest();
                 }else{
                     this.hideNotification();
@@ -436,7 +437,6 @@ export default class Wb_DataProcess extends LightningElement {
         }
         this.showNotification('info','Processing on '+ this.currentBatchSize + ' records of '+this.recordResponseData.length);
         let requestBody = this.generateRequestBody(this.selectedObjectName, recordChunks);
-        this.disableAbortBtn = false;
         this.updateRequestBatch(requestBody);
     }
     generateRequestIds(recordData){
@@ -496,6 +496,7 @@ export default class Wb_DataProcess extends LightningElement {
                 }
                 //console.log('recordResponseData',this.recordResponseData);
                 if(this.recordResponseData.length > this.currentBatchSize){
+                    this.disableAbortBtn = false;
                     this.deleteRequest();
                 }else{
                     this.hideNotification();
@@ -522,7 +523,6 @@ export default class Wb_DataProcess extends LightningElement {
         }
         this.showNotification('info','Processing on '+ this.currentBatchSize + ' records of '+this.recordResponseData.length);
         let requestIds = this.generateRequestIds(recordChunks);
-        this.disableAbortBtn = false;
         this.deleteRequestBatch(requestIds);
     }
     dataValidation(operationType, objectName, recordData){
