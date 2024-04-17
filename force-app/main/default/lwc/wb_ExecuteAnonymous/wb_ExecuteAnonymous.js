@@ -212,7 +212,7 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
         }
     }
     showToastMessage(variant, message){
-        let title = (variant === 'error' ? 'Error:' : 'Success:');
+        let title = (variant === 'error' ? 'Error:' : variant === 'warning' ? 'Warning:' : 'Success:');
         let mode = (variant === 'error' ? 'sticky:' : 'dismissible:');
         this.dispatchEvent(
             new ShowToastEvent({

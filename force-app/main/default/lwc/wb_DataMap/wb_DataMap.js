@@ -97,13 +97,14 @@ export default class Wb_DataMap extends LightningModal {
         this.close(response);
     }
     showToastMessage(variant, message){
-        let title = (variant === 'error' ? 'Error:' : 'Success:');
+        let title = (variant === 'error' ? 'Error:' : variant === 'warning' ? 'Warning:' : 'Success:');
+        let mode = (variant === 'error' ? 'sticky:' : 'dismissible:');
         this.dispatchEvent(
             new ShowToastEvent({
                 title: title,
                 message : message,
                 variant: variant,
-                mode: 'dismissible'
+                mode: mode
             }),
         );
     }

@@ -383,6 +383,7 @@ export default class Wb_Query extends LightningElement {
             }
         }else{
             this.showToastMessage('warning', 'Please select fields or type query manually.');
+            this.queryString = '';
         }
     }
     generateQuery(){
@@ -793,13 +794,14 @@ export default class Wb_Query extends LightningElement {
         });
     }
     showToastMessage(variant, message){
-        let title = (variant === 'error' ? 'Error:' : 'Success:');
+        let title = (variant === 'error' ? 'Error:' : variant === 'warning' ? 'Warning:' : 'Success:');
+        let mode = (variant === 'error' ? 'sticky:' : 'dismissible:');
         this.dispatchEvent(
             new ShowToastEvent({
                 title: title,
                 message : message,
                 variant: variant,
-                mode: 'dismissible'
+                mode: mode
             }),
         );
     }
