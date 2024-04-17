@@ -1,8 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
-import executeAnonymous from '@salesforce/apex/WB_WorkbenchController.executeAnonymous';
-import setTraceFlag from '@salesforce/apex/WB_WorkbenchController.setTraceFlag';
-import retrieveDebugLevels from '@salesforce/apex/WB_WorkbenchController.retrieveDebugLevels';
-import retrieveDebugLog from '@salesforce/apex/WB_WorkbenchController.retrieveDebugLog';
+import executeAnonymous from '@salesforce/apex/WB_WorkbenchHubController.executeAnonymous';
+import setTraceFlag from '@salesforce/apex/WB_WorkbenchHubController.setTraceFlag';
+import retrieveDebugLevels from '@salesforce/apex/WB_WorkbenchHubController.retrieveDebugLevels';
+import retrieveDebugLog from '@salesforce/apex/WB_WorkbenchHubController.retrieveDebugLog';
 import viewLogModal from 'c/wb_ViewLog';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 

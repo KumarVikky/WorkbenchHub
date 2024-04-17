@@ -27,7 +27,7 @@ public class WB_RenewToken extends WB_ServiceAdapter implements WB_ServiceReques
     }
     
     public Object executeService(Object instance, Map<String,String> params){
-        WB_WorkbenchSetting__mdt wb = WB_WorkbenchSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
+        WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
         WB_RenewToken service = (WB_RenewToken)instance;
         service.clientId = wb.WB_ConsumerKey__c;
         service.clientSecret = wb.WB_ConsumerSecret__c;
@@ -40,7 +40,7 @@ public class WB_RenewToken extends WB_ServiceAdapter implements WB_ServiceReques
             WB_RenewTokenWrapper resWrap = WB_RenewTokenWrapper.parse(res.getBody());
             Id userId = (Id) resWrap.id.substringAfterLast('/');
             Id orgId = (Id) resWrap.id.substringBetween('id/','/');
-            WB_WorkbenchSession__c record = new WB_WorkbenchSession__c ();
+            WB_WorkbenchHubSession__c record = new WB_WorkbenchHubSession__c ();
             record.WB_AccessToken__c = resWrap.access_token;
             record.WB_DomainURL__c = resWrap.instance_url;
             record.WB_UserId__c = userId;

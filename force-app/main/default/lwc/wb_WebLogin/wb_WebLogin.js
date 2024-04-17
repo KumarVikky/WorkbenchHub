@@ -1,6 +1,6 @@
 import { LightningElement, track} from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
-import getConsumerInfo from '@salesforce/apex/WB_WorkbenchController.getConsumerDetails';
+import getConsumerInfo from '@salesforce/apex/WB_WorkbenchHubController.getConsumerDetails';
 import WORKBENCH from '@salesforce/resourceUrl/Workbench'
 export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
     @track envValue = 'Production';

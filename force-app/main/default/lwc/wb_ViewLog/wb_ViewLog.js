@@ -8,7 +8,7 @@ import jszipmin from '@salesforce/resourceUrl/jszipmin';
 import filesaver from '@salesforce/resourceUrl/filesaver';
 import jquery from '@salesforce/resourceUrl/jquery';
 import { loadScript } from 'lightning/platformResourceLoader';
-import retrieveRawLog from '@salesforce/apex/WB_WorkbenchController.retrieveRawLog';
+import retrieveRawLog from '@salesforce/apex/WB_WorkbenchHubController.retrieveRawLog';
 
 
 export default class Wb_ViewLog extends LightningModal {

@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import getAllDeploymentStatus from '@salesforce/apex/WB_WorkbenchController.retrieveAllDeploymentStatus';
+import getAllDeploymentStatus from '@salesforce/apex/WB_WorkbenchHubController.retrieveAllDeploymentStatus';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const columnData = [{type: "button", label: 'Action', initialWidth: 80, typeAttributes: {label: 'View',name: 'View',title: 'View',disabled: false,value: 'View',variant: 'base'}},

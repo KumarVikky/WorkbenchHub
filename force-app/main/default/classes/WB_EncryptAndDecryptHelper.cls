@@ -3,8 +3,9 @@ public class WB_EncryptAndDecryptHelper {
     private String crypAlgorithm; 
     
     public WB_EncryptAndDecryptHelper(){
-        cryptoKey = Crypto.generateAesKey(128);
-        crypAlgorithm = 'AES128'; 
+        WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
+        cryptoKey = Crypto.generateAesKey(Integer.valueOf(wb.CryptoKey__c));
+        crypAlgorithm = wb.CryptoAlgorithm__c; 
     }
     
     public String processEncryption(string jsonData){  

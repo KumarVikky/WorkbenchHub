@@ -1,5 +1,5 @@
 import { LightningElement, api, track } from 'lwc';
-import getDeploymentDetails from '@salesforce/apex/WB_WorkbenchController.retrieveDeploymentDetails';
+import getDeploymentDetails from '@salesforce/apex/WB_WorkbenchHubController.retrieveDeploymentDetails';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 const columnData = [{label: 'Id', fieldName: 'id', type: 'text', editable: false},

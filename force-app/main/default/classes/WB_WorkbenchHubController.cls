@@ -1,7 +1,7 @@
-public class WB_WorkbenchController {
+public class WB_WorkbenchHubController {
     @AuraEnabled(cacheable=true)
     public static Map<String,Object> getConsumerDetails(){
-        WB_WorkbenchSetting__mdt wb = WB_WorkbenchSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
+        WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
         Map<String,Object> response = new Map<String,Object>();
         response.put(WB_ServiceAppConstant.CLIENT_ID,wb.WB_ConsumerKey__c);
         response.put(WB_ServiceAppConstant.CLIENT_SECRET,wb.WB_ConsumerSecret__c);
@@ -28,7 +28,7 @@ public class WB_WorkbenchController {
     public static String getAllSObjects(String userId, String apiVersion){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -48,7 +48,7 @@ public class WB_WorkbenchController {
     public static String getAllFields(String userId, String objectName, String apiVersion){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -69,7 +69,7 @@ public class WB_WorkbenchController {
     public static String getAllRecords(String userId, String queryString, String apiVersion){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -90,7 +90,7 @@ public class WB_WorkbenchController {
     public static String getAllRecordsBatch(String userId, String nextQueryBatch){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -110,7 +110,7 @@ public class WB_WorkbenchController {
     public static String getUserDetails(String userId){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -129,7 +129,7 @@ public class WB_WorkbenchController {
     public static String revokeAccess(String userId){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -148,7 +148,7 @@ public class WB_WorkbenchController {
     public static String getAllListViews(String userId, String objectName, String apiVersion){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -169,7 +169,7 @@ public class WB_WorkbenchController {
     public static String getListViewRecords(String userId, String objectName, String viewDeveloperName, String apiVersion){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -191,7 +191,7 @@ public class WB_WorkbenchController {
     public static String getListViewRecordsBatch(String userId, String nextViewBatch){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -210,7 +210,7 @@ public class WB_WorkbenchController {
     @AuraEnabled(cacheable=false)
     public static String getMetadataTypes(String userId, String apiVersion){
         List<string> result = null;
-        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
         Map<String,String> params = new Map<String,String>();
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -230,7 +230,7 @@ public class WB_WorkbenchController {
     @AuraEnabled(cacheable=false)
     public static String getMetadataItems(String userId, String selectedMetadataType, String apiVersion){
         List<string> result = null;
-        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
         Map<String,String> params = new Map<String,String>();
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -265,7 +265,7 @@ public class WB_WorkbenchController {
                 packageFile.put(packageWrap.itemType, new Set<String>{packageWrap.itemName});
             }
         }
-        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
         Map<String,String> params = new Map<String,String>();
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -285,7 +285,7 @@ public class WB_WorkbenchController {
     @AuraEnabled(cacheable=false)
     public static String checkAsyncRetrieveRequest(String userId, String retrieveAsyncResultJSON, String apiVersion){
         MetadataService.AsyncResult  retrieveAsyncResult = (MetadataService.AsyncResult) System.JSON.deserialize(retrieveAsyncResultJSON, MetadataService.AsyncResult.class);
-        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
         Map<String,String> params = new Map<String,String>();
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -305,7 +305,7 @@ public class WB_WorkbenchController {
     @AuraEnabled(cacheable=false)
     public static String metadataDeployRequest(String userId, String metadataZip, String apiVersion, String deployOptionsJson){
         WB_DeployOptionsWrapper deployOptions = WB_DeployOptionsWrapper.parse(deployOptionsJson);
-        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
         Map<String,String> params = new Map<String,String>();
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -325,7 +325,7 @@ public class WB_WorkbenchController {
     @AuraEnabled(cacheable=false)
     public static String checkAsyncDeployRequest(String userId, String deployAsyncResultJSON, String apiVersion){
         MetadataService.AsyncResult  deployAsyncResult = (MetadataService.AsyncResult) System.JSON.deserialize(deployAsyncResultJSON, MetadataService.AsyncResult.class);
-        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
         Map<String,String> params = new Map<String,String>();
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -344,7 +344,7 @@ public class WB_WorkbenchController {
     }
     @AuraEnabled(cacheable=false)
     public static String metadataQuickDeployRequest(String userId, String recentValidationId, String apiVersion){
-        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
         Map<String,String> params = new Map<String,String>();
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -365,7 +365,7 @@ public class WB_WorkbenchController {
     public static String createRecordRequest(String userId, String apiVersion, String jsonRequestBody){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -386,7 +386,7 @@ public class WB_WorkbenchController {
     public static String updateRecordRequest(String userId, String apiVersion, String jsonRequestBody){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -407,7 +407,7 @@ public class WB_WorkbenchController {
     public static String deleteRecordRequest(String userId, String apiVersion, String jsonRequestBody){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -428,7 +428,7 @@ public class WB_WorkbenchController {
     public static String retrieveAllDeploymentStatus(String userId, String apiVersion){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -450,7 +450,7 @@ public class WB_WorkbenchController {
     public static String retrieveDeploymentDetails(String userId, String apiVersion, String deployRequestId){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -469,7 +469,7 @@ public class WB_WorkbenchController {
     }
     @AuraEnabled(cacheable=false)
     public static String executeAnonymous(String userId, String apiVersion, String codeSnippet){
-        WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+        WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
         Map<String,String> params = new Map<String,String>();
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -490,7 +490,7 @@ public class WB_WorkbenchController {
     public static String retrieveDebugLevels(String userId, String apiVersion){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -512,7 +512,7 @@ public class WB_WorkbenchController {
     public static String setTraceFlag(String userId, String apiVersion, String traceValue){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -533,7 +533,7 @@ public class WB_WorkbenchController {
     public static String retrieveDebugLog(String userId, String apiVersion){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -554,7 +554,7 @@ public class WB_WorkbenchController {
     public static String retrieveRawLog(String userId, String apiVersion, String logId){
         String result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -575,7 +575,7 @@ public class WB_WorkbenchController {
     public static String restRequest(String userId, String restParamsJson){
         WB_RestResponseWrapper result = null;
         try{
-            WB_WorkbenchSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];
+            WB_WorkbenchHubSession__c wbs = [SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];
             Map<String,String> params = new Map<String,String>();
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
@@ -596,7 +596,7 @@ public class WB_WorkbenchController {
         String result = null;
         try{
             if(hostURL == null || hostURL == ''){
-       			WB_WorkbenchSession__c wbs = [SELECT WB_DomainURL__c FROM WB_WorkbenchSession__c WHERE WB_UserId__c = :userId LIMIT 1];  
+       			WB_WorkbenchHubSession__c wbs = [SELECT WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1];  
                 hostURL = wbs.WB_DomainURL__c;
             }
             result = WB_RemoteSiteSettingManager.createRemoteSiteSettings(name + userId, hostURL);

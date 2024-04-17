@@ -4,9 +4,9 @@ import jszipmin from '@salesforce/resourceUrl/jszipmin';
 import filesaver from '@salesforce/resourceUrl/filesaver';
 import jquery from '@salesforce/resourceUrl/jquery';
 import { loadScript } from 'lightning/platformResourceLoader';
-import metadataDeployRequest from '@salesforce/apex/WB_WorkbenchController.metadataDeployRequest';
-import checkAsyncDeployRequest from '@salesforce/apex/WB_WorkbenchController.checkAsyncDeployRequest';
-import metadataQuickDeployRequest from '@salesforce/apex/WB_WorkbenchController.metadataQuickDeployRequest';
+import metadataDeployRequest from '@salesforce/apex/WB_WorkbenchHubController.metadataDeployRequest';
+import checkAsyncDeployRequest from '@salesforce/apex/WB_WorkbenchHubController.checkAsyncDeployRequest';
+import metadataQuickDeployRequest from '@salesforce/apex/WB_WorkbenchHubController.metadataQuickDeployRequest';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import LightningConfirm from 'lightning/confirm';
 

@@ -1,6 +1,6 @@
 public class WB_LogLevel {
     public static void logException(Exception ex){
-        logException(ex,'');
+        logException(ex, '');
     }
     public static void logException(Exception ex, String relatedToId){
         try{
@@ -8,14 +8,12 @@ public class WB_LogLevel {
             String className = stackTrace.substringAfter('.').substringBefore('.');	
             String methodName = stackTrace.substringBefore(':').substringAfter(className).substringAfter('.');
                     
-            //Governer Limit of executingQuery 
             String QueryLimit = '1. SOQL Queries used / SOQL Queries allowed: ' + Limits.getQueries() + '/' + Limits.getLimitQueries();
             String DMLimit = '2. Number of records queried so far /  Number allowed: ' + Limits.getDmlRows() + '/' + Limits.getLimitDmlRows();
             String DMLStat = '3. Number of DML statements used so far / Number allowed: ' +  Limits.getDmlStatements() + '/' + Limits.getLimitDmlStatements();   
             String CPUT = '4. Amount of CPU time (in ms) used so far / CPU usage time (in ms) allowed: ' + Limits.getCpuTime() + '/' + Limits.getLimitCpuTime();
 
-            //Log information in object
-            WB_WorkbenchLog__c log = new WB_WorkbenchLog__c();
+            WB_WorkbenchHubLog__c log = new WB_WorkbenchHubLog__c();
             log.WB_ClassName__c = className;
             log.WB_MethodName__c = methodName;
             log.WB_LoggedBy__c = UserInfo.getUserId();
@@ -26,8 +24,8 @@ public class WB_LogLevel {
             log.WB_StackTrace__c = ex.getStackTraceString();
             log.WB_LineNumber__c = ex.getLineNumber();
             Database.insert(log);
-        }finally{
-
+        }catch(Exception exc){
+			System.debug('Exception occurred: '+ exc.getMessage());
         } 
     }
 }

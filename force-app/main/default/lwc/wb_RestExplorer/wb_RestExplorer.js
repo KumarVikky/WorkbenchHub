@@ -1,7 +1,7 @@
 import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import restRequest from '@salesforce/apex/WB_WorkbenchController.restRequest';
-import addRemoteSite from '@salesforce/apex/WB_WorkbenchController.addRemoteSite';
+import restRequest from '@salesforce/apex/WB_WorkbenchHubController.restRequest';
+import addRemoteSite from '@salesforce/apex/WB_WorkbenchHubController.addRemoteSite';
 
 export default class Wb_RestExplorer extends LightningElement {
     @api userId;

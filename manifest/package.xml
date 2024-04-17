@@ -21,7 +21,7 @@
         <members>WB_DeployOptionsWrapper</members>
         <members>WB_ServiceRequest</members>
         <members>WB_EncryptAndDecryptHelper</members>
-        <members>WB_WorkbenchController</members>
+        <members>WB_WorkbenchHubController</members>
         <members>WB_RenewTokenWrapper</members>
         <members>WB_ServiceAdapter</members>
         <members>WB_DescribeSobject</members>

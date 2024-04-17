@@ -1,8 +1,8 @@
 import { LightningElement, api, track } from 'lwc';
-import getMetadataType from '@salesforce/apex/WB_WorkbenchController.getMetadataTypes';
-import getMetadataItems from '@salesforce/apex/WB_WorkbenchController.getMetadataItems';
-import metadataRetrieveRequest from '@salesforce/apex/WB_WorkbenchController.metadataRetrieveRequest';
-import checkAsyncRetrieveRequest from '@salesforce/apex/WB_WorkbenchController.checkAsyncRetrieveRequest';
+import getMetadataType from '@salesforce/apex/WB_WorkbenchHubController.getMetadataTypes';
+import getMetadataItems from '@salesforce/apex/WB_WorkbenchHubController.getMetadataItems';
+import metadataRetrieveRequest from '@salesforce/apex/WB_WorkbenchHubController.metadataRetrieveRequest';
+import checkAsyncRetrieveRequest from '@salesforce/apex/WB_WorkbenchHubController.checkAsyncRetrieveRequest';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import jszip from '@salesforce/resourceUrl/jszip';
 import jszipmin from '@salesforce/resourceUrl/jszipmin';

@@ -34,7 +34,7 @@ public class WB_SelfTokenRequest extends WB_ServiceAdapter implements WB_Service
     }
     
     public Object executeService(Object instance, Map<String,String> params){
-        WB_WorkbenchSetting__mdt wb = WB_WorkbenchSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
+        WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
         WB_SelfTokenRequest service = (WB_SelfTokenRequest)instance;
         service.username = wb.WB_Username__c;
         service.password = wb.WB_Password__c;

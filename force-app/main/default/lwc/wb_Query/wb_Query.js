@@ -1,11 +1,11 @@
 import { LightningElement, api, track } from 'lwc';
-import getSObjects from '@salesforce/apex/WB_WorkbenchController.getAllSObjects';
-import getFields from '@salesforce/apex/WB_WorkbenchController.getAllFields';
-import getRecords from '@salesforce/apex/WB_WorkbenchController.getAllRecords';
-import getRecordsBatch from '@salesforce/apex/WB_WorkbenchController.getAllRecordsBatch';
-import getListView from '@salesforce/apex/WB_WorkbenchController.getAllListViews';
-import getListViewRecord from '@salesforce/apex/WB_WorkbenchController.getListViewRecords';
-import getListViewRecordBatch from '@salesforce/apex/WB_WorkbenchController.getListViewRecordsBatch';
+import getSObjects from '@salesforce/apex/WB_WorkbenchHubController.getAllSObjects';
+import getFields from '@salesforce/apex/WB_WorkbenchHubController.getAllFields';
+import getRecords from '@salesforce/apex/WB_WorkbenchHubController.getAllRecords';
+import getRecordsBatch from '@salesforce/apex/WB_WorkbenchHubController.getAllRecordsBatch';
+import getListView from '@salesforce/apex/WB_WorkbenchHubController.getAllListViews';
+import getListViewRecord from '@salesforce/apex/WB_WorkbenchHubController.getListViewRecords';
+import getListViewRecordBatch from '@salesforce/apex/WB_WorkbenchHubController.getListViewRecordsBatch';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import advanceFilterModal from 'c/wb_AdvanceFilterModal';
 import advanceSortModal from 'c/wb_AdvanceSortModal';

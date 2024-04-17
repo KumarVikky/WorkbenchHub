@@ -1,9 +1,9 @@
 import { LightningElement, api, track } from 'lwc';
-import getSObjects from '@salesforce/apex/WB_WorkbenchController.getAllSObjects';
-import getFields from '@salesforce/apex/WB_WorkbenchController.getAllFields';
-import createRecordRequest from '@salesforce/apex/WB_WorkbenchController.createRecordRequest';
-import updateRecordRequest from '@salesforce/apex/WB_WorkbenchController.updateRecordRequest';
-import deleteRecordRequest from '@salesforce/apex/WB_WorkbenchController.deleteRecordRequest';
+import getSObjects from '@salesforce/apex/WB_WorkbenchHubController.getAllSObjects';
+import getFields from '@salesforce/apex/WB_WorkbenchHubController.getAllFields';
+import createRecordRequest from '@salesforce/apex/WB_WorkbenchHubController.createRecordRequest';
+import updateRecordRequest from '@salesforce/apex/WB_WorkbenchHubController.updateRecordRequest';
+import deleteRecordRequest from '@salesforce/apex/WB_WorkbenchHubController.deleteRecordRequest';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import jszip from '@salesforce/resourceUrl/jszip';
 import jszipmin from '@salesforce/resourceUrl/jszipmin';

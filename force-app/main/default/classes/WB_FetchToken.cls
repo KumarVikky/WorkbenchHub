@@ -30,7 +30,7 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
     }
     
     public Object executeService(Object instance, Map<String,String> params){
-        WB_WorkbenchSetting__mdt wb = WB_WorkbenchSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
+        WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
         WB_FetchToken service = (WB_FetchToken)instance;
         service.clientId = wb.WB_ConsumerKey__c;
         service.clientSecret = wb.WB_ConsumerSecret__c;
@@ -55,7 +55,7 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
     }
     
     public static void createSession(Map<String,String> sessionParams){
-        WB_WorkbenchSession__c record = new WB_WorkbenchSession__c ();
+        WB_WorkbenchHubSession__c record = new WB_WorkbenchHubSession__c ();
         record.WB_AccessToken__c = sessionParams.get('access_token');
         record.WB_RefreshToken__c = sessionParams.get('refresh_token');
         record.WB_DomainURL__c = sessionParams.get('orgURL');
