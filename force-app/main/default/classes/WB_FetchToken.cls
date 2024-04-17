@@ -1,7 +1,4 @@
 public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceRequest{
-    public virtual class BaseException extends Exception {}
-    public class AppException extends BaseException {}
-    
     private String clientId;
     private String clientSecret;
     private String code;
@@ -36,22 +33,16 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
         service.clientSecret = wb.WB_ConsumerSecret__c;
         service.code = params.get(WB_ServiceAppConstant.CODE);
         service.endPointURL =  params.get(WB_ServiceAppConstant.ENDPOINT_URL);
-        service.redirectURL = WB_ServiceAppConstant.REDIRECT_URL;
+        service.redirectURL = wb.WB_RedirectURL__c;
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
-        Object response = null;
-        if(res.getStatusCode() == WB_ServiceAppConstant.STATUS_OK){
-            WB_TokenWrapper resWrap = WB_TokenWrapper.parse(res.getBody());
-            Id userId = (Id) resWrap.id.substringAfterLast('/');
-            Id orgId = (Id) resWrap.id.substringBetween('id/','/');
-            String orgURL = resWrap.instance_url;
-            Map<String,String> sessionParams = new Map<String,String>{'access_token' => resWrap.access_token,'refresh_token' => resWrap.refresh_token, 'orgURL' => orgURL, 'userId' => userId, 'orgId' => orgId};  
-            createSession(sessionParams);
-            response = userId;
-        }else{
-            WB_LogLevel.logException(new AppException(res.getBody()));
-        }
-        return response;
+        WB_TokenWrapper resWrap = WB_TokenWrapper.parse(res.getBody());
+        Id userId = (Id) resWrap.id.substringAfterLast('/');
+        Id orgId = (Id) resWrap.id.substringBetween('id/','/');
+        String orgURL = resWrap.instance_url;
+        Map<String,String> sessionParams = new Map<String,String>{'access_token' => resWrap.access_token,'refresh_token' => resWrap.refresh_token, 'orgURL' => orgURL, 'userId' => userId, 'orgId' => orgId};  
+        createSession(sessionParams);
+        return userId;
     }
     
     public static void createSession(Map<String,String> sessionParams){

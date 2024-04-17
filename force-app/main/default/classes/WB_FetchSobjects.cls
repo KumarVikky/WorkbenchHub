@@ -1,7 +1,4 @@
 public class WB_FetchSobjects extends WB_ServiceAdapter implements WB_ServiceRequest{
-    public virtual class BaseException extends Exception {}
-    public class AppException extends BaseException {}
-    
     private String accessToken;
     private String endPointURL;
     private String apiVersion;
@@ -34,16 +31,12 @@ public class WB_FetchSobjects extends WB_ServiceAdapter implements WB_ServiceReq
         service.apiVersion = params.get(WB_ServiceAppConstant.API_VERSION);
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
-        if(res.getStatusCode() == WB_ServiceAppConstant.STATUS_OK){
-            if(res.getBody().contains('Session expired')){
-                WB_RenewToken renewServ = new WB_RenewToken();
-                String newAccessToken = (String) renewServ.executeService(renewServ,params);
-                String authorizationHeader = 'Bearer ' + newAccessToken;
-                req.setHeader('Authorization',authorizationHeader);
-                res = service.getResponse(req);
-            }
-        }else{
-            WB_LogLevel.logException(new AppException(res.getBody()));
+        if(res.getBody().contains('Session expired')){
+            WB_RenewToken renewServ = new WB_RenewToken();
+            String newAccessToken = (String) renewServ.executeService(renewServ,params);
+            String authorizationHeader = 'Bearer ' + newAccessToken;
+            req.setHeader('Authorization',authorizationHeader);
+            res = service.getResponse(req);
         }
         return res.getBody();
     }

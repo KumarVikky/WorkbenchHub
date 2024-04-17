@@ -1,15 +1,13 @@
 public class WB_RevokeToken extends WB_ServiceAdapter implements WB_ServiceRequest{
-    public virtual class BaseException extends Exception {}
-    public class AppException extends BaseException {}
-    
     private String endPointUrl;    
     private String refreshToken;
+    private String redirectURL;    
     
     protected override String setHttpMethod(){
-        return 'POST';
+        return 'GET';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL+'/services/oauth2/revoke?token='+refreshToken;
+        return this.endPointURL+'/services/oauth2/revoke?token='+this.refreshToken+'&callback='+this.redirectURL;
     }
     protected override String setRequestBody(){
         return null;
@@ -22,17 +20,18 @@ public class WB_RevokeToken extends WB_ServiceAdapter implements WB_ServiceReque
     }
     
     public Object executeService(Object instance, Map<String,String> params){
+        WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
         WB_RevokeToken service = (WB_RevokeToken)instance;
         service.refreshToken = params.get(WB_ServiceAppConstant.REFRESH_TOKEN);
         service.endPointURL = params.get(WB_ServiceAppConstant.ENDPOINT_URL);
+        service.redirectURL = wb.WB_RedirectURL__c;
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
         Object response = null;
-        if(res.getstatusCode() == 200){
+        if(res.getstatusCode() == WB_ServiceAppConstant.STATUS_OK){
             response = 'Success';
         }else{
             response = 'Error';
-            WB_LogLevel.logException(new AppException(res.getBody()));
         }
         return response;
     }

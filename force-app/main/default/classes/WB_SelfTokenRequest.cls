@@ -1,11 +1,6 @@
 public class WB_SelfTokenRequest extends WB_ServiceAdapter implements WB_ServiceRequest {
-    public virtual class BaseException extends Exception {}
-    public class AppException extends BaseException {}
-    
     private String username;
     private String password;
-    private String accesstoken ;
-    private String instanceURL ;
     private String clientId;
     private String clientSecret; 
     
@@ -42,13 +37,7 @@ public class WB_SelfTokenRequest extends WB_ServiceAdapter implements WB_Service
         service.clientSecret = wb.WB_ConsumerSecret__c;
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
-        if(res.getStatusCode() == WB_ServiceAppConstant.STATUS_OK){
-            Map<String,Object> resultMap = (Map<String,Object>)JSON.deserializeUntyped(res.getBody());
-            accesstoken = (String)resultMap.get('access_token');
-            instanceURL = (String)resultMap.get('instance_url');
-        }else{
-            WB_LogLevel.logException(new AppException(res.getBody()));
-        }
-        return accesstoken;
+        Map<String,Object> resultMap = (Map<String,Object>)JSON.deserializeUntyped(res.getBody());
+        return (String)resultMap.get('access_token');
     }
 }

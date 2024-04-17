@@ -6,8 +6,11 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
     @track envValue = 'Production';
     @track apiVersionValue = '60.0';
     @track isLoading = false;
-    @track clientId;
-    @track clientSecret;
+    clientId;
+    clientSecret;
+    prodAuthURL;
+    sandboxAuthURL;
+    redirectURL;
     heartIcon = WORKBENCH + '/Workbench/heart.svg';
 
     get envOptions() {
@@ -41,6 +44,9 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
             this.isLoading = false;
             this.clientId = result.CLIENT_ID;
             this.clientSecret = result.CLIENT_SECRET;
+            this.prodAuthURL = result.PROD_AUTH_URL;
+            this.sandboxAuthURL = result.SANDBOX_AUTH_URL;
+            this.redirectURL = result.REDIRECT_URL;
         })
         .catch(error => {
             console.log('error',error);
@@ -48,14 +54,14 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
         })
 	} 
     handleLogin(){
-        let authURL = 'https://login.salesforce.com/services/oauth2/authorize';
+        let authURL = this.prodAuthURL;
         if(this.envValue === 'Sandbox'){
-            authURL = 'https://test.salesforce.com/services/oauth2/authorize';
+            authURL = this.sandboxAuthURL;
         }
         let responseTypeCode = 'code';
         let prompType = 'login';
         let envKey = (this.envValue === 'Production' ? 'P' : 'S');
-        let redirectURI = 'https://salesarena-dev-ed.my.site.com/workbenchhub/s/weblogin/oauthrequest';
+        let redirectURI = this.redirectURL;
         let params = '?response_type=' + responseTypeCode +
             '&client_id=' + encodeURIComponent(this.clientId) +
             '&client_secret=' + encodeURIComponent(this.clientSecret) +

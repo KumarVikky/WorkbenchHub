@@ -1,7 +1,4 @@
 public class WB_RenewToken extends WB_ServiceAdapter implements WB_ServiceRequest{
-    public virtual class BaseException extends Exception {}
-    public class AppException extends BaseException {}
-    
     private String clientId;
     private String clientSecret;
     private String refreshToken;
@@ -35,21 +32,15 @@ public class WB_RenewToken extends WB_ServiceAdapter implements WB_ServiceReques
         service.endPointURL = params.get(WB_ServiceAppConstant.ENDPOINT_URL);
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
-        Object response = null;
-        if(res.getStatusCode() == WB_ServiceAppConstant.STATUS_OK){
-            WB_RenewTokenWrapper resWrap = WB_RenewTokenWrapper.parse(res.getBody());
-            Id userId = (Id) resWrap.id.substringAfterLast('/');
-            Id orgId = (Id) resWrap.id.substringBetween('id/','/');
-            WB_WorkbenchHubSession__c record = new WB_WorkbenchHubSession__c ();
-            record.WB_AccessToken__c = resWrap.access_token;
-            record.WB_DomainURL__c = resWrap.instance_url;
-            record.WB_UserId__c = userId;
-            record.WB_OrganizationId__c = orgId;
-            insert record;
-            response = resWrap.access_token;
-        }else{
-            WB_LogLevel.logException(new AppException(res.getBody()));
-        }
-        return response;
+        WB_RenewTokenWrapper resWrap = WB_RenewTokenWrapper.parse(res.getBody());
+        Id userId = (Id) resWrap.id.substringAfterLast('/');
+        Id orgId = (Id) resWrap.id.substringBetween('id/','/');
+        WB_WorkbenchHubSession__c record = new WB_WorkbenchHubSession__c ();
+        record.WB_AccessToken__c = resWrap.access_token;
+        record.WB_DomainURL__c = resWrap.instance_url;
+        record.WB_UserId__c = userId;
+        record.WB_OrganizationId__c = orgId;
+        insert record;
+        return resWrap.access_token;
     }
 }

@@ -3,9 +3,9 @@ public class WB_EncryptAndDecryptHelper {
     private String crypAlgorithm; 
     
     public WB_EncryptAndDecryptHelper(){
-        WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
-        cryptoKey = Crypto.generateAesKey(Integer.valueOf(wb.CryptoKey__c));
-        crypAlgorithm = wb.CryptoAlgorithm__c; 
+       WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
+       cryptoKey = Crypto.generateAesKey(Integer.valueOf(wb.WB_CryptoKey__c));
+       crypAlgorithm = wb.WB_CryptoAlgorithm__c; 
     }
     
     public String processEncryption(string jsonData){  
@@ -22,8 +22,8 @@ public class WB_EncryptAndDecryptHelper {
             Blob dataToDecrypt = Crypto.decryptWithManagedIV(crypAlgorithm, privateKey, blobData); 
             decryptedData = dataToDecrypt.toString(); 
         } 
-        catch(Exception e){ 
-           System.debug('error=>'+e.getMessage());  
+        catch(Exception ex){ 
+           WB_LogLevel.logException(ex); 
         } 
         return decryptedData;  
     } 

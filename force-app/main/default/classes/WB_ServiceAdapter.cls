@@ -10,13 +10,13 @@ public abstract class WB_ServiceAdapter{
         req.setEndpoint(this.setEndPointURL());
         req.setMethod(this.setHttpMethod());
         req.setTimeout(this.setHttpTimeOut());
-        if(this.setHttpHeader() != null){
+        if(!this.setHttpHeader().isEmpty()){
             Map<String,String> headerValues = this.setHttpHeader();
             for(String header : headerValues.keySet()){
                 req.setHeader(header, headerValues.get(header));
             }
         }
-        if(this.setRequestBody() != null && this.setRequestBody() != ''){
+        if(!String.isEmpty(this.setRequestBody())){
             req.setBody(this.setRequestBody());
         }
         return req;
@@ -27,7 +27,10 @@ public abstract class WB_ServiceAdapter{
         try{
             res = http.send(req);
         }catch(CalloutException ex){
-             WB_LogLevel.logException(ex);
+            res.setStatusCode(500);
+            res.setStatus('server_error');
+            res.setBody(ex.getMessage());
+            WB_LogLevel.logException(ex);
         }
         return res;
     }

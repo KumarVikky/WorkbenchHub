@@ -3,8 +3,11 @@ public class WB_WorkbenchHubController {
     public static Map<String,Object> getConsumerDetails(){
         WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
         Map<String,Object> response = new Map<String,Object>();
-        response.put(WB_ServiceAppConstant.CLIENT_ID,wb.WB_ConsumerKey__c);
-        response.put(WB_ServiceAppConstant.CLIENT_SECRET,wb.WB_ConsumerSecret__c);
+        response.put(WB_ServiceAppConstant.CLIENT_ID, wb.WB_ConsumerKey__c);
+        response.put(WB_ServiceAppConstant.CLIENT_SECRET, wb.WB_ConsumerSecret__c);
+        response.put(WB_ServiceAppConstant.REDIRECT_URL, wb.WB_RedirectURL__c);
+        response.put(WB_ServiceAppConstant.PROD_AUTH_URL, wb.WB_ProdAuthURL__c);
+        response.put(WB_ServiceAppConstant.SANDBOX_AUTH_URL, wb.WB_SandboxAuthURL__c);
         return response;
     }
     @AuraEnabled(cacheable=false)
