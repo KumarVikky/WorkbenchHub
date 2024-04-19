@@ -222,19 +222,20 @@ export default class Wb_RestExplorer extends LightningElement {
                 }
             }
         }
-        if(this.urlValue.includes('?access_token')){
-            this.urlValue = endPointURL + '?' + paramValues + '&' + '?access_token=' + this.tokenValue;
+        if(this.urlValue.includes('access_token')){
+            this.urlValue = endPointURL + '?' + paramValues + '&' + 'access_token=' + this.tokenValue;
         }else{
             this.urlValue = endPointURL + '?' + paramValues;
         }
-        if(paramValues.slice(-1) === '='){
-            paramValues.replace(paramValues.slice(-1), '');
-        }
-        if(paramValues.slice(-1) === '&'){
+        if(paramValues.slice(-1) === '?' || paramValues.slice(-1) === '=' || paramValues.slice(-1) === '&'){
             paramValues.replace(paramValues.slice(-1), '');
         }
         if(this.paramList.length === 0){
-            this.urlValue = endPointURL;
+            if(this.urlValue.includes('access_token')){
+                this.urlValue = endPointURL + '?access_token=' + this.tokenValue;
+            }else{
+                this.urlValue = endPointURL;
+            }
         }
     }
     handleRestRequest(){
