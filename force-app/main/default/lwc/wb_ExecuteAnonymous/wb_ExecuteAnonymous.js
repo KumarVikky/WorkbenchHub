@@ -155,10 +155,8 @@ export default class Wb_ExecuteAnonymous extends LightningElement {
                     this.showToastMessage('success', 'Trace Flag is successfully set for ' + diffInMint + ' mintues');
                     this.showTraceFlagBtn();
                 }else{
-                    if(response.message){
-                        this.showToastMessage('error', response.message);
-                    }else{
-                        this.showToastMessage('error', result);
+                    if(response[0].message){
+                        this.showToastMessage('error', response[0].message);
                     }
                 }
             }else{

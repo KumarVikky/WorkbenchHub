@@ -5,7 +5,7 @@ public class WB_LogTraceFlag extends WB_ServiceAdapter implements WB_ServiceRequ
     private String requestBody;
     
     protected override String setHttpMethod(){
-        return 'GET';
+        return 'POST';
     }
     protected override String setEndPointURL(){
         return this.endPointURL+'/services/data/v'+apiVersion+'/tooling/sobjects/traceFlag';

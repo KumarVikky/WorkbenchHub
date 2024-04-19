@@ -113,9 +113,9 @@ export default class Wb_AdvanceFilterModal extends LightningModal{
         this.customConditionValue = event.target.value;
     }
     handleReorderList(){
-        for(let item in this.selectedMultiFilterByList){
-            if(this.selectedMultiFilterByList[item].id != null){
-                this.selectedMultiFilterByList[item].id = (Number(item)+1);
+        for(let index in this.selectedMultiFilterByList){
+            if(this.selectedMultiFilterByList[index].id != null){
+                this.selectedMultiFilterByList[index].id = (Number(index)+1);
             }
         }
     }

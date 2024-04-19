@@ -9,9 +9,11 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
         return 'POST';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL + '/services/oauth2/token'+'?code=' + encodingUtil.urlencode(this.code,'UTF-8') +
-            '&grant_type=authorization_code' + '&client_id=' + encodingUtil.urlencode(this.clientId,'UTF-8') +
-            '&client_secret=' + this.clientSecret + '&redirect_uri='+this.redirectURL;
+        return this.endPointURL + '/services/oauth2/token?&grant_type=authorization_code' +
+            '&client_id=' + encodingUtil.urlencode(this.clientId,'UTF-8') +
+            '&client_secret=' + encodingUtil.urlencode(this.clientSecret,'UTF-8') + 
+            '&code=' + encodingUtil.urlencode(this.code,'UTF-8') +
+            '&redirect_uri=' + this.redirectURL;
     }
     protected override String setRequestBody(){
         return null;
@@ -37,14 +39,16 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
         WB_TokenWrapper resWrap = WB_TokenWrapper.parse(res.getBody());
-        Id userId = (Id) resWrap.id.substringAfterLast('/');
-        Id orgId = (Id) resWrap.id.substringBetween('id/','/');
-        String orgURL = resWrap.instance_url;
-        Map<String,String> sessionParams = new Map<String,String>{'access_token' => resWrap.access_token,'refresh_token' => resWrap.refresh_token, 'orgURL' => orgURL, 'userId' => userId, 'orgId' => orgId};  
-        createSession(sessionParams);
-        return userId;
+        if(resWrap.access_token?.length() > 0){
+            Id userId = (Id) resWrap.id.substringAfterLast('/');
+            Id orgId = (Id) resWrap.id.substringBetween('id/','/');
+            String orgURL = resWrap.instance_url;
+            Map<String,String> sessionParams = new Map<String,String>{'access_token' => resWrap.access_token,'refresh_token' => resWrap.refresh_token, 'orgURL' => orgURL, 'userId' => userId, 'orgId' => orgId};  
+            createSession(sessionParams);
+            return userId;
+        }
+        return null;
     }
-    
     public static void createSession(Map<String,String> sessionParams){
         WB_WorkbenchHubSession__c record = new WB_WorkbenchHubSession__c ();
         record.WB_AccessToken__c = sessionParams.get('access_token');

@@ -7,7 +7,7 @@ public class WB_RevokeToken extends WB_ServiceAdapter implements WB_ServiceReque
         return 'GET';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL+'/services/oauth2/revoke?token='+this.refreshToken+'&callback='+this.redirectURL;
+        return this.endPointURL + '/services/oauth2/revoke?token=' + this.refreshToken + '&callback=' + this.redirectURL;
     }
     protected override String setRequestBody(){
         return null;

@@ -64,9 +64,9 @@ export default class Wb_AdvanceSortModal extends LightningModal {
         this.hasErrorMsg = false;
     }
     handleReorderList(){
-        for(let item in this.selectedMultiSortByList){
-            if(this.selectedMultiSortByList[item].id != null){
-                this.selectedMultiSortByList[item].id = (Number(item)+1);
+        for(let index in this.selectedMultiSortByList){
+            if(this.selectedMultiSortByList[index].id != null){
+                this.selectedMultiSortByList[index].id = (Number(index)+1);
             }
         }
     }

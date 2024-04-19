@@ -179,18 +179,29 @@ export default class Wb_DataProcess extends LightningElement {
     }
     overrideRecord(overrideMap){
         let index = 0;
+        let replaceMap = new Map();
         for(let recObj of this.recordData){
             for (const [key, value] of Object.entries(recObj)) {
                 if(overrideMap.has(key)){
                     let val = overrideMap.get(key);
-                    if(val.includes('{') && val.includes('}')){
+                    if(val.includes('{') && val.includes('}') && !(val.includes('(') && val.includes(',') && val.includes(')'))){
                         let num = Number(val.substring(val.indexOf('{')+1, val.indexOf('}')));
                         val = val.replace(val.substring(val.indexOf('{'), val.indexOf('}')+1), num+index);
+                        recObj[key] = val;
                     }
-                    recObj[key] = val;
+                    if(val.includes('(') && val.includes(',') && val.includes(')')){
+                        let repString = val.substring(val.indexOf('(')+1, val.indexOf(')'));
+                        replaceMap.set(key, {searchValue: repString.substring(0, repString.indexOf(',')), newValue: repString.substring(repString.indexOf(',')+1, repString.length)});
+                        if(value.includes('*[') && value.includes(']*')){
+                            recObj[key] = repString.substring(0, repString.indexOf(','));
+                        }
+                    }
                 }
             }
             index ++;
+        }
+        if(replaceMap.size > 0){
+            this.replaceRecord(replaceMap);
         }
     }
     appendRecord(appendMap){

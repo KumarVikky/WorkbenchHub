@@ -79,6 +79,7 @@ export default class Wb_RestExplorer extends LightningElement {
         }else{
             if(index === -1){
                 this.headerList.unshift({id: this.headerList.length + 1, key: 'Authorization', value: this.headerPrefixValue + ' ' + this.tokenValue});
+                this.headerList = this.handleReorderList(this.headerList);
             }
         }
     }
@@ -95,6 +96,7 @@ export default class Wb_RestExplorer extends LightningElement {
             this.headerList[index].value = this.headerPrefixValue + ' ' + this.tokenValue;
         }else{
             this.headerList.unshift({id: this.headerList.length + 1, key: 'Authorization', value: this.headerPrefixValue + ' ' + this.tokenValue});
+            this.headerList = this.handleReorderList(this.headerList);
         }
     }
     handleAddAuthData(event){
@@ -103,6 +105,7 @@ export default class Wb_RestExplorer extends LightningElement {
         if(this.addAuthDataValue === 'RequestHeader'){
             if(index === -1){
                 this.headerList.unshift({id: this.headerList.length + 1, key: 'Authorization', value: this.headerPrefixValue + ' ' + this.tokenValue});
+                this.headerList = this.handleReorderList(this.headerList);
             }
             if(this.urlValue.includes('?access_token=')){
                 let tokenToRemoved = this.urlValue.substring(this.urlValue.indexOf('?access_token='), this.urlValue.length);
@@ -162,6 +165,14 @@ export default class Wb_RestExplorer extends LightningElement {
         let param = this.paramList.find(e => e.id === selectedId);
         param.value = event.detail.value;
         this.generateQueryParams();
+    }
+    handleReorderList(itemList){
+        for(let index in itemList){
+            if(itemList[index].id != null){
+                itemList[index].id = (Number(index)+1);
+            }
+        }
+        return itemList;
     }
     handleRemoveHeaders(){
         let selectedLastRow = this.headerList.length;
