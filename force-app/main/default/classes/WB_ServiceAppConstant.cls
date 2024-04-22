@@ -10,6 +10,7 @@ public class WB_ServiceAppConstant{
     public static final String SOBJECT_NAME = 'SOBJECT_NAME';
     public static final String WB_SETTING = 'WB_ConsumerDetails';
     public static final String REDIRECT_URL = 'REDIRECT_URL';
+     public static final String HOST_URL = 'HOST_URL';
     public static final Integer STATUS_OK = 200; 
     public static final String LISTVIEWNAME = 'LISTVIEWNAME';
     public static final String REQUESTBODY = 'REQUESTBODY';

@@ -36,6 +36,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             Type classType = Type.forName('WB_FetchSobjects');
             Object instance = classType.newInstance();
@@ -56,6 +57,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.SOBJECT_NAME,objectName);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             Type classType = Type.forName('WB_DescribeSobject');
@@ -77,6 +79,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.QUERY,queryString);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             Type classType = Type.forName('WB_FetchQuery');
@@ -98,6 +101,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.QUERY,nextQueryBatch);
             Type classType = Type.forName('WB_FetchQueryBatch');
             Object instance = classType.newInstance();
@@ -118,6 +122,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             Type classType = Type.forName('WB_FetchUserInfo');
             Object instance = classType.newInstance();
             WB_ServiceRequest request = (WB_ServiceRequest)instance;
@@ -137,6 +142,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             Type classType = Type.forName('WB_RevokeToken');
             Object instance = classType.newInstance();
             WB_ServiceRequest request = (WB_ServiceRequest)instance;
@@ -156,6 +162,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.SOBJECT_NAME,objectName);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             Type classType = Type.forName('WB_FetchListView');
@@ -177,6 +184,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.SOBJECT_NAME,objectName);
             params.put(WB_ServiceAppConstant.LISTVIEWNAME,viewDeveloperName);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
@@ -199,6 +207,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.LISTVIEWNAME,nextViewBatch);
             Type classType = Type.forName('WB_FetchListViewRecordBatch');
             Object instance = classType.newInstance();
@@ -218,6 +227,7 @@ public class WB_WorkbenchHubController {
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
         params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
         try{           
             result = WB_RetrieveMetaData.describeMetaData(wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
         }catch(CalloutException e){
@@ -238,6 +248,7 @@ public class WB_WorkbenchHubController {
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
         params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
         list<MetadataService.FileProperties> response = new list<MetadataService.FileProperties>();
         try{
             response =  WB_RetrieveMetaData.listMetaDataItem(selectedMetadataType, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
@@ -273,6 +284,7 @@ public class WB_WorkbenchHubController {
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
         params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
         MetadataService.AsyncResult response = new MetadataService.AsyncResult();
         try{
             response =  WB_RetrieveMetaData.retrieveMetadataItem(packageFile, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
@@ -293,6 +305,7 @@ public class WB_WorkbenchHubController {
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
         params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
         String response = null;
         try{
             response = WB_RetrieveMetaData.checkRetrieveStatus(retrieveAsyncResult, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
@@ -313,6 +326,7 @@ public class WB_WorkbenchHubController {
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
         params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
         MetadataService.AsyncResult response = new MetadataService.AsyncResult();
         try{
             response = WB_DeployMetaData.deployZip(metadataZip, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion, deployOptions);
@@ -333,6 +347,7 @@ public class WB_WorkbenchHubController {
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
         params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
         String response = null;
         try{
             response = WB_DeployMetaData.checkAsyncRequest(deployAsyncResult, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
@@ -352,6 +367,7 @@ public class WB_WorkbenchHubController {
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
         params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
         String response = null;
         try{
             response = WB_DeployMetaData.deployRecentValidationFile(recentValidationId, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
@@ -373,6 +389,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             params.put(WB_ServiceAppConstant.REQUESTBODY,jsonRequestBody);
             Type classType = Type.forName('WB_CreateRecords');
@@ -394,6 +411,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             params.put(WB_ServiceAppConstant.REQUESTBODY,jsonRequestBody);
             Type classType = Type.forName('WB_UpdateRequest');
@@ -415,6 +433,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             params.put(WB_ServiceAppConstant.REQUESTBODY,jsonRequestBody);
             Type classType = Type.forName('WB_DeleteRequest');
@@ -436,6 +455,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             String query = 'SELECT+Id,+Type,+CheckOnly,+Status,+StartDate,+CompletedDate,+CreatedBy.Name+FROM+DeployRequest+ORDER+BY+CompletedDate+DESC+LIMIT+1000';
             params.put(WB_ServiceAppConstant.QUERY,query);
@@ -458,6 +478,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             params.put(WB_ServiceAppConstant.REQUESTBODY,deployRequestId);
             Type classType = Type.forName('WB_DeploymentDetails');
@@ -477,6 +498,7 @@ public class WB_WorkbenchHubController {
         params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
         params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
         params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+        params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
         ApexService.ExecuteAnonymousResult response = null;
         try{
             response = WB_AnonymousService.executeCode(codeSnippet, wbs.WB_DomainURL__c, wbs.WB_AccessToken__c, apiVersion);
@@ -498,6 +520,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             String query = 'SELECT+Id,+DeveloperName+FROM+DebugLevel+ORDER+BY+CreatedDate+DESC+LIMIT+1000';
             params.put(WB_ServiceAppConstant.QUERY,query);
@@ -520,6 +543,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             params.put(WB_ServiceAppConstant.REQUESTBODY,traceValue);
             Type classType = Type.forName('WB_LogTraceFlag');
@@ -541,6 +565,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             params.put(WB_ServiceAppConstant.REQUESTBODY,userId);
             Type classType = Type.forName('WB_FetchDebugLog');
@@ -562,6 +587,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
             params.put(WB_ServiceAppConstant.REQUESTBODY,logId);
             Type classType = Type.forName('WB_FetchRawLog');
@@ -583,6 +609,7 @@ public class WB_WorkbenchHubController {
             params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
             params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
             params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
             params.put(WB_ServiceAppConstant.REQUESTBODY,restParamsJson);
             Type classType = Type.forName('WB_RestExplorer');
             Object instance = classType.newInstance();
@@ -611,7 +638,7 @@ public class WB_WorkbenchHubController {
     }
     private static WB_WorkbenchHubSession__c sessionInfo(String userId){
         try{
-            return Database.Query('SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1');
+            return Database.Query('SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c, WB_HostURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1');
         }catch(Exception ex){
             WB_LogLevel.logException(ex);
             return null;

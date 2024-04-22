@@ -43,7 +43,8 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
             Id userId = (Id) resWrap.id.substringAfterLast('/');
             Id orgId = (Id) resWrap.id.substringBetween('id/','/');
             String orgURL = resWrap.instance_url;
-            Map<String,String> sessionParams = new Map<String,String>{'access_token' => resWrap.access_token,'refresh_token' => resWrap.refresh_token, 'orgURL' => orgURL, 'userId' => userId, 'orgId' => orgId};  
+            String hostURL = resWrap.id.substringBefore('/id');
+            Map<String,String> sessionParams = new Map<String,String>{'access_token' => resWrap.access_token,'refresh_token' => resWrap.refresh_token, 'orgURL' => orgURL, 'userId' => userId, 'orgId' => orgId, 'hostURL' => hostURL};  
             createSession(sessionParams);
             return userId;
         }
@@ -56,6 +57,7 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
         record.WB_DomainURL__c = sessionParams.get('orgURL');
         record.WB_UserId__c = sessionParams.get('userId');
         record.WB_OrganizationId__c = sessionParams.get('orgId');
+        record.WB_HostURL__c = sessionParams.get('hostURL');
         Database.insert(record, true);   
     }
     

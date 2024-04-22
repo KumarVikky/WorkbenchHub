@@ -8,18 +8,17 @@ public class WB_RenewToken extends WB_ServiceAdapter implements WB_ServiceReques
         return 'POST';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL + '/services/oauth2/token?grant_type=refresh_token' + 
-            '&client_id=' + encodingUtil.urlencode(this.clientId,'UTF-8') + 
-            '&client_secret=' + encodingUtil.urlencode(this.clientSecret,'UTF-8') + 
-            '&refresh_token=' + encodingUtil.urlencode(this.refreshToken,'UTF-8');
+        return this.endPointURL + '/services/oauth2/token';
     }
     protected override String setRequestBody(){
-       return null;
+       String requestBody = 'grant_type=refresh_token&client_id={0}&client_secret={1}&refresh_token={2}';
+       return String.format(requestBody, new String[]{encodingUtil.urlencode(this.clientId,'UTF-8'), encodingUtil.urlencode(this.clientSecret,'UTF-8'), encodingUtil.urlencode(this.refreshToken,'UTF-8')});
     }
     protected override Map<String,String> setHttpHeader(){        
         Map<String,String> headerValues = new Map<String,String>();           
         headerValues.put('Accept', '*/*');
-        headerValues.put('Content-Type', 'application/json');
+        headerValues.put('Content-Type', 'application/x-www-form-urlencoded');
+        headerValues.put('Authorization', 'Basic');
         return headerValues;
     }
     protected override Integer setHttpTimeOut(){
@@ -32,15 +31,13 @@ public class WB_RenewToken extends WB_ServiceAdapter implements WB_ServiceReques
         service.clientId = wb.WB_ConsumerKey__c;
         service.clientSecret = wb.WB_ConsumerSecret__c;
        	service.refreshToken = params.get(WB_ServiceAppConstant.REFRESH_TOKEN);
-        service.endPointURL = params.get(WB_ServiceAppConstant.ENDPOINT_URL);
+        service.endPointURL = params.get(WB_ServiceAppConstant.HOST_URL);
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
         WB_RenewTokenWrapper resWrap = WB_RenewTokenWrapper.parse(res.getBody());
         if(resWrap.access_token?.length() > 0){
         	Id userId = (Id) resWrap.id.substringAfterLast('/');
-        	Id orgId = (Id) resWrap.id.substringBetween('id/','/');
-            String orgURL = resWrap.instance_url;
-            Map<String,String> sessionParams = new Map<String,String>{'access_token' => resWrap.access_token, 'orgURL' => orgURL, 'userId' => userId, 'orgId' => orgId};  
+            Map<String,String> sessionParams = new Map<String,String>{'access_token' => resWrap.access_token, 'userId' => userId};  
             createSession(sessionParams);
         	return resWrap.access_token;
         }
@@ -49,9 +46,7 @@ public class WB_RenewToken extends WB_ServiceAdapter implements WB_ServiceReques
     public static void createSession(Map<String,String> sessionParams){
         WB_WorkbenchHubSession__c record = new WB_WorkbenchHubSession__c ();
         record.WB_AccessToken__c = sessionParams.get('access_token');
-        record.WB_DomainURL__c = sessionParams.get('orgURL');
         record.WB_UserId__c = sessionParams.get('userId');
-        record.WB_OrganizationId__c = sessionParams.get('orgId');
         Database.insert(record, true);   
     }
 }

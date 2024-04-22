@@ -4,16 +4,19 @@ public class WB_RevokeToken extends WB_ServiceAdapter implements WB_ServiceReque
     private String redirectURL;    
     
     protected override String setHttpMethod(){
-        return 'GET';
+        return 'POST';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL + '/services/oauth2/revoke?token=' + this.refreshToken + '&callback=' + this.redirectURL;
+        return this.endPointURL + '/services/oauth2/revoke';
     }
     protected override String setRequestBody(){
-        return null;
+        return encodingUtil.urlencode('token=' + this.refreshToken, 'UTF-8');
     }
     protected override Map<String,String> setHttpHeader(){
-        return null;
+        Map<String,String> headerValues = new Map<String,String>();           
+        headerValues.put('Accept', '*/*');
+        headerValues.put('Content-Type', 'application/x-www-form-urlencoded');
+        return headerValues;
     }
     protected override Integer setHttpTimeOut(){
         return 120000; 
