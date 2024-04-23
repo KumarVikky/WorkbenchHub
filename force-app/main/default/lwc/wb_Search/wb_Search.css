@@ -1,0 +1,28 @@
+.p1{
+    margin-top: 4px;
+    text-align: center;
+}
+.rowIcon{
+    display: block;
+    margin-top: 28px;
+}
+.dynamicTableShow{
+    overflow-y: scroll; 
+    height:400px;
+}
+.dynamicTableHide{
+    display: none;
+}
+table {  
+    border-collapse: collapse;  
+    width: 100%;  
+}    
+th, td {  
+    border: 1px solid #ddd;  
+    padding: 8px;  
+    text-align: left;  
+}     
+th {  
+    background-color: #096386;  
+    color: white;  
+}  

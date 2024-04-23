@@ -8,7 +8,7 @@ public class WB_FetchQuery extends WB_ServiceAdapter implements WB_ServiceReques
         return 'GET';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL+'/services/data/v'+apiVersion+'/query/?q='+query;
+        return this.endPointURL+'/services/data/v'+this.apiVersion+'/query/?q='+this.query;
     }
     protected override String setRequestBody(){
         return null;

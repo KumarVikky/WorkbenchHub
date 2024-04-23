@@ -10,9 +10,9 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
     }
     protected override String setEndPointURL(){
         return this.endPointURL + '/services/oauth2/token?&grant_type=authorization_code' +
-            '&client_id=' + encodingUtil.urlencode(this.clientId,'UTF-8') +
-            '&client_secret=' + encodingUtil.urlencode(this.clientSecret,'UTF-8') + 
-            '&code=' + encodingUtil.urlencode(this.code,'UTF-8') +
+            '&client_id=' + EncodingUtil.urlencode(this.clientId,'UTF-8') +
+            '&client_secret=' + EncodingUtil.urlencode(this.clientSecret,'UTF-8') + 
+            '&code=' + EncodingUtil.urlencode(this.code,'UTF-8') +
             '&redirect_uri=' + this.redirectURL;
     }
     protected override String setRequestBody(){
@@ -21,7 +21,7 @@ public class WB_FetchToken extends WB_ServiceAdapter implements WB_ServiceReques
     protected override Map<String,String> setHttpHeader(){
         Map<String,String> headerValues = new Map<String,String>();           
         headerValues.put('Accept', '*/*');
-        headerValues.put('Content-Type', 'application/json');
+        headerValues.put('Content-Type', 'application/x-www-form-urlencoded');
         return headerValues;
     }
     protected override Integer setHttpTimeOut(){

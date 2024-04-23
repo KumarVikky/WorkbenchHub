@@ -8,7 +8,7 @@ public class WB_FetchDebugLevel extends WB_ServiceAdapter implements WB_ServiceR
         return 'GET';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL+'/services/data/v'+apiVersion+'/tooling/query/?q='+query;
+        return this.endPointURL+'/services/data/v'+this.apiVersion+'/tooling/query/?q='+this.query;
     }
     protected override String setRequestBody(){
         return null;

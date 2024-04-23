@@ -15,6 +15,7 @@ Release updates:
 - It can add custom conditions (AND, OR & both) on multi-level filters.
 - It can fetch records using available list views in the Salesforce organization.
 - It can fetch records using available scope parameters.
+- It can generate search queries using SOSL Builder or manually using Search Editor.
 - It can create a package.xml file dynamically by selecting different metadata items.
 - It can retrieve & download metadata based on the package.xml file as a zip file.
 - It can validate & deploy metadata zip files containing package.xml & its content to different authorized Salesforce organizations.

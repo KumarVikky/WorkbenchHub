@@ -12,7 +12,7 @@ public class WB_RenewToken extends WB_ServiceAdapter implements WB_ServiceReques
     }
     protected override String setRequestBody(){
        String requestBody = 'grant_type=refresh_token&client_id={0}&client_secret={1}&refresh_token={2}';
-       return String.format(requestBody, new String[]{encodingUtil.urlencode(this.clientId,'UTF-8'), encodingUtil.urlencode(this.clientSecret,'UTF-8'), encodingUtil.urlencode(this.refreshToken,'UTF-8')});
+       return String.format(requestBody, new String[]{EncodingUtil.urlencode(this.clientId,'UTF-8'), EncodingUtil.urlencode(this.clientSecret,'UTF-8'), EncodingUtil.urlencode(this.refreshToken,'UTF-8')});
     }
     protected override Map<String,String> setHttpHeader(){        
         Map<String,String> headerValues = new Map<String,String>();           

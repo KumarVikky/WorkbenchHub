@@ -476,11 +476,19 @@ export default class Wb_Query extends LightningElement {
     }
     fetchSOQLRecords() {
         if(this.queryString){
+            if(this.queryString.includes('(') && this.queryString.includes(')')){
+                let subQuery = this.queryString.substring(this.queryString.indexOf('(')+1, this.queryString.indexOf(')')).toLowerCase();
+                if(subQuery.includes('select') && subQuery.includes('from')){
+                    this.showToastMessage('warning', 'Parent-Child relationalship query is not allowed.');
+                    return;
+                }
+            }
             this.queryStringURI = this.genertareSOQLURI(this.queryString);
             this.isLoading = true;
             this.toggleProgress(true,'active-step');
             getRecords({ userId: this.userId, queryString: this.queryStringURI, apiVersion: this.apiValue})
             .then(result => {
+                //console.log('result',result);
                 if(result){
                     let response = JSON.parse(result);
                     //console.log('response',response);
@@ -527,7 +535,7 @@ export default class Wb_Query extends LightningElement {
                             this.showToastMessage('warning', 'No records found.');
                         }
                     }
-                    if(!response.done){
+                    if(!response.done && response.nextRecordsUrl){
                         this.disableAbortBtn = false;
                         this.fetchRemainingRecords(response.nextRecordsUrl);
                     }else{
@@ -581,7 +589,7 @@ export default class Wb_Query extends LightningElement {
                 for(let item of response.records){
                     this.recordList.push(item);
                 }
-                if(!response.done){
+                if(!response.done && response.nextRecordsUrl){
                     this.fetchRemainingRecords(response.nextRecordsUrl);
                 }else{
                     this.toggleProgress(false, 'base-autocomplete');

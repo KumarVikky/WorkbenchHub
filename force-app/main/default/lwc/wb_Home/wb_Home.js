@@ -35,7 +35,7 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
             this.alertHandler('Session has expired due to inactivity, please login again.');
             this.navigateToExperiencePage("WorkbenchLogin__c");
         };
-        this._idletimer = new IdleTimer(onTimeout, 900000);//15 min of inactivity
+        this._idletimer = new IdleTimer(onTimeout, 3600000);//1 hours of inactivity.
         this._idletimer.activate(); 
         let wbSessionKey = localStorage.getItem("WB_SESSIONKEY");
         if(wbSessionKey){

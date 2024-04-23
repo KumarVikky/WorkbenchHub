@@ -21,32 +21,37 @@
                 <c-wb_-query user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-query>
             </template>
         </lightning-tab>
-        <lightning-tab label="Modify Records" value="two">
+        <lightning-tab label="SOSL Builder" value="two">
+            <template if:true={hasUserToken}>
+                <c-wb_-search user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-search>
+            </template>
+        </lightning-tab>
+        <lightning-tab label="Modify Records" value="three">
             <template if:true={hasUserToken}>
                 <c-wb_-data-process user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-data-process>
             </template>
         </lightning-tab>
-        <lightning-tab label="Metadata Retrieve" value="three">
+        <lightning-tab label="Metadata Retrieve" value="four">
             <template if:true={hasUserToken}>
                 <c-wb_-metadata-retrieve user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-metadata-retrieve>
             </template>
         </lightning-tab>
-        <lightning-tab label="Metadata Deploy" value="four">
+        <lightning-tab label="Metadata Deploy" value="five">
             <template if:true={hasUserToken}>
                 <c-wb_-metadata-deploy user-id={userId} api-value={apiValue} custom-domain={customDomain} onshownotification={showNotification} onhidenotification={hideNotification}></c-wb_-metadata-deploy>
             </template>
         </lightning-tab>
-        <lightning-tab label="Deployment Status" value="five">
+        <lightning-tab label="Deployment Status" value="six">
             <template if:true={hasUserToken}>
                 <c-wb_-deployment-status user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-deployment-status>
             </template>
         </lightning-tab>
-        <lightning-tab label="Execute Anonymous" value="six">
+        <lightning-tab label="Execute Anonymous" value="seven">
             <template if:true={hasUserToken}>
                 <c-wb_-execute-anonymous user-id={userId} api-value={apiValue} custom-domain={customDomain} user-details={profileObj}></c-wb_-execute-anonymous>
             </template>
         </lightning-tab>
-        <lightning-tab label="Rest Explorer" value="seven">
+        <lightning-tab label="Rest Explorer" value="eight">
             <template if:true={hasUserToken}>
                 <c-wb_-rest-explorer user-id={userId} api-value={apiValue} custom-domain={customDomain}></c-wb_-rest-explorer>
             </template>

@@ -636,6 +636,28 @@ public class WB_WorkbenchHubController {
         }
         return result;
     }
+    @AuraEnabled(cacheable=false)
+    public static String searchAllRecords(String userId, String searchString, String apiVersion){
+        String result = null;
+        try{
+            WB_WorkbenchHubSession__c wbs = WB_WorkbenchHubController.sessionInfo(userId);
+            Map<String,String> params = new Map<String,String>();
+            params.put(WB_ServiceAppConstant.ACCESS_TOKEN,wbs.WB_AccessToken__c);
+            params.put(WB_ServiceAppConstant.REFRESH_TOKEN,wbs.WB_RefreshToken__c);
+            params.put(WB_ServiceAppConstant.ENDPOINT_URL,wbs.WB_DomainURL__c);
+            params.put(WB_ServiceAppConstant.HOST_URL,wbs.WB_HostURL__c);
+            params.put(WB_ServiceAppConstant.QUERY,searchString);
+            params.put(WB_ServiceAppConstant.API_VERSION,apiVersion);
+            Type classType = Type.forName('WB_FetchSearch');
+            Object instance = classType.newInstance();
+            WB_ServiceRequest request = (WB_ServiceRequest)instance;
+            result = (String) request.executeService(instance,params);            
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return result;
+    }
     private static WB_WorkbenchHubSession__c sessionInfo(String userId){
         try{
             return Database.Query('SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c, WB_HostURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1');

@@ -9,7 +9,7 @@ public class WB_FetchListViewRecords extends WB_ServiceAdapter implements WB_Ser
         return 'GET';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL + '/services/data/v'+apiVersion+'/ui-api/list-records/' + this.sObjectName + '/' + this.viewDeveloperName + '?pageSize=1000&pageToken=0';
+        return this.endPointURL + '/services/data/v'+this.apiVersion+'/ui-api/list-records/' + this.sObjectName + '/' + this.viewDeveloperName + '?pageSize=1000&pageToken=0';
     }
     protected override String setRequestBody(){
         return null;

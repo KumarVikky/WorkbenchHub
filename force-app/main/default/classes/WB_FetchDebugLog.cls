@@ -8,14 +8,14 @@ public class WB_FetchDebugLog extends WB_ServiceAdapter implements WB_ServiceReq
         return 'POST';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL+'/services/data/v'+apiVersion+'/composite';
+        return this.endPointURL+'/services/data/v'+this.apiVersion+'/composite';
     }
     protected override String setRequestBody(){
         String requestType ='API';
         String location = 'Monitoring';
         CompositeSubRequest queryLog = new CompositeSubRequest();
         queryLog.method = 'GET';
-        queryLog.url = '/services/data/v'+apiVersion+'/query/?q=SELECT+Id,+Request,+Operation,+Status,+DurationMilliseconds,+LogLength,+StartTime+FROM+ApexLog+WHERE+Location+=+\''+location+ '\'+AND+Request+=+\''+requestType+'\'+AND+LogUserId+=+\''+userId+'\'+ORDER+BY+StartTime+DESC+LIMIT+10';
+        queryLog.url = '/services/data/v'+this.apiVersion+'/query/?q=SELECT+Id,+Request,+Operation,+Status,+DurationMilliseconds,+LogLength,+StartTime+FROM+ApexLog+WHERE+Location+=+\''+location+ '\'+AND+Request+=+\''+requestType+'\'+AND+LogUserId+=+\''+userId+'\'+ORDER+BY+StartTime+DESC+LIMIT+10';
         queryLog.referenceId = 'refApexLog';
         queryLog.body = null;
         queryLog.httpHeaders = null;

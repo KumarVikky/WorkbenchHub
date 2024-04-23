@@ -8,7 +8,7 @@ public class WB_FetchListView extends WB_ServiceAdapter implements WB_ServiceReq
         return 'GET';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL + '/services/data/v'+apiVersion+'/sobjects/' + this.sObjectName + '/listviews';
+        return this.endPointURL + '/services/data/v'+this.apiVersion+'/sobjects/' + this.sObjectName + '/listviews';
     }
     protected override String setRequestBody(){
         return null;

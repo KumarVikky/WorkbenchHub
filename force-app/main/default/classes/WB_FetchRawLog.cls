@@ -8,7 +8,7 @@ public class WB_FetchRawLog extends WB_ServiceAdapter implements WB_ServiceReque
         return 'GET';
     }
     protected override String setEndPointURL(){
-        return this.endPointURL+'/services/data/v'+apiVersion+'/sobjects/ApexLog/'+logId+'/Body/';
+        return this.endPointURL+'/services/data/v'+this.apiVersion+'/sobjects/ApexLog/'+this.logId+'/Body/';
     }
     protected override String setRequestBody(){
        return null;

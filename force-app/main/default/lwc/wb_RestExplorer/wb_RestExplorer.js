@@ -227,9 +227,6 @@ export default class Wb_RestExplorer extends LightningElement {
         }else{
             this.urlValue = endPointURL + '?' + paramValues;
         }
-        if(paramValues.slice(-1) === '?' || paramValues.slice(-1) === '=' || paramValues.slice(-1) === '&'){
-            paramValues.replace(paramValues.slice(-1), '');
-        }
         if(this.paramList.length === 0){
             if(this.urlValue.includes('access_token')){
                 this.urlValue = endPointURL + '?access_token=' + this.tokenValue;

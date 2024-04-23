@@ -10,7 +10,7 @@ public class WB_RevokeToken extends WB_ServiceAdapter implements WB_ServiceReque
         return this.endPointURL + '/services/oauth2/revoke';
     }
     protected override String setRequestBody(){
-        return encodingUtil.urlencode('token=' + this.refreshToken, 'UTF-8');
+        return EncodingUtil.urlencode('token=' + this.refreshToken, 'UTF-8');
     }
     protected override Map<String,String> setHttpHeader(){
         Map<String,String> headerValues = new Map<String,String>();           

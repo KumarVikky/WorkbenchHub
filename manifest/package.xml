@@ -42,6 +42,7 @@
         <members>WB_RestExplorer</members>
         <members>WB_RestRequestWrapper</members>
         <members>WB_RestResponseWrapper</members>
+        <members>WB_FetchSearch</members>
         <name>ApexClass</name>
     </types>
     <types>
@@ -68,6 +69,7 @@
         <members>wb_ExecuteAnonymous</members>
         <members>wb_ViewLog</members>
         <members>wb_RestExplorer</members>
+        <members>wb_Search</members>
         <name>LightningComponentBundle</name>
     </types>
     <version>59.0</version>

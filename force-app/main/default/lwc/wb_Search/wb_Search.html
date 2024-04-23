@@ -1,0 +1,70 @@
+<!-- sldsValidatorIgnore -->
+<template>
+    <div class="slds-box slds-p-around_none slds-var-m-top_x-small slds-var-m-bottom_medium slds-m-horizontal_none">
+        <P class="p1">Enter search string and optionally select object & fields to return specific informations. <span class="slds-var-m-left_x-small">[API: {apiValue}]</span></P>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="around-small">
+                <div class="slds-var-p-around_xx-small">
+                    <lightning-input type="text" name="SearchValue" label="Search for" value={searchValue} class="slds-var-m-bottom_x-small" onchange={handleInputChange}></lightning-input>
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="4" padding="around-small">
+                <div class="slds-var-p-around_xx-small">
+                    <lightning-combobox name="searchParameters" label="Search in" options={searchGroupOptions} value={selectSearchGroupValue} onchange={handleSearchGroupChange} dropdown-alignment="left"></lightning-combobox>  
+                </div>
+            </lightning-layout-item>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="2" padding="around-small">
+                <div class="slds-var-p-around_xx-small">
+                    <lightning-input type="text" name="SearchLimit" label="Search limit" value={searchLimitValue} class="slds-var-m-bottom_x-small" onchange={handleInputChange}></lightning-input> 
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+        <template iterator:it={returningList}>
+            <div key={it.value.id}>
+                <lightning-layout multiple-rows>
+                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="4" padding="horizontal-small">
+                        <div class="slds-var-p-around_xx-small">
+                            <lightning-combobox data-id={it.value.id} name="SObjects" label="Returning sobjects" field-level-help="Select SObject for returning specific information, If unspecified, the search results contain the IDs of all objects found." options={sObjectOptions} value={it.value.selectedSObject} onchange={handleSObjectChange} dropdown-alignment="left"></lightning-combobox>  
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
+                        <div class="slds-var-p-around_xx-small">
+                            <lightning-input data-id={it.value.id} type="text" name="Fields" label="and fields" field-level-help="Enter SObject fields with comma seperated." value={it.value.selectedFields} class="slds-var-m-bottom_x-small" onchange={handleFieldChange}></lightning-input> 
+                        </div>
+                    </lightning-layout-item>
+                    <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="2" padding="horizontal-small">
+                        <template if:true={it.first}>
+                            <span class="rowIcon">
+                                <lightning-button-icon icon-name="utility:add" name="addFilter" alternative-text="Add Row" title="Add Row" label="" onclick={handleAddRow}></lightning-button-icon>
+                            </span>
+                        </template>
+                        <template if:false={it.first}>
+                            <span class="rowIcon">
+                                <lightning-button-icon icon-name="utility:dash" name="addFilter" data-id={it.value.id} alternative-text="Remove Row" title="Remove Row" label="" onclick={handleRemoveRow}></lightning-button-icon>
+                            </span>
+                        </template>
+                    </lightning-layout-item>
+                </lightning-layout>
+            </div>
+        </template>
+        <lightning-layout multiple-rows>
+            <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="12" padding="around-medium">
+                <div class="slds-var-p-around_xx-small">
+                    <lightning-textarea name="searchEditor" label="Search Editor" placeholder="sosl search ..." field-level-help="Generate search string from SOSL builder or type manually." value={searchQueryString} onchange={handleManualSearchQuery}></lightning-textarea>
+                </div>
+                <div class="slds-var-p-around_xx-small">
+                    <lightning-button variant="brand" label="Fetch Record" title="Fetch Record" onclick={handFetchRecords}></lightning-button>
+                </div>
+            </lightning-layout-item>
+        </lightning-layout>
+    </div>
+    <div class="slds-var-p-around_xx-small">
+        <div class="dynamicTableDiv" lwc:dom="manual"></div>
+    </div>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div>
+</template>
