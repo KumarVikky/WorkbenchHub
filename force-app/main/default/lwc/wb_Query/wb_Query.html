@@ -201,27 +201,25 @@
             </lightning-layout-item>
         </lightning-layout>
         <template if:true={hasRecords}>
-            <template if:true={recordList}>
-                <div class="slds-p-around_medium">
-                    <lightning-card>
-                        <div class="recordPanel">
-                            <span class="totalRec">
-                                <h3>Total Records: {totalRecords}</h3>
-                            </span>
-                            <span class="resultPanel">
-                                <lightning-progress-ring value={progressValue} variant={progressVariant}></lightning-progress-ring>
-                            </span>
-                            <span class="btnPos">
-                                <lightning-button icon-name="utility:download" label="Download CSV" title="Download CSV File"
-                                onclick={downloadCSVFile} variant="brand" slot="actions" disabled={disableDownloadBtn} class="slds-m-bottom_xx-small"></lightning-button>
-                            </span>
-                        </div>
-                        <div class="slds-scrollable_y"  style="height:15rem;">
-                            <lightning-datatable data={recordList} columns={recordColumns} key-field={recordKey} hide-checkbox-column></lightning-datatable>
-                        </div>
-                    </lightning-card>
-                </div>
-            </template>
+            <div class="slds-p-around_medium">
+                <lightning-card>
+                    <div class="recordPanel">
+                        <span class="totalRec">
+                            <h3>Total Records: {totalRecords}</h3>
+                        </span>
+                        <span class="resultPanel">
+                            <lightning-progress-ring value={progressValue} variant={progressVariant}></lightning-progress-ring>
+                        </span>
+                        <span class="btnPos">
+                            <lightning-button icon-name="utility:download" label="Download CSV" title="Download CSV File"
+                            onclick={downloadCSVFile} variant="brand" slot="actions" disabled={disableDownloadBtn} class="slds-m-bottom_xx-small"></lightning-button>
+                        </span>
+                    </div>
+                    <div class="slds-scrollable_y"  style="height:15rem;">
+                        <lightning-datatable data={recordList} columns={recordColumns} key-field={recordKey} hide-checkbox-column></lightning-datatable>
+                    </div>
+                </lightning-card>
+            </div>
         </template>
     </div>
     <div class="spinner">

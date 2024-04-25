@@ -58,7 +58,16 @@
             </lightning-layout-item>
         </lightning-layout>
     </div>
-    <div class="slds-var-p-around_xx-small">
+    <div class="slds-box slds-var-p-around_xx-small">
+        <div if:true={showResponseMenu} class="recordPanel">
+            <span class="titlePanel">
+                <h3>Total Records: {totalRecords}</h3>
+            </span>
+            <span class="downloadPanel">
+                <lightning-button icon-name="utility:download" label="Download XLSX" title="Download XLSX"
+                onclick={downloadExcelFile} variant="brand" slot="actions" class="slds-m-bottom_x-small slds-m-right_xx-small" disabled={hasDownloadDisabled}></lightning-button>
+            </span>
+        </div>
         <div class="dynamicTableDiv" lwc:dom="manual"></div>
     </div>
     <div class="spinner">

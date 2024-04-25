@@ -13,6 +13,15 @@
 .dynamicTableHide{
     display: none;
 }
+.recordPanel{
+    margin-bottom: 45px;
+}
+.downloadPanel{
+    float: right;
+}
+.titlePanel{
+    float: left;
+}
 table {  
     border-collapse: collapse;  
     width: 100%;  

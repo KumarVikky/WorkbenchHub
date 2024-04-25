@@ -2,6 +2,8 @@ import { LightningElement, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import getSObjects from '@salesforce/apex/WB_WorkbenchHubController.getAllSObjects';
 import searchAllRecords from '@salesforce/apex/WB_WorkbenchHubController.searchAllRecords';
+import xlsx from '@salesforce/resourceUrl/xlsx';
+import { loadScript } from 'lightning/platformResourceLoader';
 
 export default class Wb_Search extends LightningElement {
     @api userId;
@@ -9,12 +11,14 @@ export default class Wb_Search extends LightningElement {
     @api apiValue;
     @track searchQueryString;
     @track returningList;
+    @track recordsMapData;
     searchValue;
     selectSearchGroupValue = 'NAME FIELDS';
     searchLimitValue = 200;
     sObjectOptions;
     isLoading = false;
     totalRecords = 0;
+    hasDownloadDisabled = true;
     
     get searchGroupOptions() {
         return [
@@ -24,10 +28,17 @@ export default class Wb_Search extends LightningElement {
             { label: 'PHONE FIELDS', value: 'PHONE FIELDS' },
         ];
     }
+    get showResponseMenu(){
+        return this.recordsMapData && this.recordsMapData.size > 0 ? true : false;
+    }
 
     connectedCallback(){
         this.returningList = [{id: 1, selectedSObject: '', selectedFields: ''}];
         this.fetchSObjects();
+        Promise.all([
+            loadScript(this, xlsx)
+        ]).then(() => console.log('Success: All Script Loaded.'))
+        .catch(error => console.log('Error:',error));
     }
 
     handleInputChange(event){
@@ -107,7 +118,7 @@ export default class Wb_Search extends LightningElement {
                 this.showToastMessage('warning', 'Please select object & fields or type search query manually.');
             }
         }else{
-            this.showToastMessage('warning', 'Please type search text.');
+            this.showToastMessage('warning', 'Please type text to be searched.');
         }
         
     }
@@ -142,7 +153,6 @@ export default class Wb_Search extends LightningElement {
                 let response = JSON.parse(result);
                 let recordsMap = new Map();
                 if(response.searchRecords && response.searchRecords.length > 0){
-                    this.totalRecords = response.searchRecords.length;
                     for(let item of response.searchRecords){
                         let recordKey = new Set();
                         let recordObj = {};
@@ -160,6 +170,8 @@ export default class Wb_Search extends LightningElement {
                             recordsMap.set(item.attributes.type, {dataKeys: Array.from(recordKey), dataValues: [recordObj]});
                         }
                     }
+                    this.recordsMapData = recordsMap;
+                    this.totalRecords = response.searchRecords.length;
                     let dynamicTableContent = this.generateDynamicTable(recordsMap);
                     let dynamicTableDiv = this.template.querySelector('.dynamicTableDiv');
                     if(dynamicTableDiv){
@@ -168,6 +180,7 @@ export default class Wb_Search extends LightningElement {
                         dynamicTableDiv.classList.remove('dynamicTableHide');
                     }
                     this.showToastMessage('success', 'Record found successfully.');
+                    this.hasDownloadDisabled = false;
                 }else{
                     let dynamicTableDiv = this.template.querySelector('.dynamicTableDiv');
                     if(dynamicTableDiv){
@@ -175,6 +188,8 @@ export default class Wb_Search extends LightningElement {
                         dynamicTableDiv.classList.remove('dynamicTableShow');
                     }
                     this.showToastMessage('warning', 'No records found.');
+                    this.hasDownloadDisabled = true;
+                    this.totalRecords = 0;
                 }
                 this.isLoading = false;
             }else{
@@ -188,7 +203,7 @@ export default class Wb_Search extends LightningElement {
 		})
 	}
     generateDynamicTable(recordsMap){
-        let htmlElement = '<h3>Total Records: ' + this.totalRecords + '</h3></br>';
+        let htmlElement = '';
         for (let [key, value] of recordsMap) {
             htmlElement += '<h3>' + key + ':' + '</h3>';
             let table = '<table>'; 
@@ -208,6 +223,22 @@ export default class Wb_Search extends LightningElement {
             htmlElement += table + '</br>';
         }
         return htmlElement;
+    }
+    downloadExcelFile(){
+        try{
+            this.hasDownloadDisabled = true;
+            const XLSX = window.XLSX;
+            let wb = XLSX.utils.book_new();
+            for (let [key, value] of this.recordsMapData) {
+                let data = XLSX.utils.json_to_sheet(value.dataValues);
+                XLSX.utils.book_append_sheet(wb, data, key);
+            }
+            XLSX.writeFile(wb, "Searched Records.xlsx");
+            this.hasDownloadDisabled = false;
+        }catch(error){
+            this.showToastMessage('error occured while generating xlsx: ', error);
+            console.log(error);
+        }
     }
     showToastMessage(variant, message){
         let title = (variant === 'error' ? 'Error:' : variant === 'warning' ? 'Warning:' : 'Success:');

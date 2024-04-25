@@ -9,11 +9,6 @@ import getListViewRecordBatch from '@salesforce/apex/WB_WorkbenchHubController.g
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import advanceFilterModal from 'c/wb_AdvanceFilterModal';
 import advanceSortModal from 'c/wb_AdvanceSortModal';
-import jszip from '@salesforce/resourceUrl/jszip';
-import jszipmin from '@salesforce/resourceUrl/jszipmin';
-import filesaver from '@salesforce/resourceUrl/filesaver';
-import jquery from '@salesforce/resourceUrl/jquery';
-import { loadScript } from 'lightning/platformResourceLoader';
 
 export default class Wb_Query extends LightningElement {
     @api userId;
@@ -109,13 +104,6 @@ export default class Wb_Query extends LightningElement {
         this.selectedSortBy = {selectedField : '', selectedOperator : 'ASC'};
         this.fetchSObjects();
         this.soqlHistoryOptions = [];
-        Promise.all([
-            loadScript(this, jszip),
-            loadScript(this, jszipmin),
-            loadScript(this, filesaver),
-            loadScript(this, jquery)
-        ]).then(() => console.log('Success: All Script Loaded.'))
-        .catch(error => console.log('Error:',error));
     }
     disconnectedCallback() {
         clearInterval(this.interval);
@@ -278,7 +266,6 @@ export default class Wb_Query extends LightningElement {
                     }
                 }
                 this.isLoading = false;
-                //this.showToastMessage('success', 'Objects retrieve successfully');
             }else{
                 this.showToastMessage('error', 'Failed to fetch sobjects:'+result);
             }
@@ -320,7 +307,6 @@ export default class Wb_Query extends LightningElement {
                 }
                 this.supportedScopeOptions = supportedList;
                 this.isLoading = false;
-                //this.showToastMessage('success', 'Fields retrieve successfully');
             }else{
                 this.showToastMessage('error', 'Failed to fetch fields:'+result);
             } 
@@ -746,6 +732,7 @@ export default class Wb_Query extends LightningElement {
 		.catch(error => {
             this.toggleProgress(false, 'base-expired');
 			console.log('error',error);
+            this.showToastMessage('error', error);
 		})
 	}
     downloadCSVFile() { 
@@ -762,9 +749,12 @@ export default class Wb_Query extends LightningElement {
             downloadElement.download = objectName +' Data.csv';
             document.body.appendChild(downloadElement);
             downloadElement.click();
-            that.disableDownloadBtn = false;  
-            that.showToastMessage('success', 'CSV File generated.');
-        });
+            that.disableDownloadBtn = false; 
+        })
+        .catch(error => {
+            this.showToastMessage('error', error);
+			console.log('error',error);
+		})
     }
     generateCSVFile(recordList){
         return new Promise(function(resolve) {

@@ -117,8 +117,11 @@ export default class Wb_MetadataRetrieve extends LightningElement {
                 // eslint-disable-next-line no-undef
                 saveAs(content, "Metadata Files.zip");
                 that.disableDownloadPackageBtn = false;
-                that.showToastMessage('success', 'Zip File generated.');
-            });
+            })
+            .catch(error => {
+                console.log('error',error);
+                this.showToastMessage('error', error);
+            })
     }
     loadZipFile(file, zip) {
         return new Promise(function(resolve) {
@@ -159,7 +162,6 @@ export default class Wb_MetadataRetrieve extends LightningElement {
                     for(let item of response){
                         this.metadataTypeOptions.push({label: item, value: item});
                     }
-                    //this.showToastMessage('success', 'Metadata retrieve successfully');
                 }else{
                     this.showToastMessage('warning', 'No Metadata found.');
                 }
@@ -186,7 +188,6 @@ export default class Wb_MetadataRetrieve extends LightningElement {
                         this.metadataItemsData.push({itemName: item});
                     }
                     this.disableAddPackageBtn = false;
-                    //this.showToastMessage('success', 'Metadata Items retrieve successfully');
                 }else{
                     this.showToastMessage('warning', 'No Metadata items found.');
                 }

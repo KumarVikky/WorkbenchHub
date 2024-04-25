@@ -5,11 +5,6 @@ import createRecordRequest from '@salesforce/apex/WB_WorkbenchHubController.crea
 import updateRecordRequest from '@salesforce/apex/WB_WorkbenchHubController.updateRecordRequest';
 import deleteRecordRequest from '@salesforce/apex/WB_WorkbenchHubController.deleteRecordRequest';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import jszip from '@salesforce/resourceUrl/jszip';
-import jszipmin from '@salesforce/resourceUrl/jszipmin';
-import filesaver from '@salesforce/resourceUrl/filesaver';
-import jquery from '@salesforce/resourceUrl/jquery';
-import { loadScript } from 'lightning/platformResourceLoader';
 import dataMapModal from 'c/wb_DataMap';
 import LightningConfirm from 'lightning/confirm';
 
@@ -60,13 +55,6 @@ export default class Wb_DataProcess extends LightningElement {
 
     connectedCallback(){
         this.fetchSObjects();
-        Promise.all([
-            loadScript(this, jszip),
-            loadScript(this, jszipmin),
-            loadScript(this, filesaver),
-            loadScript(this, jquery)
-        ]).then(() => console.log('Success: All Script Loaded.'))
-        .catch(error => console.log('Error:',error));
     }
     handleActionChange(event){
         this.selectedCrudValue = event.target.value;
@@ -350,7 +338,6 @@ export default class Wb_DataProcess extends LightningElement {
                         this.errorCount ++;
                     }
                 }
-                //console.log('recordResponseData',this.recordResponseData);
                 if(this.recordResponseData.length > this.currentBatchSize){
                     this.disableAbortBtn = false;
                     this.createRequest();
@@ -419,7 +406,6 @@ export default class Wb_DataProcess extends LightningElement {
                         this.errorCount ++;
                     }
                 }
-                //console.log('recordResponseData',this.recordResponseData);
                 if(this.recordResponseData.length > this.currentBatchSize){
                     this.disableAbortBtn = false;
                     this.updateRequest();
@@ -505,7 +491,6 @@ export default class Wb_DataProcess extends LightningElement {
                         break;
                     }
                 }
-                //console.log('recordResponseData',this.recordResponseData);
                 if(this.recordResponseData.length > this.currentBatchSize){
                     this.disableAbortBtn = false;
                     this.deleteRequest();
@@ -580,8 +565,6 @@ export default class Wb_DataProcess extends LightningElement {
                 this.previousRecordList = result.previousRecordList;
                 this.recordData = this.recordResponseData;
                 this.recordColumns = this.previousRecordList;
-                //console.log('finalMappedDataList',result.finalMappedDataList);
-                //console.log('previousRecordList',result.previousRecordList);
             }
         }else{
             this.showToastMessage('warning', validate.message);
@@ -600,9 +583,12 @@ export default class Wb_DataProcess extends LightningElement {
             downloadElement.download = 'Response.csv';
             document.body.appendChild(downloadElement);
             downloadElement.click();
-            that.disableDownloadResBtn = false;  
-            that.showToastMessage('success', 'CSV File generated.');
-        });
+            that.disableDownloadResBtn = false;
+        })
+        .catch(error => {
+			console.log('error',error);
+            this.showToastMessage('error', JSON.stringify(error));
+		})
     }
     generateCSVFile(recordList){
         return new Promise(function(resolve) {
