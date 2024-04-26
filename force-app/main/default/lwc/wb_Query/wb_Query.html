@@ -177,7 +177,10 @@
                         </lightning-layout-item>
                         <lightning-layout-item size="12" small-device-size="12" medium-device-size="12" large-device-size="2">
                             <template if:true={showQueryHistory}>
-                                <span class="spanSec">
+                                <span class="spanSec" if:true={showSoqlHistoryOpt}>
+                                    <a onclick={handleQueryHistory}>Hide History</a>
+                                </span>
+                                <span class="spanSec" if:false={showSoqlHistoryOpt}>
                                     <a onclick={handleQueryHistory}>Show History</a>
                                 </span>
                             </template>

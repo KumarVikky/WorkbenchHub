@@ -215,7 +215,11 @@ export default class Wb_Search extends LightningElement {
             for(let dataValues of value.dataValues){
                 table += '<tr>';
                 for(const key in dataValues){  
-                    table += '<td>' + dataValues[key] + '</td>';  
+                    if(key === 'Id'){
+                        table += '<td>' + '<a href="' + this.customDomain + '/' + dataValues[key] + '" target="_blank">' + dataValues[key] + '</a>' + '</td>';
+                    }else{
+                        table += '<td>' + dataValues[key] + '</td>';
+                    }  
                 } 
                 table += '</tr>';
             }
