@@ -90,6 +90,10 @@ export default class Wb_Query extends LightningElement {
             { label: 'Contains', value: 'contains' },
             { label: 'IN', value: 'in' },
             { label: 'NOT IN', value: 'not-in' },
+            { label: 'Greater than', value: '>' },
+            { label: 'Less than', value: '<' },
+            { label: 'Greater than or equal to', value: '>=' },
+            { label: 'Less than or equal to', value: '<=' }
         ];
     }
     get nullSequenceOptions(){

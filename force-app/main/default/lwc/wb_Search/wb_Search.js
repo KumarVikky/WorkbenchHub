@@ -34,6 +34,7 @@ export default class Wb_Search extends LightningElement {
 
     connectedCallback(){
         this.returningList = [{id: 1, selectedSObject: '', selectedFields: ''}];
+        this.searchValue = '';
         this.fetchSObjects();
         Promise.all([
             loadScript(this, xlsx)

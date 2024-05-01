@@ -21,6 +21,7 @@ export default class Wb_RestExplorer extends LightningElement {
     headerPrefixValue = 'Bearer';
     tokenValue = '{CurrentUserToken}';
     addAuthDataValue = 'RequestHeader';
+    urlPrefixValue = 'access_token';
     
 
     get httpMethodOptions() {
@@ -88,6 +89,8 @@ export default class Wb_RestExplorer extends LightningElement {
         let tagValue = event.target.value;
         if(tageName === 'Token'){
             this.tokenValue = tagValue;
+        }else if(tageName === 'UrlPrefix'){
+            this.urlPrefixValue = tagValue;
         }else{
             this.headerPrefixValue = tagValue; 
         }
@@ -107,12 +110,14 @@ export default class Wb_RestExplorer extends LightningElement {
                 this.headerList.unshift({id: this.headerList.length + 1, key: 'Authorization', value: this.headerPrefixValue + ' ' + this.tokenValue});
                 this.headerList = this.handleReorderList(this.headerList);
             }
-            if(this.urlValue.includes('?access_token=')){
-                let tokenToRemoved = this.urlValue.substring(this.urlValue.indexOf('?access_token='), this.urlValue.length);
+            let urlPrefixMatch1 = '?' + this.urlPrefixValue + '=';
+            let urlPrefixMatch2 = '&' + this.urlPrefixValue + '=';
+            if(this.urlValue.includes(urlPrefixMatch1)){
+                let tokenToRemoved = this.urlValue.substring(this.urlValue.indexOf(urlPrefixMatch1), this.urlValue.length);
                 this.urlValue = this.urlValue.replace(tokenToRemoved, '');
             }
-            else if(this.urlValue.includes('access_token=')){
-                let tokenToRemoved = this.urlValue.substring(this.urlValue.indexOf('access_token='), this.urlValue.length);
+            else if(this.urlValue.includes(urlPrefixMatch2)){
+                let tokenToRemoved = this.urlValue.substring(this.urlValue.indexOf(urlPrefixMatch2), this.urlValue.length);
                 this.urlValue = this.urlValue.replace(tokenToRemoved, '');
             }
         }else{
@@ -120,9 +125,9 @@ export default class Wb_RestExplorer extends LightningElement {
                 this.headerList.splice(index,1);
             }
             if(this.urlValue.includes('?')){
-                this.urlValue = this.urlValue + '&access_token=' + this.tokenValue;
+                this.urlValue = this.urlValue + '&' + this.urlPrefixValue + '=' + this.tokenValue;
             }else{
-                this.urlValue = this.urlValue + '?access_token=' + this.tokenValue;
+                this.urlValue = this.urlValue + '?' + this.urlPrefixValue + '=' + this.tokenValue;
             }
         }
     }
@@ -222,14 +227,14 @@ export default class Wb_RestExplorer extends LightningElement {
                 }
             }
         }
-        if(this.urlValue.includes('access_token')){
-            this.urlValue = endPointURL + '?' + paramValues + '&' + 'access_token=' + this.tokenValue;
+        if(this.urlValue.includes(this.urlPrefixValue)){
+            this.urlValue = endPointURL + '?' + paramValues + '&' + this.urlPrefixValue + '=' + this.tokenValue;
         }else{
             this.urlValue = endPointURL + '?' + paramValues;
         }
         if(this.paramList.length === 0){
-            if(this.urlValue.includes('access_token')){
-                this.urlValue = endPointURL + '?access_token=' + this.tokenValue;
+            if(this.urlValue.includes(this.urlPrefixValue)){
+                this.urlValue = endPointURL + '?' + this.urlPrefixValue + '=' + this.tokenValue;
             }else{
                 this.urlValue = endPointURL;
             }

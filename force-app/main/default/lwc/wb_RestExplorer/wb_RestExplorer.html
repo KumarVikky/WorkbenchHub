@@ -17,6 +17,7 @@
                                     </lightning-layout-item>
                                     <lightning-layout-item size="12" small-device-size="12" medium-device-size="6" large-device-size="6" padding="horizontal-small">
                                         <template lwc:if={hasOAuth2}>
+                                            <lightning-input type="text" name="UrlPrefix" label="Url Prefix" value={urlPrefixValue} class="slds-var-m-bottom_x-small" onchange={handlecOAuth2}></lightning-input>
                                             <lightning-input type="text" name="HeaderPrefix" label="Header Prefix" value={headerPrefixValue} class="slds-var-m-bottom_x-small" onchange={handlecOAuth2}></lightning-input>
                                             <lightning-input type="text" name="Token" label="Token" value={tokenValue} class="slds-var-m-bottom_x-small" onchange={handlecOAuth2}></lightning-input>
                                         </template>
