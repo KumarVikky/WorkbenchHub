@@ -117,7 +117,9 @@ export default class Wb_MetadataDeploy extends LightningElement {
                 that.createPackageItems(xmlDoc);
             })
         }).catch(function(err) {
+            this.showToastMessage('error', 'Failed to read ZIP file.');
             console.error("Failed to open as ZIP file:", err);
+            this.isLoading = false;
         })
     }
     createPackageItems(xmlDoc){
@@ -197,21 +199,31 @@ export default class Wb_MetadataDeploy extends LightningElement {
 		.then(result => {
             //console.log('result=>',result);
             if(result !== '' && result !== null){
-                let response = JSON.parse(result);
-                this.responseAsJson = JSON.stringify(response, null, 2);
-                if(response.errorMessage !== null){
+                if(this.isValidJson(result)){
+                    let response = JSON.parse(result);
+                    this.responseAsJson = JSON.stringify(response, null, 2);
+                    if(response.errorMessage !== null){
+                        clearInterval(this._serverInterval);
+                        this.showToastMessage('error', 'Some Error Occured.');
+                        this.disableDeployPackageBtn = false;
+                        this.disableValidatePackageBtn = false;
+                        this.disableQuickDeployBtn = true;
+                        this.hideNotification();
+                    }else{
+                        clearInterval(this._serverInterval);
+                        this.disableDeployPackageBtn = false;
+                        this.disableValidatePackageBtn = false;
+                        this.disableQuickDeployBtn = true;
+                        this.showToastMessage('success', 'Selected packages deployed successfully.');
+                        this.hideNotification();
+                    }
+                }else{
+                    this.responseAsJson = result;
                     clearInterval(this._serverInterval);
                     this.showToastMessage('error', 'Some Error Occured.');
                     this.disableDeployPackageBtn = false;
                     this.disableValidatePackageBtn = false;
                     this.disableQuickDeployBtn = true;
-                    this.hideNotification();
-                }else{
-                    clearInterval(this._serverInterval);
-                    this.disableDeployPackageBtn = false;
-                    this.disableValidatePackageBtn = false;
-                    this.disableQuickDeployBtn = true;
-                    this.showToastMessage('success', 'Selected packages deployed successfully.');
                     this.hideNotification();
                 }
             }else{
@@ -239,22 +251,32 @@ export default class Wb_MetadataDeploy extends LightningElement {
 		.then(result => {
             if(result !== '' && result !== null){
                 //console.log('result=>',result);
-                let response = JSON.parse(result);
-                this.responseAsJson = JSON.stringify(response, null, 2);
-                if(response.errorMessage !== null){
+                if(this.isValidJson(result)){
+                    let response = JSON.parse(result);
+                    this.responseAsJson = JSON.stringify(response, null, 2);
+                    if(response.errorMessage !== null){
+                        clearInterval(this._serverInterval);
+                        this.disableDeployPackageBtn = false;
+                        this.disableValidatePackageBtn = false;
+                        this.disableQuickDeployBtn = true;
+                        this.hideNotification();
+                        this.showToastMessage('error', 'Some Error Occured.');
+                    }else{
+                        clearInterval(this._serverInterval);
+                        this.hideNotification();
+                        this.showToastMessage('success', 'Selected packages validated successfully.');
+                        this.disableDeployPackageBtn = false;
+                        this.disableQuickDeployBtn = false;
+                        this.disableValidatePackageBtn = true;
+                    }
+                }else{
+                    this.responseAsJson = result;
                     clearInterval(this._serverInterval);
+                    this.showToastMessage('error', 'Some Error Occured.');
                     this.disableDeployPackageBtn = false;
                     this.disableValidatePackageBtn = false;
                     this.disableQuickDeployBtn = true;
                     this.hideNotification();
-                    this.showToastMessage('error', 'Some Error Occured.');
-                }else{
-                    clearInterval(this._serverInterval);
-                    this.hideNotification();
-                    this.showToastMessage('success', 'Selected packages validated successfully.');
-                    this.disableDeployPackageBtn = false;
-                    this.disableQuickDeployBtn = false;
-                    this.disableValidatePackageBtn = true;
                 }
             }else{
                 clearInterval(this._serverInterval);
@@ -345,6 +367,14 @@ export default class Wb_MetadataDeploy extends LightningElement {
             document.body.removeChild(el);
             alert('Response copied:  ' + el.value);
         }
+    }
+    isValidJson(content){
+        try{
+            JSON.parse(content);
+        }catch(e){
+            return false;
+        }
+        return true;
     }
     showNotification(type, message){
         let data = {'type':type, 'message':message};

@@ -219,16 +219,16 @@
                         </span>
                     </div>
                     <div class="slds-scrollable_y"  style="height:15rem;">
-                        <lightning-datatable data={recordList} columns={recordColumns} key-field={recordKey} hide-checkbox-column></lightning-datatable>
+                        <lightning-datatable data={recordList} columns={recordColumns} key-field={recordKey} show-row-number-column hide-checkbox-column></lightning-datatable>
                     </div>
                 </lightning-card>
             </div>
         </template>
     </div>
-    <div class="spinner">
-        <template if:true={isLoading}>
-             <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
-             </lightning-spinner>
-        </template>
-    </div>
+    <template if:true={isLoading}>
+        <div class="spinner">
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+        </div>
+    </template>
 </template>

@@ -47,12 +47,12 @@
                 </lightning-layout-item>
             </lightning-layout>
         </div>
-        <div class="spinner">
-            <template if:true={isLoading}>
-                <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+        <template if:true={isLoading}>
+            <div class="spinner">
+                <lightning-spinner alternative-text="Loading" variant="brand" size="large">
                 </lightning-spinner>
-            </template>
-        </div>
+            </div>
+        </template>
     </template>
     <div>
         <c-wb_-deployment-details lwc:ref="deployDetailCmp" user-id={userId} api-value={apiValue} custom-domain={customDomain} onshowparent={showDeploymentStatus}></c-wb_-deployment-details>

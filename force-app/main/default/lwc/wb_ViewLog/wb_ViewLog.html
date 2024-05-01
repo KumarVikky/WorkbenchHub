@@ -17,12 +17,12 @@
                 <pre lwc:ref="rawContent">{rawLogValue}</pre>
             </div>
         </div>
-        <div class="spinner">
-            <template if:true={isLoading}>
-                <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
+        <template if:true={isLoading}>
+            <div class="spinner">
+                <lightning-spinner alternative-text="Loading..." variant="brand" size="small">
                 </lightning-spinner>
-            </template>
-        </div>
+            </div>
+        </template>
     </lightning-modal-body>
     <lightning-modal-footer>
         <div class="slds-var-m-top_small slds-align_absolute-center">

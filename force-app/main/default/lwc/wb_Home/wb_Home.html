@@ -57,10 +57,10 @@
             </template>
         </lightning-tab>
     </lightning-tabset>
-    <div class="spinner">
-        <template if:true={isLoading}>
-             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
-             </lightning-spinner>
-        </template>
-    </div>
+    <template if:true={isLoading}>
+        <div class="spinner">
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+        </div>
+    </template>
 </template>

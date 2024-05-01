@@ -85,17 +85,17 @@
                             </span>
                         </div>
                         <div class="slds-scrollable_y"  style="height:18.5rem;">
-                            <lightning-datatable data={recordData} columns={recordColumns} draft-values={recordDataDraft} onsave={handleInLineSave} key-field={recordKey} hide-checkbox-column></lightning-datatable>
+                            <lightning-datatable data={recordData} columns={recordColumns} draft-values={recordDataDraft} onsave={handleInLineSave} key-field={recordKey} show-row-number-column hide-checkbox-column></lightning-datatable>
                         </div>
                     </template>
                 </div>
             </lightning-layout-item>
         </lightning-layout>
     </div>
-    <div class="spinner">
-        <template if:true={isLoading}>
-             <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
-             </lightning-spinner>
-        </template>
-    </div>
+    <template if:true={isLoading}>
+        <div class="spinner">
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+        </div>
+    </template>
 </template>

@@ -70,7 +70,7 @@
                     <div class="slds-theme_default">
                         <lightning-card title="Package Items">
                             <div data-id="datatable" class="slds-scrollable_y"  style="height:20.4rem;">
-                                <lightning-datatable hide-checkbox-column data={packageItemsData} columns={packageItemsColumn} key-field="ItemName" onrowselection={handleSelectedPackageItems}></lightning-datatable> 
+                                <lightning-datatable data={packageItemsData} columns={packageItemsColumn} key-field="ItemName" onrowselection={handleSelectedPackageItems} show-row-number-column hide-checkbox-column></lightning-datatable> 
                             </div>
                         </lightning-card>
                     </div>
@@ -104,10 +104,10 @@
             </lightning-layout-item>
         </lightning-layout>
     </div>
-    <div class="spinner">
-        <template if:true={isLoading}>
-             <lightning-spinner alternative-text="Loading..." variant="brand" size="large">
-             </lightning-spinner>
-        </template>
-    </div>
+    <template if:true={isLoading}>
+        <div class="spinner">
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+        </div>
+    </template>
 </template>
