@@ -206,7 +206,7 @@ export default class Wb_Search extends LightningElement {
     generateDynamicTable(recordsMap){
         let htmlElement = '';
         for (let [key, value] of recordsMap) {
-            htmlElement += '<h3>' + key + ':' + '</h3>';
+            htmlElement += '<h3>' + key + ' (' + value.dataValues.length + ')' + ':' + '</h3>';
             let table = '<table>'; 
             table += '<tr>';
             for(let dataKey of value.dataKeys){

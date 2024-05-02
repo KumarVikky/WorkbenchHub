@@ -157,7 +157,7 @@ export default class Wb_MetadataDeploy extends LightningElement {
     adjustDataPanel(){
         var divblock = this.template.querySelector('[data-id="datatable"]');
         if(divblock){
-            this.template.querySelector('[data-id="datatable"]').className='dataTablePanel';
+            this.template.querySelector('[data-id="datatable"]').classList.add('dataTablePanel', 'slds-border_top');
         }       
     }
     fetchMetadataDeployRequest(){

@@ -18,8 +18,8 @@
                         <p>Component details</p>
                     </div>
                     <div class="slds-box slds-var-p-around_medium">
-                        <div class="slds-scrollable_y"  style="height:15rem;">
-                            <lightning-datatable data={componentData} columns={componentColumns} key-field={componentKey} hide-checkbox-column></lightning-datatable>
+                        <div class="slds-scrollable_y slds-border_top"  style="height:15rem;">
+                            <lightning-datatable data={componentData} columns={componentColumns} key-field={componentKey} show-row-number-column hide-checkbox-column></lightning-datatable>
                         </div>
                     </div>
                 </lightning-layout-item>
@@ -29,8 +29,8 @@
                             <p>Error details</p>
                         </div>
                         <div class="slds-box slds-var-p-around_medium">
-                            <div class="slds-scrollable_y"  style="height:15rem;">
-                                <lightning-datatable data={componentErrorData} columns={componentErrorColumns} key-field={componentErrorKey} hide-checkbox-column></lightning-datatable>
+                            <div class="slds-scrollable_y slds-border_top"  style="height:15rem;">
+                                <lightning-datatable data={componentErrorData} columns={componentErrorColumns} key-field={componentErrorKey} show-row-number-column hide-checkbox-column></lightning-datatable>
                             </div>
                         </div>
                     </lightning-layout-item>

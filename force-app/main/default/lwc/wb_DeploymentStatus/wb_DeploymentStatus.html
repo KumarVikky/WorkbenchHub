@@ -13,7 +13,7 @@
                             <b>Succeeded:</b>
                         </div>
                         <div class="slds-box slds-var-p-around_medium">
-                            <div class="slds-scrollable_y"  style="height:15rem;">
+                            <div class="slds-scrollable_y slds-border_top"  style="height:15rem;">
                                 <lightning-datatable data={successRecordsToDisplay} columns={succeededRecordColumns} key-field={succeededRecordKey} onrowaction={handleRowAction} hide-checkbox-column></lightning-datatable>
                             </div>
                             <div align="right">
@@ -32,7 +32,7 @@
                             <b>Failed:</b>
                         </div>
                         <div class="slds-box slds-var-p-around_x-small">
-                            <div class="slds-scrollable_y"  style="height:15rem;">
+                            <div class="slds-scrollable_y slds-border_top"  style="height:15rem;">
                                 <lightning-datatable data={errorRecordsToDisplay} columns={failedRecordColumns} key-field={failedRecordKey} onrowaction={handleRowAction} hide-checkbox-column></lightning-datatable>
                             </div>
                             <div align="right">
