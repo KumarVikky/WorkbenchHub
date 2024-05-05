@@ -1,3 +1,9 @@
 <template>
     <!--OAuth Response after redirection from connected app.-->
+    <template if:true={isLoading}>
+        <div class="spinner">
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+        </div>
+    </template>
 </template>

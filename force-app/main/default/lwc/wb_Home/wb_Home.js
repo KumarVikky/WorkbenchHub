@@ -2,17 +2,13 @@ import { LightningElement, track, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { IdleTimer } from './IdleTimer';
 import LightningAlert from 'lightning/alert';
-import getAccessToken from '@salesforce/apex/WB_WorkbenchHubController.getAccessToken';
 import getUserInfo from '@salesforce/apex/WB_WorkbenchHubController.getUserDetails';
 import revokeAccess from '@salesforce/apex/WB_WorkbenchHubController.revokeAccess';
-import addRemoteSite from '@salesforce/apex/WB_WorkbenchHubController.addRemoteSite';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import { fireEvent } from 'c/wb_PubSub';
 import profileSection from 'c/wb_ProfileModal';
 
 export default class Wb_Home extends NavigationMixin(LightningElement) {
-    @track codeValue;
-    @track envValue;
     @track apiValue;
     @track userId;
     @track customDomain;
@@ -22,28 +18,23 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
     userFullName;
     profileObj;
     _idletimer;
+    hasContinuation = false;
+    hasSessionWarning = false;
+    timeLeft;
     @wire(CurrentPageReference) pageRef;
 
+    get sessionWarningMessage(){
+        return `Hey ${this.userFullName}, session will expire in next ${this.timeLeft} seconds due to inactivity, click ok to continue.`;
+    }
+
     connectedCallback(){
-        const onTimeout = () => {
-            if(this.pageRef){
-                fireEvent(this.pageRef, 'closeAllModal', true);
-            }
-            this._idletimer.deactivate();
-            this.logOutSession();
-            localStorage.removeItem("WB_SESSIONKEY");
-            this.alertHandler('Session has expired due to inactivity, please login again.');
-            this.navigateToExperiencePage("WorkbenchLogin__c");
-        };
-        this._idletimer = new IdleTimer(onTimeout, 3600000);//1 hours of inactivity.
-        this._idletimer.activate(); 
-        let wbSessionKey = localStorage.getItem("WB_SESSIONKEY");
+        let wbSessionKey = sessionStorage.getItem("WB_SESSIONKEY");
         if(wbSessionKey){
-            this.codeValue = wbSessionKey.substring(0, wbSessionKey.indexOf('&'));
-            const state = wbSessionKey.slice(wbSessionKey.indexOf('&') + 1);
-            this.envValue = state.substring(0, state.indexOf('_'));
-            this.apiValue = state.slice(state.indexOf('_') + 1);
-            this.fetchAccessToken();
+            this.userId = wbSessionKey.substring(0, 18);
+            this.apiValue = wbSessionKey.substring(18, wbSessionKey.length);
+            this.hasUserToken = true;
+            this.fetchUserInfo();
+            this.handleIdleTime();
         }else{
             this.navigateToExperiencePage("WorkbenchLogin__c");
         }
@@ -52,46 +43,8 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
         this._idletimer.deactivate();
         this.logOutSession();
     }
-    fetchAccessToken(){
-        this.isLoading = true;
-        let endPointURL = (this.envValue === 'P' ? 'https://login.salesforce.com' : 'https://test.salesforce.com');
-		getAccessToken({ codeValue: this.codeValue, endPointURL: endPointURL})
-		.then(result => {
-            if(result){
-                this.userId = result;
-                this.addURLToRemoteSiteSetting();
-            }else{
-                this.showToastMessage('error', 'Session expired or invalid! please login again.');
-                this.navigateToExperiencePage("WorkbenchLogin__c");
-            }
-		})
-		.catch(error => {
-            console.log('error',error);
-            this.isLoading = false;
-            this.showToastMessage('error', error);
-		})
-	}
-    addURLToRemoteSiteSetting(){
-        addRemoteSite({userId: this.userId, name:'WB_InternalSite_', hostURL: ''})
-        .then(result => {
-            if(result){
-                if(result.includes('success')){
-                    this.hasUserToken = true;
-                    this.fetchUserInfo();
-                    this.isLoading = false;
-                }else{
-                    this.showToastMessage('error', 'Failed to add domain to Remote Site Setting: ' + result);
-                    this.navigateToExperiencePage("WorkbenchLogin__c");
-                }
-            }
-        })
-        .catch(error => {
-            this.isLoading = false;
-            console.log('error',error);
-            this.showToastMessage('error', error);
-        })
-    } 
     fetchUserInfo(){
+        this.isLoading = true;
 		getUserInfo({ userId: this.userId})
 		.then(result => {
             if(result){
@@ -102,6 +55,7 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
                 let initials = response.name.split(" ").map((n)=>n[0]).join("");
                 let address = response.address.street_address + ' ' + response.address.country + '-' + response.address.postal_code;
                 this.profileObj = {'nameInitials':initials, 'name':response.name, 'nickName':response.nickname, 'userName':response.preferred_username, 'emailId':response.email, 'phoneNumber':response.phone_number, 'userId':response.user_id, 'organizationId':response.organization_id, 'zoneInfo':response.zoneinfo,'locale':response.locale, 'language':response.language, 'address':address};
+                this.isLoading = false;
             }else{
                 this.showToastMessage('error', 'Failed to retrieve user info.');
             }
@@ -119,12 +73,51 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
             },
         });
     }
+    handleContinueSession(){
+        this.hasContinuation = true;
+    }
     async alertHandler(message) {
         await LightningAlert.open({
             message: message,
             theme: 'error',
-            label: 'Error!', 
+            label: 'Session Expired!'
         });
+    }
+    handleIdleTime(){
+        const onTimeout = () => {
+            this._idletimer.deactivate();
+            this.handleSessionCountdown();
+        };
+        this._idletimer = new IdleTimer(onTimeout, 15*60*1000);// 15 minutes of inactivity.
+        this._idletimer.activate();
+    }
+    destroySession(){
+        if(this.pageRef){
+            fireEvent(this.pageRef, 'closeAllModal', true);
+        }
+        this.logOutSession();
+        sessionStorage.removeItem("WB_SESSIONKEY");
+        this.alertHandler('Session has expired due to inactivity, please login again.');
+        this.navigateToExperiencePage("WorkbenchLogin__c");
+    }
+    handleSessionCountdown(){
+        this.timeLeft = 30;
+        this.hasSessionWarning = true;
+        const timerId = setInterval(() => {
+            if(this.timeLeft === 0){
+                clearInterval(timerId);
+                this.hasSessionWarning = false;
+                this.destroySession();
+            }else{
+                if(this.hasContinuation === true){
+                    clearInterval(timerId);
+                    this.hasSessionWarning = false;
+                    this.hasContinuation = false;
+                    this.handleIdleTime();
+                }
+                this.timeLeft --;
+            }
+        }, 1000);
     }
     showToastMessage(variant, message){
         let title = (variant === 'error' ? 'Error:' : variant === 'warning' ? 'Warning:' : 'Success:');
@@ -155,7 +148,7 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
                 this.showToastMessage('success', 'Logged out successfully.');
             }
             this.isLoading = false;
-            localStorage.removeItem("WB_SESSIONKEY");
+            sessionStorage.removeItem("WB_SESSIONKEY");
             this._idletimer.deactivate();
             this.navigateToExperiencePage("WorkbenchLogin__c");
 		})

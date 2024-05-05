@@ -6,3 +6,6 @@
     margin: 20px;
     text-align: justify;
 }
+.maintenancePill{
+    --slds-c-pill-color-background: yellow;
+}

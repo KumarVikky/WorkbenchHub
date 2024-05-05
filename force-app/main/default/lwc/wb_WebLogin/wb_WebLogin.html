@@ -1,7 +1,12 @@
 <template>
+    <template if:true={hasMaintenance}>
+        <div align="center" class="slds-var-m-bottom_small">
+            <lightning-pill-container items={maintenanceItems} onitemremove={handleItemRemove} variant="bare" class="maintenancePill"></lightning-pill-container>
+        </div>
+    </template>
     <div class="slds-box">
         <lightning-layout multiple-rows>
-            <lightning-layout-item size="12" small-device-size="2" medium-device-size="4" large-device-size="4" padding="around-small">
+            <lightning-layout-item size="12" small-device-size="8" medium-device-size="8" large-device-size="4" padding="around-small">
                 <div class="slds-form_horizontal">
                     <lightning-combobox
                         name="environment"
@@ -40,7 +45,7 @@
     </div>
     <template if:true={isLoading}>
         <div class="spinner">
-            <lightning-spinner alternative-text="Loading" variant="base" size="large">
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
             </lightning-spinner>
         </div>
     </template>

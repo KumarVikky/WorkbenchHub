@@ -59,8 +59,26 @@
     </lightning-tabset>
     <template if:true={isLoading}>
         <div class="spinner">
-            <lightning-spinner alternative-text="Loading" variant="base" size="large">
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
             </lightning-spinner>
         </div>
+    </template>
+    <template if:true={hasSessionWarning}>
+        <div class="warningModal" style="height:4rem">
+            <section role="dialog" tabindex="0" aria-modal="true" aria-labelledby="prompt-heading-id" aria-describedby="prompt-message-wrapper" class="slds-modal slds-fade-in-open slds-modal_prompt">
+              <div class="slds-modal__container">
+                <div class="slds-modal__header slds-theme_warning slds-theme_alert-texture">
+                  <h1 class="slds-text-heading_medium" id="prompt-heading-id">Please Confirm</h1>
+                </div>
+                <div class="slds-modal__content slds-var-p-around_medium" id="prompt-message-wrapper">
+                  <p>{sessionWarningMessage}</p>
+                </div>
+                <div class="slds-modal__footer slds-theme_default">
+                    <lightning-button variant="brand" label="ok" title="ok" onclick={handleContinueSession} class="slds-var-m-left_x-small"></lightning-button>
+                </div>
+              </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open" role="presentation"></div>
+          </div>
     </template>
 </template>

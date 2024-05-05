@@ -43,6 +43,7 @@
         <members>WB_RestRequestWrapper</members>
         <members>WB_RestResponseWrapper</members>
         <members>WB_FetchSearch</members>
+        <members>WB_SalesforceMaintenance</members>
         <name>ApexClass</name>
     </types>
     <types>

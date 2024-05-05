@@ -1,6 +1,7 @@
 import { LightningElement, track} from 'lwc';
 import { NavigationMixin } from 'lightning/navigation';
 import getConsumerInfo from '@salesforce/apex/WB_WorkbenchHubController.getConsumerDetails';
+import getMaintenanceWindow from '@salesforce/apex/WB_WorkbenchHubController.fetchMaintenanceWindow';
 import WORKBENCH from '@salesforce/resourceUrl/Workbench'
 export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
     @track envValue = 'Production';
@@ -12,6 +13,7 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
     sandboxAuthURL;
     redirectURL;
     heartIcon = WORKBENCH + '/Workbench/heart.svg';
+    @track maintenanceItems = [];
 
     get envOptions() {
         return [
@@ -34,8 +36,13 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
             { label: '50.0', value: '50.0' },
         ];
     }
+    get hasMaintenance(){
+        return this.maintenanceItems.length > 0 ? true : false;
+    }
+
     connectedCallback(){
         this.fetchConsumerInfo();
+        this.fetchMaintenanceWindow();
     }
     fetchConsumerInfo(){
         this.isLoading = true;
@@ -53,6 +60,29 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
             this.isLoading = false;
         })
 	} 
+    fetchMaintenanceWindow(){
+        this.isLoading = true;
+		getMaintenanceWindow()
+        .then(result => {
+            this.isLoading = false;
+            let response = JSON.parse(result);
+            if(response.maintenanceWindow && response.releaseVersion){
+                let message = `Salesforce scheduled maintenance on ${response.maintenanceWindow} for ${response.releaseVersion}.`;
+                let item = {
+                    type: 'icon',
+                    label: message,
+                    name: 'Realease1',
+                    iconName: 'utility:info_alt',
+                    alternativeText: message,
+                };
+                this.maintenanceItems.push(item);
+            }
+        })
+        .catch(error => {
+            console.log('error',error);
+            this.isLoading = false;
+        })
+	} 
     handleLogin(){
         let authURL = this.prodAuthURL;
         if(this.envValue === 'Sandbox'){
@@ -60,7 +90,7 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
         }
         let responseTypeCode = 'code';
         let prompType = 'login';
-        let envKey = (this.envValue === 'Production' ? 'P' : 'S');
+        let envKey = (this.envValue === 'Production' ? 'p' : 's');
         let redirectURI = this.redirectURL;
         let params = '?response_type=' + responseTypeCode +
             '&client_id=' + encodeURIComponent(this.clientId) +
@@ -68,11 +98,11 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
             '&prompt=' + prompType +
             '&redirect_uri=' + redirectURI + '&prompt=consent' +
             '&scope=' + encodeURIComponent('id profile email address phone api web sfap_api refresh_token') +
-            '&state=' + encodeURIComponent(envKey+'_'+this.apiVersionValue);
+            '&state=' + encodeURIComponent(envKey + this.apiVersionValue);
        let url = authURL + params;
-       let wbSessionKey = localStorage.getItem("WB_SESSIONKEY");
+       let wbSessionKey = sessionStorage.getItem("WB_SESSIONKEY");
        if(wbSessionKey){
-            localStorage.removeItem("WB_SESSIONKEY");
+            sessionStorage.removeItem("WB_SESSIONKEY");
        }
        this.navigateToWebPage(url);
     }
@@ -90,5 +120,8 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
     handleApiChange(event) {
         this.apiVersionValue = event.detail.value;
     }
-    
+    handleItemRemove(event) {
+        const index = event.detail.index;
+        this.maintenanceItems.splice(index, 1);
+    }
 }

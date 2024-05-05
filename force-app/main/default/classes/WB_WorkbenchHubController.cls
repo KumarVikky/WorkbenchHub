@@ -1,4 +1,4 @@
-public class WB_WorkbenchHubController {
+public with sharing class WB_WorkbenchHubController{
     @AuraEnabled(cacheable=true)
     public static Map<String,Object> getConsumerDetails(){
         WB_WorkbenchHubSetting__mdt wb = WB_WorkbenchHubSetting__mdt.getInstance(WB_ServiceAppConstant.WB_SETTING);
@@ -146,7 +146,8 @@ public class WB_WorkbenchHubController {
             Type classType = Type.forName('WB_RevokeToken');
             Object instance = classType.newInstance();
             WB_ServiceRequest request = (WB_ServiceRequest)instance;
-            result = (String) request.executeService(instance,params);            
+            result = (String) request.executeService(instance,params); 
+            //WB_WorkbenchHubController.deleteSession(userId);           
         }catch(Exception ex){
             WB_LogLevel.logException(ex);
             new AuraHandledException(ex.getMessage());
@@ -658,12 +659,33 @@ public class WB_WorkbenchHubController {
         }
         return result;
     }
+    @AuraEnabled(cacheable=false)
+    public static String fetchMaintenanceWindow(){
+        String result = null;
+        try{
+            Type classType = Type.forName('WB_SalesforceMaintenance');
+            Object instance = classType.newInstance();
+            WB_ServiceRequest request = (WB_ServiceRequest)instance;
+            result = (String) request.executeService(instance,null);            
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
+            new AuraHandledException(ex.getMessage());
+        }
+        return result;
+    }
     private static WB_WorkbenchHubSession__c sessionInfo(String userId){
         try{
             return Database.Query('SELECT WB_AccessToken__c, WB_RefreshToken__c, WB_DomainURL__c, WB_HostURL__c FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1');
         }catch(Exception ex){
             WB_LogLevel.logException(ex);
             return null;
+        }
+    }
+    private static void deleteSession(String userId){
+        try{
+            Database.delete(Database.Query('SELECT Id FROM WB_WorkbenchHubSession__c WHERE WB_UserId__c = :userId LIMIT 1'));
+        }catch(Exception ex){
+            WB_LogLevel.logException(ex);
         }
     }
 }
