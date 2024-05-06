@@ -67,13 +67,13 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
             this.isLoading = false;
             let response = JSON.parse(result);
             if(response.maintenanceWindow && response.releaseVersion){
-                let message = `Salesforce scheduled maintenance on ${response.maintenanceWindow} for ${response.releaseVersion}.`;
+                let message = `Upcoming Events: Salesforce scheduled maintenance on ${response.maintenanceWindow} for the ${response.releaseVersion}.`;
                 let item = {
                     type: 'icon',
                     label: message,
                     name: 'Realease1',
                     iconName: 'utility:info_alt',
-                    alternativeText: message,
+                    alternativeText: 'Release Event',
                 };
                 this.maintenanceItems.push(item);
             }

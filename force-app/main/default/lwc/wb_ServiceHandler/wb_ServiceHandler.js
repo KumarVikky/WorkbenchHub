@@ -3,7 +3,7 @@ import { NavigationMixin } from 'lightning/navigation';
 
 export default class Wb_ServiceHandler extends NavigationMixin(LightningElement) {
     connectedCallback(){
-        let wbSessionKey = localStorage.getItem("WB_SESSIONKEY");
+        let wbSessionKey = sessionStorage.getItem("WB_SESSIONKEY");
         if(wbSessionKey){
             this.navigateToExperiencePage('WorkbenchHome__c');
         }else{

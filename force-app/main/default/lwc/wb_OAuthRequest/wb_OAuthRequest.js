@@ -20,12 +20,17 @@ export default class Wb_OAuthRequest extends NavigationMixin(LightningElement) {
                 let crrUrl = window.location.href;
                 let nextUrl = crrUrl.substring(0, crrUrl.indexOf('?'));
                 window.history.pushState('', '', nextUrl);
-                window.history.replaceState('', '', nextUrl);
                 let envValue = stateVal.substring(0, 1);
                 this.apiValue = stateVal.substring(1, stateVal.length);
                 let endPointUrlVal = (envValue === 'p' ? this._prodURL : this._sandboxURL);
                 this.fetchAccessToken(codeVal, endPointUrlVal);
             }
+        }
+    }
+
+    connectedCallback(){
+        if(this.apiValue === ''){
+            this.navigateToExperiencePage("WorkbenchLogin__c");
         }
     }
 
