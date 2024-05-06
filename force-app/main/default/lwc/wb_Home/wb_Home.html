@@ -6,7 +6,7 @@
             </div>
             <div class="slds-col slds-size_12-of-12">
                 <span class="slds-var-m-bottom_xx-small spanRight"> 
-                    <span>Logged in as: <abbr title={userName}><span class="spanColor">{userFullName}</span></abbr></span> &nbsp;&nbsp;
+                    <span>Logged in as:  <lightning-button variant="base" data-id="Notify_Btn" label={userFullName} title={userName} class="spanColor" onclick={subscribeNotification}></lightning-button></span> &nbsp;&nbsp;
                     <lightning-button-menu alternative-text="Show menu" menu-alignment="right" onselect={handleUserMenu} icon-name="utility:settings">
                         <lightning-menu-item value="ProfileMenu" label="Profile" prefix-icon-name="utility:profile_alt"></lightning-menu-item>
                         <lightning-menu-item value="LogOut" label="Logout" prefix-icon-name="utility:logout"></lightning-menu-item>

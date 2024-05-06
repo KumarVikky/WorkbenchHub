@@ -21,6 +21,7 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
     hasContinuation = false;
     hasSessionWarning = false;
     timeLeft;
+    hasInitiatOnce= false;
     @wire(CurrentPageReference) pageRef;
 
     get sessionWarningMessage(){
@@ -37,6 +38,12 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
             this.handleIdleTime();
         }else{
             this.navigateToExperiencePage("WorkbenchLogin__c");
+        }
+    }
+    renderedCallback(){
+        if(!this.hasInitiatOnce){
+            this.initiateSubscribe();
+            this.hasInitiatOnce = true;
         }
     }
     disconnectedCallback() {
@@ -103,6 +110,7 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
     handleSessionCountdown(){
         this.timeLeft = 30;
         this.hasSessionWarning = true;
+        this.notifyUser();
         const timerId = setInterval(() => {
             if(this.timeLeft === 0){
                 clearInterval(timerId);
@@ -130,6 +138,25 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
                 mode: mode
             }),
         );
+    }
+    initiateSubscribe(){
+        this.template.querySelector('[data-id="Notify_Btn"]').click();
+    }
+    subscribeNotification(){
+        Notification.requestPermission();
+    }
+    notifyUser(){
+        let message = `Hey ${this.userFullName}, are you still there? WorkbenchHub session will expire soon due to inactivity.`;
+        if(!("Notification" in window)){
+            console.log("This browser does not support desktop notification");
+        }else if(Notification.permission === "granted"){
+            const notification = new Notification(message);
+        }else if(Notification.permission !== "denied"){
+            this.subscribeNotification();
+            if(Notification.permission === "granted"){
+                const notification = new Notification(message);
+            }
+        }
     }
     handleUserMenu(event){
         let menuItem = event.detail.value;
