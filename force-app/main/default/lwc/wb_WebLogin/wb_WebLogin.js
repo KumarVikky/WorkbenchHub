@@ -61,10 +61,8 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
         })
 	} 
     fetchMaintenanceWindow(){
-        this.isLoading = true;
 		getMaintenanceWindow()
         .then(result => {
-            this.isLoading = false;
             let response = JSON.parse(result);
             if(response.maintenanceWindow && response.releaseVersion){
                 let message = `Upcoming Events: Salesforce scheduled maintenance on ${response.maintenanceWindow} for the ${response.releaseVersion}.`;

@@ -2,6 +2,7 @@ import { LightningElement, track, wire } from 'lwc';
 import { NavigationMixin, CurrentPageReference } from 'lightning/navigation';
 import { IdleTimer } from './IdleTimer';
 import LightningAlert from 'lightning/alert';
+import addRemoteSite from '@salesforce/apex/WB_WorkbenchHubController.addRemoteSite';
 import getUserInfo from '@salesforce/apex/WB_WorkbenchHubController.getUserDetails';
 import revokeAccess from '@salesforce/apex/WB_WorkbenchHubController.revokeAccess';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
@@ -21,7 +22,7 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
     hasContinuation = false;
     hasSessionWarning = false;
     timeLeft;
-    hasInitiatOnce= false;
+    hasInitiateOnce= false;
     @wire(CurrentPageReference) pageRef;
 
     get sessionWarningMessage(){
@@ -33,25 +34,44 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
         if(wbSessionKey){
             this.userId = wbSessionKey.substring(0, 18);
             this.apiValue = wbSessionKey.substring(18, wbSessionKey.length);
-            this.hasUserToken = true;
-            this.fetchUserInfo();
+            this.addURLToRemoteSiteSetting();
             this.handleIdleTime();
+            this.hasUserToken = true;
         }else{
             this.navigateToExperiencePage("WorkbenchLogin__c");
         }
     }
     renderedCallback(){
-        if(!this.hasInitiatOnce){
+        if(!this.hasInitiateOnce){
             this.initiateSubscribe();
-            this.hasInitiatOnce = true;
+            this.hasInitiateOnce = true;
         }
     }
     disconnectedCallback() {
         this._idletimer.deactivate();
         this.logOutSession();
     }
-    fetchUserInfo(){
+    addURLToRemoteSiteSetting(){
         this.isLoading = true;
+        addRemoteSite({userId: this.userId, name:'WB_InternalSite_', hostURL: ''})
+        .then(result => {
+            if(result){
+                if(result.includes('success')){
+                    this.fetchUserInfo();
+                }else{
+                    this.showToastMessage('error', 'Failed to add domain to Remote Site Setting: ' + result);
+                    this.navigateToExperiencePage("WorkbenchLogin__c");
+                }
+                this.isLoading = false;
+            }
+        })
+        .catch(error => {
+            this.isLoading = false;
+            console.log('error',error);
+            this.showToastMessage('error', error);
+        })
+    }
+    fetchUserInfo(){
 		getUserInfo({ userId: this.userId})
 		.then(result => {
             if(result){
@@ -62,7 +82,6 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
                 let initials = response.name.split(" ").map((n)=>n[0]).join("");
                 let address = response.address.street_address + ' ' + response.address.country + '-' + response.address.postal_code;
                 this.profileObj = {'nameInitials':initials, 'name':response.name, 'nickName':response.nickname, 'userName':response.preferred_username, 'emailId':response.email, 'phoneNumber':response.phone_number, 'userId':response.user_id, 'organizationId':response.organization_id, 'zoneInfo':response.zoneinfo,'locale':response.locale, 'language':response.language, 'address':address};
-                this.isLoading = false;
             }else{
                 this.showToastMessage('error', 'Failed to retrieve user info.');
             }
@@ -110,7 +129,9 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
     handleSessionCountdown(){
         this.timeLeft = 30;
         this.hasSessionWarning = true;
-        this.notifyUser();
+        if(!this.hasMobileDevice()){
+            this.notifyUser();
+        }
         const timerId = setInterval(() => {
             if(this.timeLeft === 0){
                 clearInterval(timerId);
@@ -143,20 +164,20 @@ export default class Wb_Home extends NavigationMixin(LightningElement) {
         this.template.querySelector('[data-id="Notify_Btn"]').click();
     }
     subscribeNotification(){
-        Notification.requestPermission();
+        if(("Notification" in window) && !this.hasMobileDevice()){
+            Notification.requestPermission(); 
+        }
     }
     notifyUser(){
         let message = `Hey ${this.userFullName}, are you still there? WorkbenchHub session will expire soon due to inactivity.`;
-        if(!("Notification" in window)){
-            console.log("This browser does not support desktop notification");
-        }else if(Notification.permission === "granted"){
-            const notification = new Notification(message);
-        }else if(Notification.permission !== "denied"){
-            this.subscribeNotification();
+        if(("Notification" in window)){
             if(Notification.permission === "granted"){
                 const notification = new Notification(message);
             }
         }
+    }
+    hasMobileDevice(){
+        return (document.documentElement.clientWidth <= 768);
     }
     handleUserMenu(event){
         let menuItem = event.detail.value;
