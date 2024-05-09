@@ -12,6 +12,8 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
     prodAuthURL;
     sandboxAuthURL;
     redirectURL;
+    collapsible = true;
+	expanded = false;
     heartIcon = WORKBENCH + '/Workbench/heart.svg';
     @track maintenanceItems = [];
 
@@ -44,6 +46,9 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
         this.fetchConsumerInfo();
         this.fetchMaintenanceWindow();
     }
+    handleExpansion(){
+        this.expanded = !this.expanded;
+    }
     fetchConsumerInfo(){
         this.isLoading = true;
 		getConsumerInfo()
@@ -64,16 +69,29 @@ export default class Wb_WebLogin extends NavigationMixin(LightningElement) {
 		getMaintenanceWindow()
         .then(result => {
             let response = JSON.parse(result);
-            if(response.maintenanceWindow && response.releaseVersion){
-                let message = `Upcoming Events: Salesforce scheduled maintenance on ${response.maintenanceWindow} for the ${response.releaseVersion}.`;
-                let item = {
-                    type: 'icon',
-                    label: message,
-                    name: 'Realease1',
-                    iconName: 'utility:info_alt',
-                    alternativeText: 'Release Event',
-                };
-                this.maintenanceItems.push(item);
+            let labelHeader = 'Upcoming Events: ';
+            if(response.Maintenances){
+                for(let main of response.Maintenances){
+                    if(main.message && main.message.maintenanceType && main.message.eventStatus === "confirmed"){
+                        let plannedStartDateTime = new Date(main.plannedStartTime);
+                        let plannedEndDateTime = new Date(main.plannedEndTime);
+                        let currentDateTime = new Date();
+                        if(main.message.maintenanceType === 'scheduledMaintenance'){
+                            if(plannedEndDateTime >= currentDateTime){
+                                let label = 'Scheduled maintenance for the ' + main.name + ' on ' + plannedStartDateTime.toUTCString() + ' – ' + plannedEndDateTime.toUTCString();
+                                let notification = { type: 'icon', label: labelHeader + label, name: 'Schedule', iconName: 'utility:info_alt', alternativeText: 'Maintenance Events'};
+                                this.maintenanceItems.push(notification);
+                            }
+                        }
+                        if(main.message.maintenanceType === 'release'){
+                            if(plannedEndDateTime >= currentDateTime){
+                                let label = 'Schedule release of the ' + main.name + ' on ' + plannedStartDateTime.toUTCString() + ' – ' + plannedEndDateTime.toUTCString();
+                                let notification = { type: 'icon', label: labelHeader + label, name: 'Schedule', iconName: 'utility:info_alt', alternativeText: 'Release Events'};
+                                this.maintenanceItems.push(notification);
+                            }
+                        }
+                    }
+                }
             }
         })
         .catch(error => {

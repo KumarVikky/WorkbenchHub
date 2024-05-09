@@ -1,7 +1,7 @@
 <template>
     <template if:true={hasMaintenance}>
-        <div align="center" class="slds-var-m-bottom_small">
-            <lightning-pill-container items={maintenanceItems} onitemremove={handleItemRemove} variant="bare" class="maintenancePill"></lightning-pill-container>
+        <div class="slds-var-m-bottom_small">
+            <lightning-pill-container items={maintenanceItems} onitemremove={handleItemRemove} class="maintenancePill" is-collapsible={collapsible} is-expanded={expanded} onfocus={handleExpansion}></lightning-pill-container>
         </div>
     </template>
     <div class="slds-box">
