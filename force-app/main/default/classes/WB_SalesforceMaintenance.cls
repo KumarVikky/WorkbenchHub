@@ -22,7 +22,7 @@ public class WB_SalesforceMaintenance extends WB_ServiceAdapter implements WB_Se
     
     public Object executeService(Object instance, Map<String,String> params){
         WB_SalesforceMaintenance service = (WB_SalesforceMaintenance)instance;
-        service.endPointURL = 'https://api.status.salesforce.com/v1/instances/AP59/status/preview';
+        service.endPointURL = 'https://api.status.salesforce.com/v1/instances/AP59/status?childProducts=false';
         HttpRequest req = service.getRequest();
         HttpResponse res = service.getResponse(req);
         return res.getBody();
